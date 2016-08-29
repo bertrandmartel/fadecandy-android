@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="fr.bmartel.android.fadecandy">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name">
+
+        <service
+            android:name=".service.FadecandyService"
+            android:label="@string/app_name">
+
+            <intent-filter>
+                <action android:name="fr.bmartel.android.fadecandy.IFadecandyService" />
+            </intent-filter>
+
+        </service>
+
+        <activity
+            android:name=".activity.UsbEventReceiverActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:label="Fadecandy Android"
+            android:noHistory="true"
+            android:process=":UsbEventReceiverActivityProcess"
+            android:taskAffinity="fr.bmartel.fadecandy.taskAffinityUsbEventReceiver"
+            android:theme="@style/Theme.Transparent">
+
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+                android:resource="@xml/usb_device_filter" />
+
+        </activity>
+
+    </application>
+
+
+</manifest> 

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu>
+
+    <!--
+    <item
+        android:id="@+id/cancel_btn"
+        android:icon="@drawable/ic_cancel"
+        android:title="@string/cancel"
+        app:showAsAction="always" />
+    -->
+</menu>

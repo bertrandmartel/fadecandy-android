@@ -1,0 +1,145 @@
+<!-- A DrawerLayout is intended to be used as the top-level content view using match_parent for both width and height to consume the full space available. -->
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <!-- The ActionBar displayed at the top -->
+    <include
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize" />
+
+    <ScrollView
+        android:id="@+id/scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
+
+            <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/tableLayout1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <TableRow
+                    android:id="@+id/tableRow0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dip">
+
+                    <Button
+                        android:id="@+id/full_color_red"
+                        android:layout_width="0px"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25"
+                        android:backgroundTint="#FF0000"
+                        android:text="Full color" />
+
+                    <Button
+                        android:id="@+id/full_color_orange"
+                        android:layout_width="0px"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25"
+                        android:backgroundTint="#FFA500"
+                        android:text="Full color" />
+
+                    <Button
+                        android:id="@+id/full_color_green"
+                        android:layout_width="0px"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25"
+                        android:backgroundTint="#00FF00"
+                        android:text="Full color" />
+
+                    <Button
+                        android:id="@+id/full_color_blue"
+                        android:layout_width="0px"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25"
+                        android:backgroundTint="#0000FF"
+                        android:text="Full color" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRow1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dip">
+
+                    <Button
+                        android:id="@+id/spark_color_red"
+                        android:layout_width="0px"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25"
+                        android:backgroundTint="#FF0000"
+                        android:text="SPARK" />
+
+                    <Button
+                        android:id="@+id/spark_color_orange"
+                        android:layout_width="0px"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25"
+                        android:backgroundTint="#FFA500"
+                        android:text="SPARK" />
+
+                    <Button
+                        android:id="@+id/spark_color_green"
+                        android:layout_width="0px"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25"
+                        android:backgroundTint="#00FF00"
+                        android:text="SPARK" />
+
+                    <Button
+                        android:id="@+id/spark_color_blue"
+                        android:layout_width="0px"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25"
+                        android:backgroundTint="#0000FF"
+                        android:text="SPARK" />
+                </TableRow>
+
+            </TableLayout>
+
+            <SeekBar
+                android:id="@+id/seekbar_speed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="100" />
+
+            <Button
+                android:id="@+id/button_all_off"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="NONE" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>
+
+<!-- The navigation drawer that comes from the left --><!-- Note that `android:layout_gravity` needs to be set to 'start' -->
+<android.support.design.widget.NavigationView
+    android:id="@+id/nvView"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_gravity="start"
+    android:layout_marginTop="@dimen/abc_action_bar_default_height_material"
+    android:background="@android:color/white"
+    app:itemTextColor="#000000"
+    app:menu="@menu/drawer_view" />
+
+</android.support.v4.widget.DrawerLayout>

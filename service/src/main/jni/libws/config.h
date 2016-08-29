@@ -1,0 +1,1 @@
+#define LWS_BUILTIN_GETIFADDRS

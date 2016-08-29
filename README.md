@@ -1,0 +1,1 @@
+cmake -DLWS_WITH_SSL:BOOL=OFF .
