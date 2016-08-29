@@ -21,12 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.bmartel.fadecandy.inter;
+package fr.bmartel.fadecandy.dialog;
+
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.view.LayoutInflater;
+import android.widget.ListView;
+
+import fr.bmartel.fadecandy.R;
+import fr.bmartel.fadecandy.adapter.OpenSourceItemAdapter;
 
 /**
- * Created by akinaru on 26/08/16.
+ * open source components dialog
+ *
+ * @author Bertrand Martel
  */
-public interface IFc {
+public class OpenSourceItemsDialog extends AlertDialog {
 
-    void switchServerStatus();
+    public OpenSourceItemsDialog(Context context) {
+        super(context);
+
+        LayoutInflater inflater = LayoutInflater.from(context);
+        ListView listview = (ListView) inflater.inflate(R.layout.open_source_list, null);
+        listview.setAdapter(new OpenSourceItemAdapter(context));
+
+        setView(listview);
+        setTitle(R.string.open_source_items);
+        setButton(DialogInterface.BUTTON_POSITIVE, context.getResources().getString(R.string.dialog_ok),
+                (OnClickListener) null);
+    }
 }
