@@ -2,9 +2,9 @@ package fr.bmartel.android.fadecandy;
 
 interface IFadecandyService {
 
-    void startServer();
+    int startServer();
 
-    void stopServer();
+    int stopServer();
 
     boolean isServerRunning();
 

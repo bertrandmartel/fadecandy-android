@@ -1,18 +1,18 @@
 /**
  * The MIT License (MIT)
- * <p/>
+ * <p>
  * Copyright (c) 2016 Bertrand Martel
- * <p/>
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p/>
+ * <p>
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * <p/>
+ * <p>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -48,8 +48,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import fr.bmartel.android.fadecandy.IFadecandyService;
 import fr.bmartel.android.fadecandy.activity.UsbEventReceiverActivity;
@@ -69,8 +67,6 @@ public class FadecandyService extends Service {
     private static final String ACTION_USB_PERMISSION = "fr.bmartel.fadecandy.USB_PERMISSION";
 
     private UsbManager mUsbManager;
-
-    private ExecutorService threadPool;
 
     private HashMap<Integer, UsbItem> mUsbDevices = new HashMap<>();
 
@@ -111,8 +107,6 @@ public class FadecandyService extends Service {
         Log.v(TAG, "Fadecandy config : " + mConfig.toJsonString());
 
         mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
-
-        threadPool = Executors.newFixedThreadPool(1);
 
         initBroadcastReceiver();
     }
@@ -330,31 +324,28 @@ public class FadecandyService extends Service {
     private final IFadecandyService.Stub mBinder = new IFadecandyService.Stub() {
 
         @Override
-        public void startServer() {
+        public int startServer() {
 
             stopServer();
 
-            threadPool.execute(new Runnable() {
-                @Override
-                public void run() {
-                    int status = startFcServer(mConfig.toJsonString());
+            int status = startFcServer(mConfig.toJsonString());
 
-                    if (status == 0) {
-                        Log.v(TAG, "server running");
-                        mIsServerRunning = true;
-                    } else {
-                        Log.v(TAG, "error occured while starting server");
-                    }
-                }
-            });
+            if (status == 0) {
+                Log.v(TAG, "server running");
+                mIsServerRunning = true;
+            } else {
+                Log.e(TAG, "error occured while starting server");
+            }
 
+            return status;
         }
 
         @Override
-        public void stopServer() {
+        public int stopServer() {
             Log.v(TAG, "stop server");
             stopFcServer();
             mIsServerRunning = false;
+            return 0;
         }
 
         @Override

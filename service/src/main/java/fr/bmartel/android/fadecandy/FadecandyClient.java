@@ -20,13 +20,16 @@ public class FadecandyClient {
 
     private boolean mShouldStartServer;
 
-    public FadecandyClient(Context context) {
+    public FadecandyClient(Context context, IFadecandyListener listener) {
         mContext = context;
+        mListener = listener;
     }
 
     public void connect() {
         bindService();
     }
+
+    private IFadecandyListener mListener;
 
     private static final String SERVICE_NAME = "fr.bmartel.android.fadecandy.service.FadecandyService";
 
@@ -58,12 +61,20 @@ public class FadecandyClient {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            Log.i(TAG, "fadecandy service connected");
+            Log.v(TAG, "fadecandy service connected");
             fadecandyService = IFadecandyService.Stub.asInterface(service);
 
             if (mShouldStartServer) {
                 try {
-                    fadecandyService.startServer();
+                    if (fadecandyService.startServer() == 0) {
+                        if (mListener != null) {
+                            mListener.onServerStart();
+                        }
+                    } else {
+                        if (mListener != null) {
+                            mListener.onServerError(ServerError.START_SERVER_ERROR);
+                        }
+                    }
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
@@ -73,14 +84,23 @@ public class FadecandyClient {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            Log.i(TAG, "fadecandy disconected");
+            Log.v(TAG, "fadecandy disconected");
         }
     };
 
     public void startServer() {
+
         if (mBound) {
             try {
-                fadecandyService.startServer();
+                if (fadecandyService.startServer() == 0) {
+                    if (mListener != null) {
+                        mListener.onServerStart();
+                    }
+                } else {
+                    if (mListener != null) {
+                        mListener.onServerError(ServerError.START_SERVER_ERROR);
+                    }
+                }
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -92,9 +112,18 @@ public class FadecandyClient {
     }
 
     public void closeServer() {
+
         if (mBound) {
             try {
-                fadecandyService.stopServer();
+                if (fadecandyService.stopServer() == 0) {
+                    if (mListener != null) {
+                        mListener.onServerClose();
+                    }
+                } else {
+                    if (mListener != null) {
+                        mListener.onServerError(ServerError.CLOSE_SERVER_ERROR);
+                    }
+                }
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -104,6 +133,7 @@ public class FadecandyClient {
     }
 
     public boolean isServerRunning() {
+
         if (mBound) {
             try {
                 return fadecandyService.isServerRunning();

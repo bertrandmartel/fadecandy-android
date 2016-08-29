@@ -18,3 +18,9 @@
 -keep public class fr.bmartel.android.fadecandy.FadecandyClient {
   public protected *;
 }
+-keep public class fr.bmartel.android.fadecandy.IFadecandyListener {
+  public protected *;
+}
+-keep public class fr.bmartel.android.fadecandy.ServerError {
+  public protected *;
+}
