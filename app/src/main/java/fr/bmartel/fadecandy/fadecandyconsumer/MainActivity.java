@@ -23,6 +23,7 @@
  */
 package fr.bmartel.fadecandy.fadecandyconsumer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -38,6 +39,7 @@ import java.util.concurrent.Executors;
 import fr.bmartel.android.fadecandy.FadecandyClient;
 import fr.bmartel.android.fadecandy.IFadecandyListener;
 import fr.bmartel.android.fadecandy.ServerError;
+import fr.bmartel.android.fadecandy.ServiceType;
 import fr.bmartel.fadecandy.R;
 import fr.bmartel.fadecandy.ledcontrol.ColorUtils;
 import fr.bmartel.fadecandy.ledcontrol.Spark;
@@ -309,7 +311,7 @@ public class MainActivity extends BaseActivity {
             public void onServerError(ServerError error) {
 
             }
-        });
+        }, new Intent(getApplicationContext(), MainActivity.class));
         fadecandyClient.startServer();
     }
 
@@ -339,10 +341,11 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.i(TAG,"onDestroy()");
         mStarted = false;
         try {
             if (fadecandyClient != null) {
-                fadecandyClient.closeServer();
+                fadecandyClient.disconnect();
             }
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
@@ -371,6 +374,21 @@ public class MainActivity extends BaseActivity {
             } else {
                 fadecandyClient.startServer();
             }
+        }
+    }
+
+    @Override
+    public ServiceType getServiceType() {
+        if (fadecandyClient != null) {
+            return fadecandyClient.getServiceType();
+        }
+        return null;
+    }
+
+    @Override
+    public void setServiceType(ServiceType serviceType) {
+        if (fadecandyClient != null) {
+            fadecandyClient.setServiceType(serviceType);
         }
     }
 }

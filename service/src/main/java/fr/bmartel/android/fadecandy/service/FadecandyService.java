@@ -26,6 +26,7 @@ package fr.bmartel.android.fadecandy.service;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -49,13 +50,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import fr.bmartel.android.fadecandy.IFadecandyService;
+import fr.bmartel.android.fadecandy.FadecandyServiceBinder;
+import fr.bmartel.android.fadecandy.ServiceType;
 import fr.bmartel.android.fadecandy.activity.UsbEventReceiverActivity;
 import fr.bmartel.android.fadecandy.constant.Constants;
 import fr.bmartel.android.fadecandy.model.FadecandyColor;
 import fr.bmartel.android.fadecandy.model.FadecandyConfig;
 import fr.bmartel.android.fadecandy.model.FadecandyDevice;
 import fr.bmartel.android.fadecandy.model.UsbItem;
+import fr.bmartel.android.fadecandy.utils.ManualResetEvent;
+import fr.bmartel.android.fadecandy.utils.NotificationHelper;
 
 /**
  * @author Bertrand Martel
@@ -66,11 +70,15 @@ public class FadecandyService extends Service {
 
     private static final String ACTION_USB_PERMISSION = "fr.bmartel.fadecandy.USB_PERMISSION";
 
+    public static final String ACTION_EXIT = "exit";
+
     private UsbManager mUsbManager;
 
     private HashMap<Integer, UsbItem> mUsbDevices = new HashMap<>();
 
     private FadecandyConfig mConfig;
+
+    private ServiceType mServiceType;
 
     public native int startFcServer(String config);
 
@@ -82,11 +90,19 @@ public class FadecandyService extends Service {
 
     private boolean mIsServerRunning;
 
+    private final static int STOP_SERVER_TIMEOUT = 400;
+
+    private ManualResetEvent eventManager = new ManualResetEvent(false);
+
     // Load the .so
     static {
         System.loadLibrary("websockets");
         System.loadLibrary("fadecandy-server");
     }
+
+    private SharedPreferences prefs;
+
+    private boolean mExit = false;
 
     // Setup
     @Override
@@ -94,8 +110,19 @@ public class FadecandyService extends Service {
         super.onCreate();
         Log.v(TAG, "onCreate()");
 
-        SharedPreferences prefs = this.getSharedPreferences(Constants.PREFERENCE_PREFS, Context.MODE_PRIVATE);
+        mExit = false;
+
+        mBinder = new FadecandyServiceBinder(this);
+
+        prefs = this.getSharedPreferences(Constants.PREFERENCE_PREFS, Context.MODE_PRIVATE);
         String configStr = prefs.getString(Constants.PREFERENCE_CONFIG, getDefaultConfig().toJsonString());
+        int serviceType = prefs.getInt(Constants.PREFERENCE_SERVICE_TYPE, 0);
+
+        if (serviceType == 0) {
+            mServiceType = ServiceType.NON_PERSISTENT_SERVICE;
+        } else {
+            mServiceType = ServiceType.PERSISTENT_SERVICE;
+        }
 
         try {
             mConfig = new FadecandyConfig(new JSONObject(configStr));
@@ -120,6 +147,7 @@ public class FadecandyService extends Service {
         filter.addAction(ACTION_USB_PERMISSION);
         filter.addAction(UsbEventReceiverActivity.ACTION_USB_DEVICE_ATTACHED);
         filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
+        filter.addAction(FadecandyService.ACTION_EXIT);
         registerReceiver(receiver, filter);
     }
 
@@ -151,14 +179,24 @@ public class FadecandyService extends Service {
         initUsbDeviceList();
     }
     */
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
+    public void clean() {
         stopFcServer();
 
         if (receiver != null) {
             unregisterReceiver(receiver);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+
+        Log.v(TAG, "onDestroy");
+        clean();
+
+        super.onDestroy();
+
+        if (mExit) {
+            android.os.Process.killProcess(android.os.Process.myPid());
         }
     }
 
@@ -284,11 +322,17 @@ public class FadecandyService extends Service {
                             dispatchUsb(item, fd);
                         }
                     } else {
-                        Log.d(TAG, "permission denied for device " + device);
+                        Log.v(TAG, "permission denied for device " + device);
                     }
                 } else {
                     Log.e(TAG, "permission denied");
                 }
+            } else if (FadecandyService.ACTION_EXIT.equals(action)) {
+                Log.v(TAG, "stopping FadecandyService");
+
+                mExit = true;
+                stopForeground(true);
+                stopSelf();
             }
         }
     };
@@ -313,47 +357,70 @@ public class FadecandyService extends Service {
         return mBinder;
     }
 
+    private FadecandyServiceBinder mBinder;
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        Intent testIntent = new Intent();
+        testIntent.setComponent(ComponentName.unflattenFromString("fr.bmartel.fadecandy/.fadecandyconsumer.MainActivity"));
+
+        switch (mServiceType) {
+            case NON_PERSISTENT_SERVICE:
+                Log.v(TAG, "NON_PERSISTENT_SERVICE");
+                return START_NOT_STICKY;
+            case PERSISTENT_SERVICE:
+                startForeground(4242, NotificationHelper.createNotification(this, null, testIntent));
+                Log.v(TAG, "PERSISTENT_SERVICE");
+                return START_STICKY;
+        }
+
         return START_NOT_STICKY;
     }
 
-    /**
-     * Service binder
-     */
-    private final IFadecandyService.Stub mBinder = new IFadecandyService.Stub() {
+    public int startServer() {
 
-        @Override
-        public int startServer() {
+        if (isServerRunning()) {
+
+            eventManager.reset();
 
             stopServer();
 
-            int status = startFcServer(mConfig.toJsonString());
-
-            if (status == 0) {
-                Log.v(TAG, "server running");
-                mIsServerRunning = true;
-            } else {
-                Log.e(TAG, "error occured while starting server");
+            try {
+                eventManager.waitOne(STOP_SERVER_TIMEOUT);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-            return status;
         }
 
-        @Override
-        public int stopServer() {
-            Log.v(TAG, "stop server");
-            stopFcServer();
-            mIsServerRunning = false;
-            return 0;
+        int status = startFcServer(mConfig.toJsonString());
+
+        initUsbDeviceList();
+
+        if (status == 0) {
+            Log.v(TAG, "server running");
+            mIsServerRunning = true;
+        } else {
+            Log.e(TAG, "error occured while starting server");
         }
 
-        @Override
-        public boolean isServerRunning() {
-            return mIsServerRunning;
-        }
+        return status;
+    }
 
-    };
+    public int stopServer() {
+        Log.v(TAG, "stop server");
+        stopFcServer();
+        mIsServerRunning = false;
+        return 0;
+    }
+
+    public boolean isServerRunning() {
+        return mIsServerRunning;
+    }
+
+    private void onServerClose() {
+        eventManager.set();
+    }
 
     private int bulkTransfer(int fileDescriptor, int timeout, byte[] data) {
 
@@ -374,7 +441,6 @@ public class FadecandyService extends Service {
 
         try {
             UsbDeviceConnection connection = manager.openDevice(device);
-
 
             Log.v("USB", "Device name=" + device.getDeviceName());
 
@@ -409,4 +475,16 @@ public class FadecandyService extends Service {
         return null;
     }
 
+    public ServiceType getServiceType() {
+        return mServiceType;
+    }
+
+    public void setServiceType(ServiceType serviceType) {
+        this.mServiceType = serviceType;
+        int serviceTypePref = 0;
+        if (serviceType == ServiceType.PERSISTENT_SERVICE) {
+            serviceTypePref = 1;
+        }
+        prefs.edit().putInt(Constants.PREFERENCE_SERVICE_TYPE, serviceTypePref).apply();
+    }
 }

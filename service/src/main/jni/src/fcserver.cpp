@@ -41,7 +41,7 @@ FCServer::FCServer()
       mTcpNetServer(cbOpcMessage, cbJsonMessage, this, mVerbose),
       mUSBHotplugThread(0)
 {
-
+     __android_log_print(ANDROID_LOG_ERROR, APP_NAME, "FCServer init");
 }
 
 int FCServer::init(const char* config)
