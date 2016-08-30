@@ -25,4 +25,6 @@
     <string name="ip_list">Server IP address</string>
     <string name="port_text">Server port</string>
     <string name="configuration_server_title">server configuration</string>
+    <string name="brightness">Brightness</string>
+    <string name="color">Color</string>
 </resources>

@@ -40,7 +40,7 @@ public interface IFc {
 
     Context getContext();
 
-    int getDefaultPort();
+    int getServerPort();
 
     String getIpAddress();
 

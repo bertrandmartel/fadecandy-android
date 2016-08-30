@@ -25,14 +25,21 @@ package fr.bmartel.fadecandy.fadecandyconsumer;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
-import android.widget.SeekBar;
+import android.widget.ScrollView;
 import android.widget.Toast;
+
+import com.larswerkman.holocolorpicker.ColorPicker;
+
+import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -45,7 +52,7 @@ import fr.bmartel.fadecandy.R;
 import fr.bmartel.fadecandy.ledcontrol.ColorUtils;
 import fr.bmartel.fadecandy.ledcontrol.Spark;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements ColorPicker.OnColorChangedListener {
 
     private final static String TAG = MainActivity.class.getSimpleName();
 
@@ -67,177 +74,75 @@ public class MainActivity extends BaseActivity {
 
     private boolean mStarted;
 
+    private ExecutorService executorService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         setLayout(R.layout.activity_main);
         super.onCreate(savedInstanceState);
 
-        Button full_color_red = (Button) findViewById(R.id.full_color_red);
-        Button full_color_orange = (Button) findViewById(R.id.full_color_orange);
-        Button full_color_blue = (Button) findViewById(R.id.full_color_blue);
-        Button full_color_greeen = (Button) findViewById(R.id.full_color_green);
+        executorService = Executors.newSingleThreadExecutor();
 
-        Button spark_color_red = (Button) findViewById(R.id.spark_color_red);
-        Button spark_color_orange = (Button) findViewById(R.id.spark_color_orange);
-        Button spark_color_blue = (Button) findViewById(R.id.spark_color_blue);
-        Button spark_color_greeen = (Button) findViewById(R.id.spark_color_green);
+        //init color picker
+        ColorPicker picker = (ColorPicker) findViewById(R.id.picker);
+        picker.setOnColorChangedListener(this);
+        picker.setShowOldCenterColor(false);
 
-        full_color_red.setOnClickListener(new View.OnClickListener() {
+        discreteSeekBar = (DiscreteSeekBar) findViewById(R.id.discrete1);
+        discreteSeekBar.keepShowingPopup(false);
+
+        discreteSeekBar.setNumericTransformer(new DiscreteSeekBar.NumericTransformer() {
             @Override
-            public void onClick(View v) {
-                threadPool.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        checkJoinThread();
-                        ColorUtils.setFullColor(host, port, STRIP_COUNT, 0xFF0000);
-                    }
-                });
-            }
-        });
-        full_color_orange.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                threadPool.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        checkJoinThread();
-                        ColorUtils.setFullColor(host, port, STRIP_COUNT, 0xFFA500);
-                    }
-                });
-            }
-        });
-        full_color_blue.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                threadPool.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        checkJoinThread();
-                        ColorUtils.setFullColor(host, port, STRIP_COUNT, 0x0000FF);
-                    }
-                });
-            }
-        });
-        full_color_greeen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                threadPool.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        checkJoinThread();
-                        ColorUtils.setFullColor(host, port, STRIP_COUNT, 0x00FF00);
-                    }
-                });
+            public int transform(int value) {
+                return value * 1;
             }
         });
 
-        spark_color_red.setOnClickListener(new View.OnClickListener() {
+        discreteSeekBar.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onClick(View v) {
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (SHOW_SEEKBAR_VALUE) {
+                    if (!hasFocus) {
+                        discreteSeekBar.showFloater(250);
+                    }
+                }
+            }
+        });
 
-                checkJoinThread();
-                Spark.CONTROL = true;
-                controlLoop = true;
-                currentSparkColor = 0xFF0000;
-                workerThread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        while (controlLoop) {
-                            Spark.draw(host, port, STRIP_COUNT, 0xFF0000);
+        discreteSeekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
+
+            @Override
+            public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
+            }
+
+            @Override
+            public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
+
+            }
+        });
+
+        if (SHOW_SEEKBAR_VALUE) {
+
+            final ScrollView view = (ScrollView) findViewById(R.id.scrollview);
+
+            view.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+                @Override
+                public void onScrollChanged() {
+                    if (!openingDrawer) {
+                        if (view.getScrollX() == 0 && view.getScrollY() == 0) {
+                            discreteSeekBar.showFloater(250);
+                        } else {
+                            discreteSeekBar.hideFloater(1);
                         }
                     }
-                });
-                workerThread.start();
-            }
-        });
-
-        spark_color_orange.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                checkJoinThread();
-                Spark.CONTROL = true;
-                controlLoop = true;
-                currentSparkColor = 0xFFA500;
-                workerThread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        while (controlLoop) {
-                            Spark.draw(host, port, STRIP_COUNT, 0xFFA500);
-                        }
-                    }
-                });
-                workerThread.start();
-            }
-        });
-
-        spark_color_blue.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                checkJoinThread();
-                Spark.CONTROL = true;
-                controlLoop = true;
-                currentSparkColor = 0x0000FF;
-                workerThread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        while (controlLoop) {
-                            Spark.draw(host, port, STRIP_COUNT, 0x0000FF);
-                        }
-                    }
-                });
-                workerThread.start();
-            }
-        });
-
-        spark_color_greeen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                checkJoinThread();
-                Spark.CONTROL = true;
-                controlLoop = true;
-                currentSparkColor = 0x00FF00;
-                workerThread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        while (controlLoop) {
-                            Spark.draw(host, port, STRIP_COUNT, 0x00FF00);
-                        }
-                    }
-                });
-                workerThread.start();
-            }
-        });
-
-        SeekBar speedSeekBar = (SeekBar) findViewById(R.id.seekbar_speed);
-
-        speedSeekBar.setProgress(0);
-        speedSeekBar.incrementProgressBy(10);
-        speedSeekBar.setMax(100);
-
-        speedSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                progress = progress / 10;
-                progress = progress * 10;
-
-                Spark.setSpeed(progress);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
+                }
+            });
+        }
 
         Button button_all_off = (Button) findViewById(R.id.button_all_off);
 
@@ -314,6 +219,32 @@ public class MainActivity extends BaseActivity {
             }
         }, new Intent(getApplicationContext(), MainActivity.class));
         fadecandyClient.startServer();
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+
+        if (SHOW_SEEKBAR_VALUE) {
+            Log.v(TAG, "focus : " + hasFocus);
+            if (hasFocus) {
+                new Handler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        discreteSeekBar.showFloater(250);
+                    }
+                });
+            } else {
+                discreteSeekBar.hideFloater(250);
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //discreteSeekBar.setProgress(100);
+        //discreteSeekBar.showFloater(250);
     }
 
     @Override
@@ -399,7 +330,7 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    public int getDefaultPort() {
+    public int getServerPort() {
         if (fadecandyClient != null) {
             return fadecandyClient.getServerPort();
         }
@@ -426,5 +357,20 @@ public class MainActivity extends BaseActivity {
         if (fadecandyClient != null) {
             fadecandyClient.setServerAddress(ip);
         }
+    }
+
+    @Override
+    public void onColorChanged(final int color) {
+
+        Log.i(TAG, "color changed : " + Color.red(color) + " - " + Color.green(color) + " - " + Color.blue(color));
+
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+
+                checkJoinThread();
+                ColorUtils.setFullColor(getIpAddress(), getServerPort(), STRIP_COUNT, color);
+            }
+        });
     }
 }

@@ -6,140 +6,98 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-    <!-- The ActionBar displayed at the top -->
-    <include
-        layout="@layout/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?actionBarSize" />
-
-    <ScrollView
-        android:id="@+id/scrollview"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:orientation="vertical">
+        <!-- The ActionBar displayed at the top -->
+        <include
+            layout="@layout/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize" />
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <ScrollView
+            android:id="@+id/scrollview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="10dp"
-            android:orientation="vertical">
+            android:fillViewport="true">
 
-            <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/tableLayout1"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
-
-                <TableRow
-                    android:id="@+id/tableRow0"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="5dip">
-
-                    <Button
-                        android:id="@+id/full_color_red"
-                        android:layout_width="0px"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.25"
-                        android:backgroundTint="#FF0000"
-                        android:text="Full color" />
-
-                    <Button
-                        android:id="@+id/full_color_orange"
-                        android:layout_width="0px"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.25"
-                        android:backgroundTint="#FFA500"
-                        android:text="Full color" />
-
-                    <Button
-                        android:id="@+id/full_color_green"
-                        android:layout_width="0px"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.25"
-                        android:backgroundTint="#00FF00"
-                        android:text="Full color" />
-
-                    <Button
-                        android:id="@+id/full_color_blue"
-                        android:layout_width="0px"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.25"
-                        android:backgroundTint="#0000FF"
-                        android:text="Full color" />
-                </TableRow>
-
-                <TableRow
-                    android:id="@+id/tableRow1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="5dip">
-
-                    <Button
-                        android:id="@+id/spark_color_red"
-                        android:layout_width="0px"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.25"
-                        android:backgroundTint="#FF0000"
-                        android:text="SPARK" />
-
-                    <Button
-                        android:id="@+id/spark_color_orange"
-                        android:layout_width="0px"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.25"
-                        android:backgroundTint="#FFA500"
-                        android:text="SPARK" />
-
-                    <Button
-                        android:id="@+id/spark_color_green"
-                        android:layout_width="0px"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.25"
-                        android:backgroundTint="#00FF00"
-                        android:text="SPARK" />
-
-                    <Button
-                        android:id="@+id/spark_color_blue"
-                        android:layout_width="0px"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.25"
-                        android:backgroundTint="#0000FF"
-                        android:text="SPARK" />
-                </TableRow>
-
-            </TableLayout>
-
-            <SeekBar
-                android:id="@+id/seekbar_speed"
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:max="100" />
+                android:layout_height="match_parent"
+                android:layout_margin="20dp"
+                android:orientation="vertical"
+                android:paddingBottom="20dp">
 
-            <Button
-                android:id="@+id/button_all_off"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="NONE" />
+                <!--
+                <SeekBar
+                    android:id="@+id/seekbar_brightness"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp" />
+-->
 
-        </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="20dp"
+                    android:paddingTop="10dp"
+                    android:text="@string/brightness" />
 
-    </ScrollView>
+                <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+                    android:id="@+id/discrete1"
+                    android:layout_width="match_parent"
+                    android:layout_height="62dp"
+                    android:paddingBottom="20dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    app:dsb_indicatorColor="#342347"
+                    app:dsb_max="100"
+                    app:dsb_min="0"
+                    app:dsb_progressColor="#342347"
+                    app:dsb_value="1" />
 
-</LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/color" />
 
-<!-- The navigation drawer that comes from the left --><!-- Note that `android:layout_gravity` needs to be set to 'start' -->
-<android.support.design.widget.NavigationView
-    android:id="@+id/nvView"
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:layout_gravity="start"
-    android:layout_marginTop="@dimen/abc_action_bar_default_height_material"
-    android:background="@android:color/white"
-    app:itemTextColor="#000000"
-    app:menu="@menu/drawer_view" />
+                <com.larswerkman.holocolorpicker.ColorPicker
+                    android:id="@+id/picker"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/button_all_off"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:layout_marginTop="20dip"
+                    android:background="@drawable/ripple"
+                    android:fontFamily="sans-serif"
+                    android:text="Clear"
+                    android:textAllCaps="false"
+                    android:textColor="#000000"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+    <!-- The navigation drawer that comes from the left --><!-- Note that `android:layout_gravity` needs to be set to 'start' -->
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nvView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:layout_marginTop="@dimen/abc_action_bar_default_height_material"
+        android:background="@android:color/white"
+        app:itemTextColor="#000000"
+        app:menu="@menu/drawer_view" />
 
 </android.support.v4.widget.DrawerLayout>
