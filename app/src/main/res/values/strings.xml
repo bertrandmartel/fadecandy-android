@@ -22,4 +22,7 @@
     <string name="issue_object">Fadecandy Android Issue</string>
     <string name="issue_title">Report a problem</string>
     <string name="issue_message">Your error report here...</string>
+    <string name="ip_list">Server IP address</string>
+    <string name="port_text">Server port</string>
+    <string name="configuration_server_title">server configuration</string>
 </resources>
