@@ -35,6 +35,7 @@ import android.view.MenuItem;
 import fr.bmartel.android.fadecandy.ServiceType;
 import fr.bmartel.fadecandy.R;
 import fr.bmartel.fadecandy.dialog.AboutDialog;
+import fr.bmartel.fadecandy.dialog.ConfigurationDialog;
 import fr.bmartel.fadecandy.dialog.OpenSourceItemsDialog;
 import fr.bmartel.fadecandy.inter.IFc;
 
@@ -64,6 +65,10 @@ public class MenuUtils {
             }
             case R.id.server_config: {
                 Log.v(TAG, "server_config");
+                if (fcActivity != null) {
+                    ConfigurationDialog dialog = new ConfigurationDialog(fcActivity);
+                    dialog.show();
+                }
                 break;
             }
             case R.id.open_source_components: {

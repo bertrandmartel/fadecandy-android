@@ -177,4 +177,29 @@ public class FadecandyClient {
         }
     }
 
+    public int getServerPort() {
+        if (mBound && fadecandyService != null) {
+            return fadecandyService.getServerPort();
+        }
+        return 0;
+    }
+
+    public String getIpAddress() {
+        if (mBound && fadecandyService != null) {
+            return fadecandyService.getIpAddress();
+        }
+        return "";
+    }
+
+    public void setServerPort(int port) {
+        if (mBound && fadecandyService != null) {
+            fadecandyService.setServerPort(port);
+        }
+    }
+
+    public void setServerAddress(String ip) {
+        if (mBound && fadecandyService != null) {
+            fadecandyService.setServerAddress(ip);
+        }
+    }
 }

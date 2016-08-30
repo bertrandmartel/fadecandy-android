@@ -25,6 +25,7 @@ package fr.bmartel.fadecandy.utils;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,23 +34,28 @@ public class Utils {
     /**
      * Get IP address from first non-localhost interface
      */
-    public static String getIPAddress(boolean useIPv4) {
+    public static List<String> getIPAddress(boolean useIPv4) {
+
+        List<String> ipList = new ArrayList<>();
+
         try {
             List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
             for (NetworkInterface intf : interfaces) {
                 List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
                 for (InetAddress addr : addrs) {
-                    if (!addr.isLoopbackAddress()) {
-                        String sAddr = addr.getHostAddress();
-                        boolean isIPv4 = sAddr.indexOf(':') < 0;
+                    String sAddr = addr.getHostAddress();
+                    boolean isIPv4 = sAddr.indexOf(':') < 0;
 
-                        if (useIPv4) {
-                            if (isIPv4)
-                                return sAddr;
-                        } else {
-                            if (!isIPv4) {
-                                int delim = sAddr.indexOf('%'); // drop ip6 zone suffix
-                                return delim < 0 ? sAddr.toUpperCase() : sAddr.substring(0, delim).toUpperCase();
+                    if (useIPv4) {
+                        if (isIPv4)
+                            ipList.add(sAddr);
+                    } else {
+                        if (!isIPv4) {
+                            int delim = sAddr.indexOf('%'); // drop ip6 zone suffix
+                            if (delim < 0) {
+                                ipList.add(sAddr.toUpperCase());
+                            } else {
+                                ipList.add(sAddr.substring(0, delim).toUpperCase());
                             }
                         }
                     }
@@ -57,7 +63,7 @@ public class Utils {
             }
         } catch (Exception ex) {
         } // for now eat exceptions
-        return "";
+        return ipList;
     }
 
 }

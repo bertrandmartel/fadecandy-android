@@ -1,18 +1,18 @@
 /**
  * The MIT License (MIT)
- * <p>
+ * <p/>
  * Copyright (c) 2016 Bertrand Martel
- * <p>
+ * <p/>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p>
+ * <p/>
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * <p>
+ * <p/>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -80,6 +80,10 @@ public class FadecandyService extends Service {
 
     private ServiceType mServiceType;
 
+    private String mServerAddress;
+
+    private int mServerPort;
+
     public native int startFcServer(String config);
 
     public native void stopFcServer();
@@ -116,13 +120,11 @@ public class FadecandyService extends Service {
 
         prefs = this.getSharedPreferences(Constants.PREFERENCE_PREFS, Context.MODE_PRIVATE);
         String configStr = prefs.getString(Constants.PREFERENCE_CONFIG, getDefaultConfig().toJsonString());
-        int serviceType = prefs.getInt(Constants.PREFERENCE_SERVICE_TYPE, 0);
+        int serviceType = prefs.getInt(Constants.PREFERENCE_SERVICE_TYPE, ServiceType.getState(Constants.DEFAULT_SERVICE_TYPE));
+        mServerPort = prefs.getInt(Constants.PREFERENCE_PORT, Constants.DEFAULT_SERVER_PORT);
+        mServerAddress = prefs.getString(Constants.PREFERENCE_IP_ADDRESS, Constants.DEFAULT_SERVER_ADDRESS);
 
-        if (serviceType == 0) {
-            mServiceType = ServiceType.NON_PERSISTENT_SERVICE;
-        } else {
-            mServiceType = ServiceType.PERSISTENT_SERVICE;
-        }
+        mServiceType = ServiceType.getServiceType(serviceType);
 
         try {
             mConfig = new FadecandyConfig(new JSONObject(configStr));
@@ -233,7 +235,7 @@ public class FadecandyService extends Service {
 
         fcDevices.add(new FadecandyDevice(map, "fadecandy"));
 
-        return new FadecandyConfig("127.0.0.1", 7890, new FadecandyColor(defaultGamma, 2.5f), true, fcDevices);
+        return new FadecandyConfig(Constants.DEFAULT_SERVER_ADDRESS, Constants.DEFAULT_SERVER_PORT, new FadecandyColor(defaultGamma, 2.5f), true, fcDevices);
     }
 
     /**
@@ -481,10 +483,24 @@ public class FadecandyService extends Service {
 
     public void setServiceType(ServiceType serviceType) {
         this.mServiceType = serviceType;
-        int serviceTypePref = 0;
-        if (serviceType == ServiceType.PERSISTENT_SERVICE) {
-            serviceTypePref = 1;
-        }
-        prefs.edit().putInt(Constants.PREFERENCE_SERVICE_TYPE, serviceTypePref).apply();
+        prefs.edit().putInt(Constants.PREFERENCE_SERVICE_TYPE, ServiceType.getState(serviceType)).apply();
+    }
+
+    public int getServerPort() {
+        return mServerPort;
+    }
+
+    public String getIpAddress() {
+        return mServerAddress;
+    }
+
+    public void setServerPort(int port) {
+        this.mServerPort = port;
+        prefs.edit().putInt(Constants.PREFERENCE_PORT, port).apply();
+    }
+
+    public void setServerAddress(String ip) {
+        this.mServerAddress = ip;
+        prefs.edit().putString(Constants.PREFERENCE_IP_ADDRESS, ip).apply();
     }
 }

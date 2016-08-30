@@ -23,6 +23,7 @@
  */
 package fr.bmartel.fadecandy.fadecandyconsumer;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -389,6 +390,41 @@ public class MainActivity extends BaseActivity {
     public void setServiceType(ServiceType serviceType) {
         if (fadecandyClient != null) {
             fadecandyClient.setServiceType(serviceType);
+        }
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    @Override
+    public int getDefaultPort() {
+        if (fadecandyClient != null) {
+            return fadecandyClient.getServerPort();
+        }
+        return 0;
+    }
+
+    @Override
+    public String getIpAddress() {
+        if (fadecandyClient != null) {
+            return fadecandyClient.getIpAddress();
+        }
+        return "";
+    }
+
+    @Override
+    public void setServerPort(int port) {
+        if (fadecandyClient != null) {
+            fadecandyClient.setServerPort(port);
+        }
+    }
+
+    @Override
+    public void setServerAddress(String ip) {
+        if (fadecandyClient != null) {
+            fadecandyClient.setServerAddress(ip);
         }
     }
 }
