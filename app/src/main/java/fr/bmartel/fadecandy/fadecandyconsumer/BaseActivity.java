@@ -33,6 +33,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
+import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
 import fr.bmartel.fadecandy.R;
 import fr.bmartel.fadecandy.inter.IFc;
@@ -81,11 +84,17 @@ public abstract class BaseActivity extends AppCompatActivity implements IFc {
         layoutId = resId;
     }
 
+    protected boolean openingDrawer = false;
+
     protected FloatingActionButton mFailureButton;
 
     protected boolean mFailure = false;
 
     protected boolean mAssociated = false;
+
+    protected DiscreteSeekBar discreteSeekBar;
+
+    protected final static boolean SHOW_SEEKBAR_VALUE = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,7 +145,45 @@ public abstract class BaseActivity extends AppCompatActivity implements IFc {
      * @return
      */
     protected ActionBarDrawerToggle setupDrawerToggle() {
-        return new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open, R.string.drawer_close);
+        return new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open, R.string.drawer_close) {
+
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+
+                if (slideOffset == 0) {
+                    openingDrawer = false;
+                    if (SHOW_SEEKBAR_VALUE) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                discreteSeekBar.showFloater(250);
+                            }
+                        });
+                    }
+                } else if (slideOffset == 1) {
+                    openingDrawer = true;
+                    if (SHOW_SEEKBAR_VALUE) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                discreteSeekBar.hideFloater(1);
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+            }
+        };
     }
 
     @Override

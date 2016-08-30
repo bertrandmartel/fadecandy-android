@@ -45,7 +45,7 @@ public class ConfigurationDialog extends AlertDialog {
         sItems.setSelection(defaultPos);
 
         final EditText portEditText = (EditText) dialoglayout.findViewById(R.id.port_edit);
-        portEditText.setText("" + activity.getDefaultPort());
+        portEditText.setText("" + activity.getServerPort());
         portEditText.setSelection(portEditText.getText().length());
 
         setTitle(R.string.configuration_server_title);
