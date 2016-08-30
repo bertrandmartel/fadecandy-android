@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/disconnect_button"
-        android:icon="@drawable/disconnect"
+        android:icon="@drawable/ic_action_playback_play_white"
         android:title="disconnect"
         android:visible="true"
         app:showAsAction="ifRoom" />

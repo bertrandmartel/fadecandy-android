@@ -273,7 +273,7 @@ public class MainActivity extends BaseActivity {
                         }
 
                         item = toolbar.getMenu().findItem(R.id.disconnect_button);
-                        item.setIcon(R.drawable.connect);
+                        item.setIcon(R.drawable.ic_cancel_white);
 
                         if (mStarted) {
                             Toast.makeText(MainActivity.this, "server started", Toast.LENGTH_SHORT).show();
@@ -298,7 +298,7 @@ public class MainActivity extends BaseActivity {
                         }
 
                         item = toolbar.getMenu().findItem(R.id.disconnect_button);
-                        item.setIcon(R.drawable.disconnect);
+                        item.setIcon(R.drawable.ic_action_playback_play_white);
 
                         if (mStarted) {
                             Toast.makeText(MainActivity.this, "server closed", Toast.LENGTH_SHORT).show();
@@ -320,7 +320,7 @@ public class MainActivity extends BaseActivity {
         super.onPrepareOptionsMenu(menu);
 
         if (fadecandyClient != null && fadecandyClient.isServerRunning()) {
-            menu.findItem(R.id.disconnect_button).setIcon(R.drawable.connect);
+            menu.findItem(R.id.disconnect_button).setIcon(R.drawable.ic_cancel_white);
         }
 
         return true;
@@ -341,7 +341,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.i(TAG,"onDestroy()");
+        Log.i(TAG, "onDestroy()");
         mStarted = false;
         try {
             if (fadecandyClient != null) {
