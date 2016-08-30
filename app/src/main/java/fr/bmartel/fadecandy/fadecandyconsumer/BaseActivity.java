@@ -116,14 +116,16 @@ public abstract class BaseActivity extends AppCompatActivity implements IFc {
      *
      * @param navigationView
      */
-    private void setupDrawerContent(NavigationView navigationView) {
+    private void setupDrawerContent(final NavigationView navigationView) {
 
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
+
                         MenuUtils.selectDrawerItem(menuItem, mDrawer, BaseActivity.this, BaseActivity.this);
-                        return true;
+
+                        return false;
                     }
                 });
     }
