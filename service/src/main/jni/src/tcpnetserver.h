@@ -51,6 +51,8 @@ public:
     //close tcp server
     void close();
 
+    void dispatch_close_server();
+
 private:
     enum ClientState {
         CLIENT_STATE_PROTOCOL_DETECT = 0,

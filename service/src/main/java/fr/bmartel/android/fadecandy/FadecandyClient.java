@@ -1,18 +1,21 @@
 package fr.bmartel.android.fadecandy;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.os.RemoteException;
 import android.util.Log;
+
+import fr.bmartel.android.fadecandy.service.FadecandyService;
 
 public class FadecandyClient {
 
     private final static String TAG = FadecandyClient.class.getSimpleName();
 
-    private IFadecandyService fadecandyService;
+    private FadecandyService fadecandyService;
 
     private boolean mBound;
 
@@ -20,34 +23,64 @@ public class FadecandyClient {
 
     private boolean mShouldStartServer;
 
-    public FadecandyClient(Context context, IFadecandyListener listener) {
+    private Intent mActivityIntent;
+
+    private Intent fadecandyServiceIntent;
+
+    public FadecandyClient(Context context, IFadecandyListener listener, Intent activityIntent) {
         mContext = context;
         mListener = listener;
+        mActivityIntent = activityIntent;
     }
 
     public void connect() {
         bindService();
+        registerReceiver();
+    }
+
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            if (intent.getAction().equals(FadecandyService.ACTION_EXIT)) {
+                Log.i(TAG, "Exit event received : disconnecting");
+                disconnect();
+            }
+        }
+    };
+
+    private void registerReceiver() {
+        Log.i(TAG, "register receiver");
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(FadecandyService.ACTION_EXIT);
+        mContext.registerReceiver(receiver, filter);
     }
 
     private IFadecandyListener mListener;
 
-    private static final String SERVICE_NAME = "fr.bmartel.android.fadecandy.service.FadecandyService";
+    public static final String SERVICE_NAME = "fr.bmartel.android.fadecandy.service.FadecandyService";
 
     public void disconnect() {
         if (mBound) {
+            Log.v(TAG, "unbind");
             mContext.unbindService(mServiceConnection);
+            mContext.unregisterReceiver(receiver);
             mBound = false;
+            if (mListener != null) {
+                mListener.onServerClose();
+            }
         }
     }
 
     private void bindService() {
 
-        Intent intent = new Intent();
-        intent.setClassName(mContext, SERVICE_NAME);
+        fadecandyServiceIntent = new Intent();
+        fadecandyServiceIntent.setClassName(mContext, SERVICE_NAME);
 
-        mContext.startService(intent);
+        mContext.startService(fadecandyServiceIntent);
 
-        mBound = mContext.bindService(intent, mServiceConnection,
+
+        mBound = mContext.bindService(fadecandyServiceIntent, mServiceConnection,
                 Context.BIND_AUTO_CREATE);
 
         if (mBound) {
@@ -62,21 +95,17 @@ public class FadecandyClient {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             Log.v(TAG, "fadecandy service connected");
-            fadecandyService = IFadecandyService.Stub.asInterface(service);
+            fadecandyService = ((FadecandyServiceBinder) service).getService();
 
             if (mShouldStartServer) {
-                try {
-                    if (fadecandyService.startServer() == 0) {
-                        if (mListener != null) {
-                            mListener.onServerStart();
-                        }
-                    } else {
-                        if (mListener != null) {
-                            mListener.onServerError(ServerError.START_SERVER_ERROR);
-                        }
+                if (fadecandyService.startServer() == 0) {
+                    if (mListener != null) {
+                        mListener.onServerStart();
                     }
-                } catch (RemoteException e) {
-                    e.printStackTrace();
+                } else {
+                    if (mListener != null) {
+                        mListener.onServerError(ServerError.START_SERVER_ERROR);
+                    }
                 }
             }
             mShouldStartServer = false;
@@ -91,41 +120,33 @@ public class FadecandyClient {
     public void startServer() {
 
         if (mBound) {
-            try {
-                if (fadecandyService.startServer() == 0) {
-                    if (mListener != null) {
-                        mListener.onServerStart();
-                    }
-                } else {
-                    if (mListener != null) {
-                        mListener.onServerError(ServerError.START_SERVER_ERROR);
-                    }
+            if (fadecandyService.startServer() == 0) {
+                if (mListener != null) {
+                    mListener.onServerStart();
                 }
-            } catch (RemoteException e) {
-                e.printStackTrace();
+            } else {
+                if (mListener != null) {
+                    mListener.onServerError(ServerError.START_SERVER_ERROR);
+                }
             }
         } else {
             mShouldStartServer = true;
             Log.e(TAG, "Starting service...");
-            bindService();
+            connect();
         }
     }
 
     public void closeServer() {
 
         if (mBound) {
-            try {
-                if (fadecandyService.stopServer() == 0) {
-                    if (mListener != null) {
-                        mListener.onServerClose();
-                    }
-                } else {
-                    if (mListener != null) {
-                        mListener.onServerError(ServerError.CLOSE_SERVER_ERROR);
-                    }
+            if (fadecandyService.stopServer() == 0) {
+                if (mListener != null) {
+                    mListener.onServerClose();
                 }
-            } catch (RemoteException e) {
-                e.printStackTrace();
+            } else {
+                if (mListener != null) {
+                    mListener.onServerError(ServerError.CLOSE_SERVER_ERROR);
+                }
             }
         } else {
             Log.e(TAG, "service not started.");
@@ -135,14 +156,25 @@ public class FadecandyClient {
     public boolean isServerRunning() {
 
         if (mBound) {
-            try {
-                return fadecandyService.isServerRunning();
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
+            return fadecandyService.isServerRunning();
         } else {
             Log.e(TAG, "service not started");
         }
         return false;
     }
+
+    public ServiceType getServiceType() {
+        if (mBound && fadecandyService != null) {
+            return fadecandyService.getServiceType();
+        }
+        return null;
+    }
+
+    public void setServiceType(ServiceType serviceType) {
+        Log.i(TAG, "serviceType : " + serviceType);
+        if (mBound && fadecandyService != null) {
+            fadecandyService.setServiceType(serviceType);
+        }
+    }
+
 }

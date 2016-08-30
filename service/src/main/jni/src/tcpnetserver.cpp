@@ -34,7 +34,7 @@
 #include <algorithm>
 #include <sys/socket.h>
 #include "fcserver.h"
- 
+
 #ifdef __ANDROID__
 
 #include "android/log.h"
@@ -123,6 +123,8 @@ void TcpNetServer::threadFunc(void *arg)
     close_service_fd(context);
     libwebsocket_context_destroy(context);
 
+    self->dispatch_close_server();
+
     if (FCServer::jvm != 0) {
         FCServer::jvm->DetachCurrentThread();
     }
@@ -131,6 +133,40 @@ void TcpNetServer::threadFunc(void *arg)
     }
 
     __android_log_print(ANDROID_LOG_VERBOSE, APP_NAME, "Server close");
+}
+
+void TcpNetServer::dispatch_close_server() {
+
+    if (FCServer::jvm != 0) {
+
+        int getEnvStat = FCServer::jvm->GetEnv((void **)&FCServer::env, JNI_VERSION_1_6);
+
+        if (getEnvStat == JNI_EDETACHED) {
+
+            __android_log_print(ANDROID_LOG_VERBOSE, APP_NAME, "jvm not attached\n");
+
+            if (FCServer::jvm->AttachCurrentThread(&FCServer::env, NULL) != 0) {
+
+                __android_log_print(ANDROID_LOG_ERROR, APP_NAME, "failed to attach\n");
+            }
+        } else if (getEnvStat == JNI_EVERSION) {
+
+            __android_log_print(ANDROID_LOG_ERROR, APP_NAME, "jni: version not supported\n");
+        }
+
+        jmethodID methodId = FCServer::env->GetMethodID(FCServer::someClass, "onServerClose", "()V");
+
+        if (!methodId) {
+            __android_log_print(ANDROID_LOG_ERROR, APP_NAME, "method onServerClose not found\n");
+        }
+        else {
+            FCServer::env->CallVoidMethod(FCServer::thisClass, methodId);
+        }
+        FCServer::jvm->DetachCurrentThread();
+    }
+    else {
+        __android_log_print(ANDROID_LOG_ERROR, APP_NAME, "jvm not defined\n");
+    }
 }
 
 void TcpNetServer::close() {

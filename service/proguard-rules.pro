@@ -15,6 +15,10 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-useuniqueclassmembernames
+-keepattributes SourceFile,LineNumberTable
+-allowaccessmodification
+
 -keep public class fr.bmartel.android.fadecandy.FadecandyClient {
   public protected *;
 }
@@ -23,4 +27,13 @@
 }
 -keep public class fr.bmartel.android.fadecandy.ServerError {
   public protected *;
+}
+-keep public class fr.bmartel.android.fadecandy.ServiceType {
+  public protected *;
+}
+
+-keep class fr.bmartel.android.fadecandy.service.FadecandyService { *; }
+
+-keepclassmembers,allowobfuscation class fr.bmartel.android.fadecandy.service.FadecandyService.** {
+    <methods>;
 }
