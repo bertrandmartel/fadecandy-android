@@ -174,13 +174,11 @@ public class FadecandyService extends Service {
     /**
      * start Fadecandy server with a new configuration.
      */
-    /*
-    private void startServer(FadecandyConfig config) {
+    public void startServer(FadecandyConfig config) {
         mConfig = config;
         startServer();
-        initUsbDeviceList();
     }
-    */
+
     public void clean() {
         stopFcServer();
 
@@ -394,6 +392,8 @@ public class FadecandyService extends Service {
                 e.printStackTrace();
             }
         }
+
+        mConfig = new FadecandyConfig(mServerAddress, mServerPort, mConfig.getFcColor(), mConfig.isVerbose(), mConfig.getFcDevices());
 
         int status = startFcServer(mConfig.toJsonString());
 
