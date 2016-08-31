@@ -59,11 +59,11 @@ public class LedStripConfigurationDialog extends AlertDialog {
 
                 int ledCount = Integer.parseInt(mLedCountEditText.getText().toString());
 
-                if (ledCount > 0 && ledCount <= Constants.MAX_LED_PER_STRIP) {
+                if (ledCount > 0 && ledCount <= Constants.MAX_LED) {
                     mActivity.setLedCount(Integer.parseInt(mLedCountEditText.getText().toString()));
                     dismiss();
                 } else {
-                    Toast.makeText(mActivity.getContext(), "Led count must be > 0 and < " + Constants.MAX_LED_PER_STRIP, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity.getContext(), "Led count must be > 0 and <= " + Constants.MAX_LED, Toast.LENGTH_SHORT).show();
                 }
             }
         });

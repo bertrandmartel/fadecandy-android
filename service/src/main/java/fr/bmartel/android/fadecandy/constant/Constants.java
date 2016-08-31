@@ -55,5 +55,5 @@ public class Constants {
 
     public final static String SERVICE_EXTRA_ACTIVITY = "activity";
 
-    public static final int MAX_LED_PER_STRIP = 64;
+    public static final int MAX_LED = 512 ;
 }

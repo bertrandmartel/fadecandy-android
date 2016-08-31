@@ -339,6 +339,6 @@ public class FadecandySingleton {
 
     public void setLedCount(int ledCount) {
         this.mLedCount = ledCount;
-        prefs.edit().putInt(Constants.PREFERENCE_SERVICE_TYPE, mLedCount).apply();
+        prefs.edit().putInt(PREFERENCE_FIELD_LEDCOUNT, mLedCount).apply();
     }
 }
