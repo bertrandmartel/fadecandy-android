@@ -28,6 +28,12 @@
 -keep public class fr.bmartel.android.fadecandy.model.FadecandyConfig {
   public protected *;
 }
+-keep public class fr.bmartel.android.fadecandy.model.UsbItem {
+  public protected *;
+}
+-keep public class fr.bmartel.android.fadecandy.inter.IUsbListener {
+  public protected *;
+}
 -keep public class fr.bmartel.android.fadecandy.model.FadecandyDevice {
   public protected *;
 }

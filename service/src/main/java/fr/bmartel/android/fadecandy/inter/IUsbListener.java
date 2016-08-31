@@ -1,15 +1,10 @@
-package fr.bmartel.fadecandy.listener;
+package fr.bmartel.android.fadecandy.inter;
 
 import fr.bmartel.android.fadecandy.model.UsbItem;
 
-public interface ISingletonListener {
-
-    void onServerStart();
-
-    void onServerClose();
+public interface IUsbListener {
 
     void onUsbDeviceAttached(UsbItem usbItem);
 
     void onUsbDeviceDetached(UsbItem usbItem);
-
 }

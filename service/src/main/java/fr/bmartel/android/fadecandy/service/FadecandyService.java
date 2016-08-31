@@ -54,6 +54,7 @@ import fr.bmartel.android.fadecandy.FadecandyServiceBinder;
 import fr.bmartel.android.fadecandy.ServiceType;
 import fr.bmartel.android.fadecandy.activity.UsbEventReceiverActivity;
 import fr.bmartel.android.fadecandy.constant.Constants;
+import fr.bmartel.android.fadecandy.inter.IUsbListener;
 import fr.bmartel.android.fadecandy.model.FadecandyColor;
 import fr.bmartel.android.fadecandy.model.FadecandyConfig;
 import fr.bmartel.android.fadecandy.model.FadecandyDevice;
@@ -95,6 +96,8 @@ public class FadecandyService extends Service {
     private boolean mIsServerRunning;
 
     private final static int STOP_SERVER_TIMEOUT = 400;
+
+    private List<IUsbListener> mUsbListeners = new ArrayList<>();
 
     private ManualResetEvent eventManager = new ManualResetEvent(false);
 
@@ -153,6 +156,14 @@ public class FadecandyService extends Service {
         filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
         filter.addAction(FadecandyService.ACTION_EXIT);
         registerReceiver(receiver, filter);
+    }
+
+    public void addUsbListener(IUsbListener listener) {
+        mUsbListeners.add(listener);
+    }
+
+    public void removeUsbListener(IUsbListener listener) {
+        mUsbListeners.remove(listener);
     }
 
     /**
@@ -272,7 +283,6 @@ public class FadecandyService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            Log.v(TAG, "Received permission result");
             String action = intent.getAction();
 
             if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
@@ -287,6 +297,9 @@ public class FadecandyService extends Service {
                         if (pair.getValue().getDevice().equals(device)) {
                             usbDeviceLeft(pair.getKey());
                             mUsbDevices.remove(pair.getKey());
+                            for (int i = 0; i < mUsbListeners.size(); i++) {
+                                mUsbListeners.get(i).onUsbDeviceDetached(pair.getValue());
+                            }
                             break;
                         }
                     }
@@ -350,6 +363,10 @@ public class FadecandyService extends Service {
         }
 
         mUsbDevices.put(fd, device);
+
+        for (int i = 0; i < mUsbListeners.size(); i++) {
+            mUsbListeners.get(i).onUsbDeviceAttached(device);
+        }
 
         usbDeviceArrived(device.getDevice().getVendorId(), device.getDevice().getProductId(), serialNum, fd);
     }
@@ -432,7 +449,6 @@ public class FadecandyService extends Service {
     private int bulkTransfer(int fileDescriptor, int timeout, byte[] data) {
 
         if (mUsbDevices.containsKey(fileDescriptor)) {
-            Log.v(TAG, "sending " + data.length + " bytes");
             if (mUsbDevices.get(fileDescriptor).getConnection() != null) {
                 return mUsbDevices.get(fileDescriptor).getConnection().bulkTransfer(mUsbDevices.get(fileDescriptor).getUsbEndpoint(), data, data.length, timeout);
             }
@@ -507,5 +523,9 @@ public class FadecandyService extends Service {
     public void setServerAddress(String ip) {
         this.mServerAddress = ip;
         prefs.edit().putString(Constants.PREFERENCE_IP_ADDRESS, ip).apply();
+    }
+
+    public HashMap<Integer, UsbItem> getUsbDeviceMap() {
+        return mUsbDevices;
     }
 }
