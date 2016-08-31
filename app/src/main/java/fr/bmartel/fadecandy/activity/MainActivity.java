@@ -37,6 +37,7 @@ import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;
 
 import fr.bmartel.android.fadecandy.ServiceType;
+import fr.bmartel.android.fadecandy.model.UsbItem;
 import fr.bmartel.fadecandy.FadecandySingleton;
 import fr.bmartel.fadecandy.R;
 import fr.bmartel.fadecandy.fragment.FullColorFragment;
@@ -48,8 +49,6 @@ import fr.bmartel.fadecandy.listener.ISingletonListener;
 public class MainActivity extends BaseActivity {
 
     private final static String TAG = MainActivity.class.getSimpleName();
-
-    private FadecandySingleton mSingleton;
 
     private boolean mStarted;
 
@@ -128,9 +127,6 @@ public class MainActivity extends BaseActivity {
                         item.setTitle(getResources().getString(R.string.cancel));
                     }
 
-                    item = toolbar.getMenu().findItem(R.id.disconnect_button);
-                    item.setIcon(R.drawable.ic_cancel_white);
-
                     if (mStarted) {
                         Toast.makeText(MainActivity.this, "server started", Toast.LENGTH_SHORT).show();
                     } else {
@@ -153,12 +149,40 @@ public class MainActivity extends BaseActivity {
                         item.setTitle(getResources().getString(R.string.start));
                     }
 
-                    item = toolbar.getMenu().findItem(R.id.disconnect_button);
-                    item.setIcon(R.drawable.ic_action_playback_play_white);
-
                     if (mStarted) {
                         Toast.makeText(MainActivity.this, "server closed", Toast.LENGTH_SHORT).show();
                     }
+                }
+            });
+        }
+
+        @Override
+        public void onUsbDeviceAttached(UsbItem usbItem) {
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                    String deviceTxt = "device";
+                    if (mSingleton.getUsbDevices().size() > 1) {
+                        deviceTxt = "devices";
+                    }
+                    getSupportActionBar().setTitle(getResources().getString(R.string.app_title) + " (" + mSingleton.getUsbDevices().size() + " " + deviceTxt + ")");
+                }
+            });
+        }
+
+        @Override
+        public void onUsbDeviceDetached(UsbItem usbItem) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                    String deviceTxt = "device";
+                    if (mSingleton.getUsbDevices().size() > 1) {
+                        deviceTxt = "devices";
+                    }
+                    getSupportActionBar().setTitle(getResources().getString(R.string.app_title) + " (" + mSingleton.getUsbDevices().size() + " " + deviceTxt + ")");
                 }
             });
         }
@@ -168,29 +192,19 @@ public class MainActivity extends BaseActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
-        if (mSingleton != null && mSingleton.isServerRunning()) {
-            menu.findItem(R.id.disconnect_button).setIcon(R.drawable.ic_cancel_white);
-        }
-
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.disconnect_button:
-                switchServerStatus();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        return true;
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.i(TAG, "onDestroy()");
+        Log.v(TAG, "onDestroy()");
 
         mSingleton.removeListener(mListener);
 

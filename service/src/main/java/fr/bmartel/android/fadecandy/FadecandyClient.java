@@ -9,8 +9,12 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.util.Log;
 
+import java.util.HashMap;
+
 import fr.bmartel.android.fadecandy.constant.Constants;
+import fr.bmartel.android.fadecandy.inter.IUsbListener;
 import fr.bmartel.android.fadecandy.model.FadecandyConfig;
+import fr.bmartel.android.fadecandy.model.UsbItem;
 import fr.bmartel.android.fadecandy.service.FadecandyService;
 
 public class FadecandyClient {
@@ -29,9 +33,10 @@ public class FadecandyClient {
 
     private Intent fadecandyServiceIntent;
 
-    public FadecandyClient(Context context, IFadecandyListener listener, String activityName) {
+    public FadecandyClient(Context context, IFadecandyListener listener, IUsbListener usbListener, String activityName) {
         mContext = context;
         mListener = listener;
+        mUsbListener = usbListener;
         mActivity = activityName;
     }
 
@@ -45,14 +50,13 @@ public class FadecandyClient {
         public void onReceive(Context context, Intent intent) {
 
             if (intent.getAction().equals(FadecandyService.ACTION_EXIT)) {
-                Log.i(TAG, "Exit event received : disconnecting");
+                Log.v(TAG, "Exit event received : disconnecting");
                 disconnect();
             }
         }
     };
 
     private void registerReceiver() {
-        Log.i(TAG, "register receiver");
         IntentFilter filter = new IntentFilter();
         filter.addAction(FadecandyService.ACTION_EXIT);
         mContext.registerReceiver(receiver, filter);
@@ -60,11 +64,14 @@ public class FadecandyClient {
 
     private IFadecandyListener mListener;
 
+    private IUsbListener mUsbListener;
+
     public static final String SERVICE_NAME = "fr.bmartel.android.fadecandy.service.FadecandyService";
 
     public void disconnect() {
         if (mBound) {
             Log.v(TAG, "unbind");
+            fadecandyService.removeUsbListener(mUsbListener);
             mContext.unbindService(mServiceConnection);
             mContext.unregisterReceiver(receiver);
             mBound = false;
@@ -97,6 +104,10 @@ public class FadecandyClient {
         public void onServiceConnected(ComponentName name, IBinder service) {
             Log.v(TAG, "fadecandy service connected");
             fadecandyService = ((FadecandyServiceBinder) service).getService();
+
+            if (mUsbListener != null) {
+                fadecandyService.addUsbListener(mUsbListener);
+            }
 
             if (mShouldStartServer) {
                 if (fadecandyService.startServer() == 0) {
@@ -172,7 +183,6 @@ public class FadecandyClient {
     }
 
     public void setServiceType(ServiceType serviceType) {
-        Log.i(TAG, "serviceType : " + serviceType);
         if (mBound && fadecandyService != null) {
             fadecandyService.setServiceType(serviceType);
         }
@@ -209,5 +219,12 @@ public class FadecandyClient {
             return fadecandyService.getConfig();
         }
         return null;
+    }
+
+    public HashMap<Integer, UsbItem> getUsbDeviceMap() {
+        if (mBound && fadecandyService != null) {
+            return fadecandyService.getUsbDeviceMap();
+        }
+        return new HashMap<>();
     }
 }

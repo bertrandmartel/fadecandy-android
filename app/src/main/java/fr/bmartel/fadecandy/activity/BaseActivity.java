@@ -34,6 +34,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import fr.bmartel.fadecandy.FadecandySingleton;
 import fr.bmartel.fadecandy.R;
 import fr.bmartel.fadecandy.inter.IFc;
 import fr.bmartel.fadecandy.menu.MenuUtils;
@@ -83,6 +84,8 @@ public abstract class BaseActivity extends AppCompatActivity implements IFc {
 
     protected boolean openingDrawer = false;
 
+    protected FadecandySingleton mSingleton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,7 +95,13 @@ public abstract class BaseActivity extends AppCompatActivity implements IFc {
         // Set a Toolbar to replace the ActionBar.
         toolbar = (Toolbar) findViewById(R.id.toolbar_item);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getResources().getString(R.string.fc_title));
+
+        String deviceTxt = "device";
+        if (mSingleton.getUsbDevices().size() > 1) {
+            deviceTxt = "devices";
+        }
+
+        getSupportActionBar().setTitle(getResources().getString(R.string.app_title) + " (" + mSingleton.getUsbDevices().size() + " " + deviceTxt + ")");
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.inflateMenu(R.menu.toolbar_menu);

@@ -1,9 +1,11 @@
 package fr.bmartel.fadecandy;
 
 import android.content.Context;
+import android.support.v4.media.MediaMetadataCompat;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -12,7 +14,9 @@ import fr.bmartel.android.fadecandy.FadecandyClient;
 import fr.bmartel.android.fadecandy.IFadecandyListener;
 import fr.bmartel.android.fadecandy.ServerError;
 import fr.bmartel.android.fadecandy.ServiceType;
+import fr.bmartel.android.fadecandy.inter.IUsbListener;
 import fr.bmartel.android.fadecandy.model.FadecandyConfig;
+import fr.bmartel.android.fadecandy.model.UsbItem;
 import fr.bmartel.fadecandy.ledcontrol.ColorUtils;
 import fr.bmartel.fadecandy.ledcontrol.Spark;
 import fr.bmartel.fadecandy.listener.ISingletonListener;
@@ -51,6 +55,7 @@ public class FadecandySingleton {
     private int mTemperature = -1;
 
     public final static int DEFAULT_SPARK_SPEED = 60;
+    private MediaMetadataCompat usbDevices;
 
     public static FadecandySingleton getInstance(Context context) {
         if (mInstance == null) {
@@ -83,6 +88,7 @@ public class FadecandySingleton {
                 for (int i = 0; i < mListeners.size(); i++) {
                     mListeners.get(i).onServerStart();
                 }
+
             }
 
             @Override
@@ -99,10 +105,45 @@ public class FadecandySingleton {
             public void onServerError(ServerError error) {
 
             }
+
+        }, new IUsbListener() {
+            @Override
+            public void onUsbDeviceAttached(UsbItem usbItem) {
+                for (int i = 0; i < mListeners.size(); i++) {
+                    mListeners.get(i).onUsbDeviceAttached(usbItem);
+                }
+            }
+
+            @Override
+            public void onUsbDeviceDetached(UsbItem usbItem) {
+                for (int i = 0; i < mListeners.size(); i++) {
+                    mListeners.get(i).onUsbDeviceDetached(usbItem);
+                }
+            }
         }, "fr.bmartel.fadecandy/.activity.MainActivity");
+
 
         mFadecandyClient.startServer();
     }
+
+    private IUsbListener mUsbListener = new IUsbListener() {
+
+        @Override
+        public void onUsbDeviceAttached(UsbItem usbItem) {
+
+            for (int i = 0; i < mListeners.size(); i++) {
+                mListeners.get(i).onUsbDeviceAttached(usbItem);
+            }
+        }
+
+        @Override
+        public void onUsbDeviceDetached(UsbItem usbItem) {
+
+            for (int i = 0; i < mListeners.size(); i++) {
+                mListeners.get(i).onUsbDeviceDetached(usbItem);
+            }
+        }
+    };
 
     public void clearPixel() {
 
@@ -296,5 +337,12 @@ public class FadecandySingleton {
 
     public int getTemperature() {
         return mTemperature;
+    }
+
+    public HashMap<Integer, UsbItem> getUsbDevices() {
+        if (mFadecandyClient != null) {
+            return mFadecandyClient.getUsbDeviceMap();
+        }
+        return new HashMap<>();
     }
 }

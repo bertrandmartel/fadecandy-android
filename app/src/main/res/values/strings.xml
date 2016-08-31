@@ -4,6 +4,7 @@
     <string name="cancel">stop server</string>
     <string name="start">start server</string>
     <string name="fc_title">Fadecandy Android</string>
+    <string name="app_title">Fadecandy</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="menu_status_server">stop server</string>
