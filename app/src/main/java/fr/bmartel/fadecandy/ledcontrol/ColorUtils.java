@@ -18,7 +18,6 @@ public class ColorUtils {
         for (int i = 0; i < stripCount; i++) {
             strip.setPixelColor(i, color);
         }
-
         server.show();        // Display the pixel changes
         server.close();
     }
