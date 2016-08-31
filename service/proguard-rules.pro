@@ -31,6 +31,9 @@
 -keep public class fr.bmartel.android.fadecandy.model.UsbItem {
   public protected *;
 }
+-keep public class fr.bmartel.android.fadecandy.constant.Constants {
+  public protected *;
+}
 -keep public class fr.bmartel.android.fadecandy.inter.IUsbListener {
   public protected *;
 }

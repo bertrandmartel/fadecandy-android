@@ -281,4 +281,19 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public int getLedCount() {
+        if (mSingleton != null) {
+            return mSingleton.getLedCount();
+        }
+        return 0;
+    }
+
+    @Override
+    public void setLedCount(int ledCount) {
+        if (mSingleton != null) {
+            mSingleton.setLedCount(ledCount);
+        }
+    }
+
 }

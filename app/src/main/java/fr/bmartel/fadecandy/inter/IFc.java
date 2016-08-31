@@ -48,4 +48,7 @@ public interface IFc {
 
     void setServerAddress(String ip);
 
+    int getLedCount();
+
+    void setLedCount(int ledCount);
 }
