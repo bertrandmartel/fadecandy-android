@@ -191,4 +191,10 @@ public class FadecandySingleton {
             mFadecandyClient.startServer();
         }
     }
+
+    public void connect() {
+        if (mFadecandyClient != null) {
+            mFadecandyClient.connect();
+        }
+    }
 }
