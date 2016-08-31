@@ -14,6 +14,7 @@ import com.github.akinaru.PixelStrip;
  */
 public class Spark extends Animation {
 
+    public static float COLOR_CORRECTION = -1f;
     public static boolean CONTROL = false;
 
     int color[] = null;
@@ -80,6 +81,12 @@ public class Spark extends Animation {
 
         for (int i = 0; i < 1000 && Spark.CONTROL; i++) {
             server.animate();
+
+            if (COLOR_CORRECTION != -1) {
+                fadeCandy.setColorCorrection(2.5f, COLOR_CORRECTION, COLOR_CORRECTION, COLOR_CORRECTION);
+                COLOR_CORRECTION = -1;
+            }
+
             try {
                 Thread.sleep(speed);
             } catch (InterruptedException e) {

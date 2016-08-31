@@ -26,6 +26,7 @@ package fr.bmartel.fadecandy.activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,6 +42,7 @@ import fr.bmartel.fadecandy.R;
 import fr.bmartel.fadecandy.fragment.FullColorFragment;
 import fr.bmartel.fadecandy.fragment.SparkFragment;
 import fr.bmartel.fadecandy.fragment.TemperatureFragment;
+import fr.bmartel.fadecandy.inter.IFragment;
 import fr.bmartel.fadecandy.listener.ISingletonListener;
 
 public class MainActivity extends BaseActivity {
@@ -50,6 +52,8 @@ public class MainActivity extends BaseActivity {
     private FadecandySingleton mSingleton;
 
     private boolean mStarted;
+
+    private Fragment mFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +67,9 @@ public class MainActivity extends BaseActivity {
         setLayout(R.layout.activity_main);
         super.onCreate(savedInstanceState);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame, new FullColorFragment()).commit();
+        mFragment = new FullColorFragment();
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame, mFragment).commit();
 
         BottomBar mBottomBar = (BottomBar) findViewById(R.id.bottomBar);
 
@@ -72,13 +78,16 @@ public class MainActivity extends BaseActivity {
             public void onTabSelected(@IdRes int tabId) {
                 switch (tabId) {
                     case R.id.tab_fullcolor:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame, new FullColorFragment()).commit();
+                        mFragment = new FullColorFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame, mFragment).commit();
                         break;
                     case R.id.tab_spark:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame, new SparkFragment()).commit();
+                        mFragment = new SparkFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame, mFragment).commit();
                         break;
                     case R.id.tab_temperature:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame, new TemperatureFragment()).commit();
+                        mFragment = new TemperatureFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame, mFragment).commit();
                         break;
                 }
             }
@@ -124,6 +133,8 @@ public class MainActivity extends BaseActivity {
 
                     if (mStarted) {
                         Toast.makeText(MainActivity.this, "server started", Toast.LENGTH_SHORT).show();
+                    } else {
+                        ((IFragment) mFragment).onServerFirstStart();
                     }
                     mStarted = true;
                 }

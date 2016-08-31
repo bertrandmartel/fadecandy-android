@@ -87,4 +87,12 @@ public class FadecandyColor {
     public String toString() {
         return toJsonObject().toString();
     }
+
+    public List<Float> getWhitepoints() {
+        return mWhitepoints;
+    }
+
+    public float getGamma() {
+        return mGamma;
+    }
 }

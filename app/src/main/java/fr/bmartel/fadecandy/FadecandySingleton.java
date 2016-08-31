@@ -1,7 +1,6 @@
 package fr.bmartel.fadecandy;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ import fr.bmartel.android.fadecandy.FadecandyClient;
 import fr.bmartel.android.fadecandy.IFadecandyListener;
 import fr.bmartel.android.fadecandy.ServerError;
 import fr.bmartel.android.fadecandy.ServiceType;
-import fr.bmartel.fadecandy.activity.MainActivity;
+import fr.bmartel.android.fadecandy.model.FadecandyConfig;
 import fr.bmartel.fadecandy.ledcontrol.ColorUtils;
 import fr.bmartel.fadecandy.ledcontrol.Spark;
 import fr.bmartel.fadecandy.listener.ISingletonListener;
@@ -36,6 +35,22 @@ public class FadecandySingleton {
     private final static int STRIP_COUNT = 30;
 
     private final static String TAG = FadecandySingleton.class.getSimpleName();
+
+    private Thread workerThread = null;
+
+    private boolean controlLoop = true;
+
+    private int currentSparkColor = 0;
+
+    private int mCurrentBrightness = -1;
+
+    private int mColor = -1;
+
+    private int mCurrentSpeed = -1;
+
+    private int mTemperature = -1;
+
+    public final static int DEFAULT_SPARK_SPEED = 60;
 
     public static FadecandySingleton getInstance(Context context) {
         if (mInstance == null) {
@@ -84,7 +99,7 @@ public class FadecandySingleton {
             public void onServerError(ServerError error) {
 
             }
-        }, new Intent(mContext, MainActivity.class));
+        }, "fr.bmartel.fadecandy/.activity.MainActivity");
 
         mFadecandyClient.startServer();
     }
@@ -101,10 +116,20 @@ public class FadecandySingleton {
     }
 
     public void checkJoinThread() {
-        Spark.CONTROL = false;
+        if (workerThread != null) {
+            Spark.CONTROL = false;
+            controlLoop = false;
+            try {
+                workerThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void setFullColor(final int color) {
+
+        mColor = color;
 
         mExecutorService.execute(new Runnable() {
             @Override
@@ -114,6 +139,10 @@ public class FadecandySingleton {
                 ColorUtils.setFullColor(getIpAddress(), getServerPort(), STRIP_COUNT, color);
             }
         });
+    }
+
+    public int getColor() {
+        return mColor;
     }
 
     public boolean isServerRunning() {
@@ -138,6 +167,13 @@ public class FadecandySingleton {
     public ServiceType getServiceType() {
         if (mFadecandyClient != null) {
             return mFadecandyClient.getServiceType();
+        }
+        return null;
+    }
+
+    public FadecandyConfig getConfig() {
+        if (mFadecandyClient != null) {
+            return mFadecandyClient.getConfig();
         }
         return null;
     }
@@ -198,13 +234,67 @@ public class FadecandySingleton {
         }
     }
 
+    public int getCurrentColorCorrection() {
+        return mCurrentBrightness;
+    }
+
     public void setColorCorrection(final int value) {
+
+        mCurrentBrightness = value;
+
         mExecutorService.execute(new Runnable() {
             @Override
             public void run() {
+
                 checkJoinThread();
                 ColorUtils.setBrightness(getIpAddress(), getServerPort(), (value / 100f));
             }
         });
+    }
+
+    public void setColorCorrectionSpark(final int value) {
+
+        mCurrentBrightness = value;
+
+        Spark.COLOR_CORRECTION = (value / 100f);
+    }
+
+    public void spark(final int color) {
+
+        mColor = color;
+
+        checkJoinThread();
+        Spark.CONTROL = true;
+        controlLoop = true;
+        currentSparkColor = color;
+        workerThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (controlLoop) {
+                    Spark.draw(getIpAddress(), getServerPort(), STRIP_COUNT, color);
+                }
+            }
+        });
+        workerThread.start();
+    }
+
+    public void setSpeed(int speed) {
+
+        mCurrentSpeed = speed;
+
+        Spark.setSpeed(speed);
+    }
+
+    public int getSpeed() {
+        return mCurrentSpeed;
+    }
+
+    public void setTemperature(int temperature) {
+        mTemperature = temperature;
+        setFullColor(temperature);
+    }
+
+    public int getTemperature() {
+        return mTemperature;
     }
 }

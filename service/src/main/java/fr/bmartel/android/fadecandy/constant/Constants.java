@@ -53,4 +53,6 @@ public class Constants {
     public final static String PREFERENCE_PORT = "port";
     public final static String PREFERENCE_IP_ADDRESS = "ipAddress";
 
+    public final static String SERVICE_EXTRA_ACTIVITY = "activity";
+
 }

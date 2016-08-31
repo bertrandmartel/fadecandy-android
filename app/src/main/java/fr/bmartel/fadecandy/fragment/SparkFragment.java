@@ -17,9 +17,7 @@ import fr.bmartel.fadecandy.R;
 /**
  * Created by akinaru on 31/08/16.
  */
-public class SparkFragment extends android.support.v4.app.Fragment implements ColorPicker.OnColorChangedListener {
-
-    private FadecandySingleton mSingleton;
+public class SparkFragment extends MainFragment implements ColorPicker.OnColorChangedListener {
 
     private final static String TAG = FullColorFragment.class.getSimpleName();
 
@@ -33,37 +31,18 @@ public class SparkFragment extends android.support.v4.app.Fragment implements Co
 
         View view = inflater.inflate(R.layout.spark_fragment, container, false);
 
-        mSingleton = FadecandySingleton.getInstance(getActivity().getApplicationContext());
+        mIsSpark = true;
+
+        super.onCreate(view);
 
         //init color picker
         ColorPicker picker = (ColorPicker) view.findViewById(R.id.picker);
         picker.setOnColorChangedListener(this);
         picker.setShowOldCenterColor(false);
 
-        DiscreteSeekBar discreteSeekBar = (DiscreteSeekBar) view.findViewById(R.id.seekbar_brightness);
-
-        discreteSeekBar.setNumericTransformer(new DiscreteSeekBar.NumericTransformer() {
-            @Override
-            public int transform(int value) {
-                return value * 1;
-            }
-        });
-
-        discreteSeekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
-
-            @Override
-            public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
-            }
-
-            @Override
-            public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
-
-            }
-        });
+        if (mSingleton.getColor() != -1) {
+            picker.setColor(mSingleton.getColor());
+        }
 
         DiscreteSeekBar speedSeekbar = (DiscreteSeekBar) view.findViewById(R.id.seekbar_speed);
 
@@ -78,6 +57,7 @@ public class SparkFragment extends android.support.v4.app.Fragment implements Co
 
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
+                mSingleton.setSpeed(value);
             }
 
             @Override
@@ -90,6 +70,12 @@ public class SparkFragment extends android.support.v4.app.Fragment implements Co
             }
         });
 
+        if (mSingleton.getSpeed() != -1) {
+            speedSeekbar.setProgress(mSingleton.getSpeed());
+        } else {
+            speedSeekbar.setProgress(FadecandySingleton.DEFAULT_SPARK_SPEED);
+        }
+
         return view;
     }
 
@@ -98,7 +84,11 @@ public class SparkFragment extends android.support.v4.app.Fragment implements Co
 
         Log.i(TAG, "color changed : " + Color.red(color) + " - " + Color.green(color) + " - " + Color.blue(color));
 
-        mSingleton.setFullColor(color);
+        mSingleton.spark(color);
     }
 
+    @Override
+    public void onServerFirstStart() {
+
+    }
 }
