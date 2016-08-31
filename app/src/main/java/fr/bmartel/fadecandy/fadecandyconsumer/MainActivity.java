@@ -28,6 +28,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.IdRes;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,6 +39,9 @@ import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.larswerkman.holocolorpicker.ColorPicker;
+import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnTabReselectListener;
+import com.roughike.bottombar.OnTabSelectListener;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
@@ -76,6 +80,8 @@ public class MainActivity extends BaseActivity implements ColorPicker.OnColorCha
 
     private ExecutorService executorService;
 
+    private BottomBar mBottomBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -90,23 +96,11 @@ public class MainActivity extends BaseActivity implements ColorPicker.OnColorCha
         picker.setShowOldCenterColor(false);
 
         discreteSeekBar = (DiscreteSeekBar) findViewById(R.id.discrete1);
-        discreteSeekBar.keepShowingPopup(false);
 
         discreteSeekBar.setNumericTransformer(new DiscreteSeekBar.NumericTransformer() {
             @Override
             public int transform(int value) {
                 return value * 1;
-            }
-        });
-
-        discreteSeekBar.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (SHOW_SEEKBAR_VALUE) {
-                    if (!hasFocus) {
-                        discreteSeekBar.showFloater(250);
-                    }
-                }
             }
         });
 
@@ -125,24 +119,6 @@ public class MainActivity extends BaseActivity implements ColorPicker.OnColorCha
 
             }
         });
-
-        if (SHOW_SEEKBAR_VALUE) {
-
-            final ScrollView view = (ScrollView) findViewById(R.id.scrollview);
-
-            view.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
-                @Override
-                public void onScrollChanged() {
-                    if (!openingDrawer) {
-                        if (view.getScrollX() == 0 && view.getScrollY() == 0) {
-                            discreteSeekBar.showFloater(250);
-                        } else {
-                            discreteSeekBar.hideFloater(1);
-                        }
-                    }
-                }
-            });
-        }
 
         Button button_all_off = (Button) findViewById(R.id.button_all_off);
 
@@ -219,24 +195,36 @@ public class MainActivity extends BaseActivity implements ColorPicker.OnColorCha
             }
         }, new Intent(getApplicationContext(), MainActivity.class));
         fadecandyClient.startServer();
-    }
 
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
+        mBottomBar = (BottomBar) findViewById(R.id.bottomBar);
 
-        if (SHOW_SEEKBAR_VALUE) {
-            Log.v(TAG, "focus : " + hasFocus);
-            if (hasFocus) {
-                new Handler().post(new Runnable() {
-                    @Override
-                    public void run() {
-                        discreteSeekBar.showFloater(250);
-                    }
-                });
-            } else {
-                discreteSeekBar.hideFloater(250);
+        mBottomBar.setOnTabSelectListener(new OnTabSelectListener() {
+            @Override
+            public void onTabSelected(@IdRes int tabId) {
+                switch (tabId) {
+                    case R.id.tab_fullcolor:
+                        break;
+                    case R.id.tab_spark:
+                        break;
+                    case R.id.tab_temperature:
+                        break;
+                }
             }
-        }
+        });
+
+        mBottomBar.setOnTabReselectListener(new OnTabReselectListener() {
+            @Override
+            public void onTabReSelected(@IdRes int tabId) {
+                switch (tabId) {
+                    case R.id.tab_fullcolor:
+                        break;
+                    case R.id.tab_spark:
+                        break;
+                    case R.id.tab_temperature:
+                        break;
+                }
+            }
+        });
     }
 
     @Override
