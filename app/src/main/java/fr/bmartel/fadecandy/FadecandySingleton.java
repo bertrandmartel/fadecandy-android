@@ -197,4 +197,14 @@ public class FadecandySingleton {
             mFadecandyClient.connect();
         }
     }
+
+    public void setColorCorrection(final int value) {
+        mExecutorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                checkJoinThread();
+                ColorUtils.setBrightness(getIpAddress(), getServerPort(), (value / 100f));
+            }
+        });
+    }
 }

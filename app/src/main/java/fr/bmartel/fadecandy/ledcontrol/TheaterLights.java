@@ -1,9 +1,9 @@
 package fr.bmartel.fadecandy.ledcontrol;
 
-import opc.Animation;
-import opc.OpcClient;
-import opc.OpcDevice;
-import opc.PixelStrip;
+import com.github.akinaru.Animation;
+import com.github.akinaru.OpcClient;
+import com.github.akinaru.OpcDevice;
+import com.github.akinaru.PixelStrip;
 
 /**
  * Pairs of lights traveling down the strip.
