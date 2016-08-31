@@ -10,17 +10,12 @@ import android.widget.Button;
 
 import com.larswerkman.holocolorpicker.ColorPicker;
 
-import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
-
-import fr.bmartel.fadecandy.FadecandySingleton;
 import fr.bmartel.fadecandy.R;
 
 /**
  * Created by akinaru on 31/08/16.
  */
-public class FullColorFragment extends android.support.v4.app.Fragment implements ColorPicker.OnColorChangedListener {
-
-    private FadecandySingleton mSingleton;
+public class FullColorFragment extends MainFragment implements ColorPicker.OnColorChangedListener {
 
     private final static String TAG = FullColorFragment.class.getSimpleName();
 
@@ -34,38 +29,18 @@ public class FullColorFragment extends android.support.v4.app.Fragment implement
 
         View view = inflater.inflate(R.layout.full_color_fragment, container, false);
 
-        mSingleton = FadecandySingleton.getInstance(getActivity().getApplicationContext());
+        mIsSpark = false;
+
+        super.onCreate(view);
 
         //init color picker
         final ColorPicker picker = (ColorPicker) view.findViewById(R.id.picker);
         picker.setOnColorChangedListener(this);
         picker.setShowOldCenterColor(false);
 
-        DiscreteSeekBar discreteSeekBar = (DiscreteSeekBar) view.findViewById(R.id.seekbar_brightness);
-
-        discreteSeekBar.setNumericTransformer(new DiscreteSeekBar.NumericTransformer() {
-            @Override
-            public int transform(int value) {
-                return value * 1;
-            }
-        });
-
-        discreteSeekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
-
-            @Override
-            public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
-                mSingleton.setColorCorrection(value);
-            }
-
-            @Override
-            public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
-
-            }
-        });
+        if (mSingleton.getColor() != -1) {
+            picker.setColor(mSingleton.getColor());
+        }
 
         Button button_all_off = (Button) view.findViewById(R.id.button_all_off);
 

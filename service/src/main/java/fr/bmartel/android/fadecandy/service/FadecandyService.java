@@ -108,6 +108,8 @@ public class FadecandyService extends Service {
 
     private boolean mExit = false;
 
+    private boolean mUsbInit = false;
+
     // Setup
     @Override
     public void onCreate() {
@@ -205,7 +207,7 @@ public class FadecandyService extends Service {
      *
      * @return
      */
-    private FadecandyConfig getConfig() {
+    public FadecandyConfig getConfig() {
         return mConfig;
     }
 
@@ -363,7 +365,7 @@ public class FadecandyService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         Intent testIntent = new Intent();
-        testIntent.setComponent(ComponentName.unflattenFromString("fr.bmartel.fadecandy/.fadecandyconsumer.MainActivity"));
+        testIntent.setComponent(ComponentName.unflattenFromString(intent.getStringExtra(Constants.SERVICE_EXTRA_ACTIVITY)));
 
         switch (mServiceType) {
             case NON_PERSISTENT_SERVICE:
@@ -397,7 +399,10 @@ public class FadecandyService extends Service {
 
         int status = startFcServer(mConfig.toJsonString());
 
-        initUsbDeviceList();
+        if (!mUsbInit) {
+            initUsbDeviceList();
+            mUsbInit = true;
+        }
 
         if (status == 0) {
             Log.v(TAG, "server running");

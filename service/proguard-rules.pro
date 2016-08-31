@@ -25,6 +25,15 @@
 -keep public class fr.bmartel.android.fadecandy.IFadecandyListener {
   public protected *;
 }
+-keep public class fr.bmartel.android.fadecandy.model.FadecandyConfig {
+  public protected *;
+}
+-keep public class fr.bmartel.android.fadecandy.model.FadecandyDevice {
+  public protected *;
+}
+-keep public class fr.bmartel.android.fadecandy.model.FadecandyColor {
+  public protected *;
+}
 -keep public class fr.bmartel.android.fadecandy.ServerError {
   public protected *;
 }

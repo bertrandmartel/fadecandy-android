@@ -9,6 +9,8 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.util.Log;
 
+import fr.bmartel.android.fadecandy.constant.Constants;
+import fr.bmartel.android.fadecandy.model.FadecandyConfig;
 import fr.bmartel.android.fadecandy.service.FadecandyService;
 
 public class FadecandyClient {
@@ -23,14 +25,14 @@ public class FadecandyClient {
 
     private boolean mShouldStartServer;
 
-    private Intent mActivityIntent;
+    private String mActivity;
 
     private Intent fadecandyServiceIntent;
 
-    public FadecandyClient(Context context, IFadecandyListener listener, Intent activityIntent) {
+    public FadecandyClient(Context context, IFadecandyListener listener, String activityName) {
         mContext = context;
         mListener = listener;
-        mActivityIntent = activityIntent;
+        mActivity = activityName;
     }
 
     public void connect() {
@@ -76,9 +78,8 @@ public class FadecandyClient {
 
         fadecandyServiceIntent = new Intent();
         fadecandyServiceIntent.setClassName(mContext, SERVICE_NAME);
-
+        fadecandyServiceIntent.putExtra(Constants.SERVICE_EXTRA_ACTIVITY, mActivity);
         mContext.startService(fadecandyServiceIntent);
-
 
         mBound = mContext.bindService(fadecandyServiceIntent, mServiceConnection,
                 Context.BIND_AUTO_CREATE);
@@ -201,5 +202,12 @@ public class FadecandyClient {
         if (mBound && fadecandyService != null) {
             fadecandyService.setServerAddress(ip);
         }
+    }
+
+    public FadecandyConfig getConfig() {
+        if (mBound && fadecandyService != null) {
+            return fadecandyService.getConfig();
+        }
+        return null;
     }
 }
