@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        icon="@drawable/ic_color_lens"
+        id="@+id/tab_fullcolor"
+        title="Full Color" />
+    <tab
+        icon="@drawable/ic_star_border"
+        id="@+id/tab_spark"
+        title="Spark" />
+    <tab
+        icon="@drawable/ic_action_temperature"
+        id="@+id/tab_temperature"
+        title="Temperature" />
+</tabs>

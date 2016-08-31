@@ -94,8 +94,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IFc {
 
     protected DiscreteSeekBar discreteSeekBar;
 
-    protected final static boolean SHOW_SEEKBAR_VALUE = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -153,24 +151,8 @@ public abstract class BaseActivity extends AppCompatActivity implements IFc {
 
                 if (slideOffset == 0) {
                     openingDrawer = false;
-                    if (SHOW_SEEKBAR_VALUE) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                discreteSeekBar.showFloater(250);
-                            }
-                        });
-                    }
                 } else if (slideOffset == 1) {
                     openingDrawer = true;
-                    if (SHOW_SEEKBAR_VALUE) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                discreteSeekBar.hideFloater(1);
-                            }
-                        });
-                    }
                 }
             }
 

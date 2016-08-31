@@ -36,6 +36,7 @@ dependencies {
     compile 'com.android.support:design:23.3.0'
     compile 'com.android.support:recyclerview-v7:+'
     compile 'com.larswerkman:HoloColorPicker:1.5'
-    compile 'akinaru:seekbar:0.1'
+    compile 'org.adw.library:discrete-seekbar:1.0.1'
+    compile 'com.roughike:bottom-bar:2.0.2'
 }
 
