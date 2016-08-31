@@ -58,6 +58,8 @@ public class MainActivity extends BaseActivity {
 
         mSingleton.addListener(mListener);
 
+        mSingleton.connect();
+
         setLayout(R.layout.activity_main);
         super.onCreate(savedInstanceState);
 
