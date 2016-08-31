@@ -37,7 +37,7 @@ public class FullColorFragment extends android.support.v4.app.Fragment implement
         mSingleton = FadecandySingleton.getInstance(getActivity().getApplicationContext());
 
         //init color picker
-        ColorPicker picker = (ColorPicker) view.findViewById(R.id.picker);
+        final ColorPicker picker = (ColorPicker) view.findViewById(R.id.picker);
         picker.setOnColorChangedListener(this);
         picker.setShowOldCenterColor(false);
 
@@ -54,6 +54,7 @@ public class FullColorFragment extends android.support.v4.app.Fragment implement
 
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
+                mSingleton.setColorCorrection(value);
             }
 
             @Override

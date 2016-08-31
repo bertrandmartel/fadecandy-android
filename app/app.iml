@@ -112,7 +112,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="recyclerview-v7-24.1.1" level="project" />
     <orderEntry type="library" exported="" name="support-v4-24.1.1" level="project" />
-    <orderEntry type="library" exported="" name="java-opc" level="project" />
+    <orderEntry type="library" exported="" name="opc-1.01" level="project" />
     <orderEntry type="library" exported="" name="HoloColorPicker-1.5" level="project" />
     <orderEntry type="library" exported="" name="support-vector-drawable-23.3.0" level="project" />
     <orderEntry type="library" exported="" name="animated-vector-drawable-23.3.0" level="project" />
