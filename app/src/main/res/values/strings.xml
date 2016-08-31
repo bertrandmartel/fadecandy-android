@@ -27,4 +27,6 @@
     <string name="configuration_server_title">server configuration</string>
     <string name="brightness">Brightness</string>
     <string name="color">Color</string>
+    <string name="speed">Speed</string>
+    <string name="temperature">Temperature</string>
 </resources>

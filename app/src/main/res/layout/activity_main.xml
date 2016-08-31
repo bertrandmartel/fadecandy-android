@@ -27,70 +27,12 @@
                 android:layout_above="@+id/bottomBar"
                 android:fillViewport="true">
 
-                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                <FrameLayout
+                    android:id="@+id/fragment_frame"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="20dp"
-                    android:orientation="vertical"
-                    android:paddingBottom="20dp">
-
-                    <!--
-                    <SeekBar
-                        android:id="@+id/seekbar_brightness"
-                        android:layout_width="match_parent"
-                        android:layout_height="30dp"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="20dp" />
-    -->
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingBottom="20dp"
-                        android:paddingTop="10dp"
-                        android:text="@string/brightness" />
-
-                    <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
-                        android:id="@+id/discrete1"
-                        android:layout_width="match_parent"
-                        android:layout_height="62dp"
-                        android:paddingBottom="20dp"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        app:dsb_indicatorColor="#342347"
-                        app:dsb_max="100"
-                        app:dsb_min="0"
-                        app:dsb_progressColor="#342347"
-                        app:dsb_value="1" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/color" />
-
-                    <com.larswerkman.holocolorpicker.ColorPicker
-                        android:id="@+id/picker"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_gravity="center"
-                        android:layout_weight="1" />
-
-                    <Button
-                        android:id="@+id/button_all_off"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:layout_marginTop="20dip"
-                        android:background="@drawable/ripple"
-                        android:fontFamily="sans-serif"
-                        android:text="Clear"
-                        android:textAllCaps="false"
-                        android:textColor="#000000"
-                        android:textSize="18sp" />
-
-                </LinearLayout>
+                    android:layout_height="match_parent">
+                    
+                </FrameLayout>
 
             </ScrollView>
 

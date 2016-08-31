@@ -113,4 +113,16 @@ public class FadecandyConfig {
     public String toJsonString() {
         return toJsonObject().toString();
     }
+
+    public FadecandyColor getFcColor() {
+        return mFcColor;
+    }
+
+    public boolean isVerbose() {
+        return mVerbose;
+    }
+
+    public List<FadecandyDevice> getFcDevices() {
+        return mFcDevices;
+    }
 }

@@ -21,10 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.bmartel.fadecandy.fadecandyconsumer;
+package fr.bmartel.fadecandy.activity;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -34,8 +33,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
-import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
 import fr.bmartel.fadecandy.R;
 import fr.bmartel.fadecandy.inter.IFc;
@@ -85,14 +82,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IFc {
     }
 
     protected boolean openingDrawer = false;
-
-    protected FloatingActionButton mFailureButton;
-
-    protected boolean mFailure = false;
-
-    protected boolean mAssociated = false;
-
-    protected DiscreteSeekBar discreteSeekBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -198,21 +187,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IFc {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         this.getMenuInflater().inflate(R.menu.toolbar_menu, menu);
-
-        //cancel button
-        /*
-        MenuItem item = menu.findItem(R.id.cancel_btn);
-        if (item != null) {
-            item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    stopServer();
-                    return true;
-                }
-            });
-        }
-        */
 
         return super.onCreateOptionsMenu(menu);
     }
