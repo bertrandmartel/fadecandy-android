@@ -30,4 +30,7 @@
     <string name="color">Color</string>
     <string name="speed">Speed</string>
     <string name="temperature">Temperature</string>
+    <string name="menu_ledstrip_config">led count configuration</string>
+    <string name="led_count_text">led count</string>
+    <string name="configuration_led_title">Led configuration</string>
 </resources>

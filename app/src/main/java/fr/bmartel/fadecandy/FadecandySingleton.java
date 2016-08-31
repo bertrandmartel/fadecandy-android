@@ -1,7 +1,7 @@
 package fr.bmartel.fadecandy;
 
 import android.content.Context;
-import android.support.v4.media.MediaMetadataCompat;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -14,6 +14,7 @@ import fr.bmartel.android.fadecandy.FadecandyClient;
 import fr.bmartel.android.fadecandy.IFadecandyListener;
 import fr.bmartel.android.fadecandy.ServerError;
 import fr.bmartel.android.fadecandy.ServiceType;
+import fr.bmartel.android.fadecandy.constant.Constants;
 import fr.bmartel.android.fadecandy.inter.IUsbListener;
 import fr.bmartel.android.fadecandy.model.FadecandyConfig;
 import fr.bmartel.android.fadecandy.model.UsbItem;
@@ -36,15 +37,11 @@ public class FadecandySingleton {
 
     private List<ISingletonListener> mListeners = new ArrayList<>();
 
-    private final static int STRIP_COUNT = 30;
-
     private final static String TAG = FadecandySingleton.class.getSimpleName();
 
     private Thread workerThread = null;
 
     private boolean controlLoop = true;
-
-    private int currentSparkColor = 0;
 
     private int mCurrentBrightness = -1;
 
@@ -54,8 +51,15 @@ public class FadecandySingleton {
 
     private int mTemperature = -1;
 
+    private final static int DEFAULT_LED_COUNT = 64;
+
     public final static int DEFAULT_SPARK_SPEED = 60;
-    private MediaMetadataCompat usbDevices;
+
+    private final static String PREFERENCE_FIELD_LEDCOUNT = "ledCount";
+
+    private int mLedCount;
+
+    private SharedPreferences prefs;
 
     public static FadecandySingleton getInstance(Context context) {
         if (mInstance == null) {
@@ -73,6 +77,9 @@ public class FadecandySingleton {
     }
 
     public FadecandySingleton(Context context) {
+
+        prefs = context.getSharedPreferences(Constants.PREFERENCE_PREFS, Context.MODE_PRIVATE);
+        mLedCount = prefs.getInt(PREFERENCE_FIELD_LEDCOUNT, DEFAULT_LED_COUNT);
 
         mExecutorService = Executors.newSingleThreadExecutor();
 
@@ -126,32 +133,13 @@ public class FadecandySingleton {
         mFadecandyClient.startServer();
     }
 
-    private IUsbListener mUsbListener = new IUsbListener() {
-
-        @Override
-        public void onUsbDeviceAttached(UsbItem usbItem) {
-
-            for (int i = 0; i < mListeners.size(); i++) {
-                mListeners.get(i).onUsbDeviceAttached(usbItem);
-            }
-        }
-
-        @Override
-        public void onUsbDeviceDetached(UsbItem usbItem) {
-
-            for (int i = 0; i < mListeners.size(); i++) {
-                mListeners.get(i).onUsbDeviceDetached(usbItem);
-            }
-        }
-    };
-
     public void clearPixel() {
 
         mExecutorService.execute(new Runnable() {
             @Override
             public void run() {
                 checkJoinThread();
-                ColorUtils.clear(getIpAddress(), getServerPort(), STRIP_COUNT);
+                ColorUtils.clear(getIpAddress(), getServerPort(), mLedCount);
             }
         });
     }
@@ -177,7 +165,7 @@ public class FadecandySingleton {
             public void run() {
 
                 checkJoinThread();
-                ColorUtils.setFullColor(getIpAddress(), getServerPort(), STRIP_COUNT, color);
+                ColorUtils.setFullColor(getIpAddress(), getServerPort(), mLedCount, color);
             }
         });
     }
@@ -307,12 +295,11 @@ public class FadecandySingleton {
         checkJoinThread();
         Spark.CONTROL = true;
         controlLoop = true;
-        currentSparkColor = color;
         workerThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 while (controlLoop) {
-                    Spark.draw(getIpAddress(), getServerPort(), STRIP_COUNT, color);
+                    Spark.draw(getIpAddress(), getServerPort(), mLedCount, color);
                 }
             }
         });
@@ -344,5 +331,14 @@ public class FadecandySingleton {
             return mFadecandyClient.getUsbDeviceMap();
         }
         return new HashMap<>();
+    }
+
+    public int getLedCount() {
+        return mLedCount;
+    }
+
+    public void setLedCount(int ledCount) {
+        this.mLedCount = ledCount;
+        prefs.edit().putInt(Constants.PREFERENCE_SERVICE_TYPE, mLedCount).apply();
     }
 }

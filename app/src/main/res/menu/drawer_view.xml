@@ -9,6 +9,11 @@
             android:title="@string/menu_status_server" />
 
         <item
+            android:id="@+id/ledstrip_config"
+            android:icon="@drawable/led"
+            android:title="@string/menu_ledstrip_config" />
+
+        <item
             android:id="@+id/server_config"
             android:icon="@drawable/ic_storage"
             android:title="@string/menu_config_server" />
