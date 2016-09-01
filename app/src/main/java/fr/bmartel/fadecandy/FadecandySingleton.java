@@ -548,4 +548,15 @@ public class FadecandySingleton {
         this.mLedCount = ledCount;
         prefs.edit().putInt(PREFERENCE_FIELD_LEDCOUNT, mLedCount).apply();
     }
+
+    /**
+     * Restart Fadecandy Server.
+     */
+    public void restartServer() {
+
+        if (mFadecandyClient != null) {
+            mFadecandyClient.startServer();
+        }
+    }
+
 }
