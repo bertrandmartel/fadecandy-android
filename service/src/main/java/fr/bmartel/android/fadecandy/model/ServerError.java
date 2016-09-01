@@ -23,38 +23,12 @@
  */
 package fr.bmartel.android.fadecandy.model;
 
-import android.hardware.usb.UsbDevice;
-import android.hardware.usb.UsbDeviceConnection;
-import android.hardware.usb.UsbEndpoint;
-
 /**
- * Compose an UsbDevice, a UsbConnection & UsbEndpoint.
+ * Fadecandy Server error.
  *
  * @author Bertrand Martel
  */
-public class UsbItem {
-
-    private UsbDevice device;
-
-    private UsbDeviceConnection connection;
-
-    private UsbEndpoint usbEndpoint;
-
-    public UsbItem(UsbDevice device, UsbDeviceConnection connection, UsbEndpoint usbEndpoint) {
-        this.device = device;
-        this.connection = connection;
-        this.usbEndpoint = usbEndpoint;
-    }
-
-    public UsbDeviceConnection getConnection() {
-        return connection;
-    }
-
-    public UsbDevice getDevice() {
-        return device;
-    }
-
-    public UsbEndpoint getUsbEndpoint() {
-        return usbEndpoint;
-    }
+public enum ServerError {
+    CLOSE_SERVER_ERROR,
+    START_SERVER_ERROR
 }

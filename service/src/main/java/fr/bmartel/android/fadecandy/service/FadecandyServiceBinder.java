@@ -21,40 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.bmartel.android.fadecandy.model;
+package fr.bmartel.android.fadecandy.service;
 
-import android.hardware.usb.UsbDevice;
-import android.hardware.usb.UsbDeviceConnection;
-import android.hardware.usb.UsbEndpoint;
+import android.os.Binder;
+
+import fr.bmartel.android.fadecandy.service.FadecandyService;
 
 /**
- * Compose an UsbDevice, a UsbConnection & UsbEndpoint.
+ * Fadecandy Service binder.
  *
  * @author Bertrand Martel
  */
-public class UsbItem {
+public class FadecandyServiceBinder extends Binder {
 
-    private UsbDevice device;
+    private FadecandyService fadecandyService;
 
-    private UsbDeviceConnection connection;
-
-    private UsbEndpoint usbEndpoint;
-
-    public UsbItem(UsbDevice device, UsbDeviceConnection connection, UsbEndpoint usbEndpoint) {
-        this.device = device;
-        this.connection = connection;
-        this.usbEndpoint = usbEndpoint;
+    public FadecandyServiceBinder(FadecandyService fadecandyService) {
+        this.fadecandyService = fadecandyService;
     }
 
-    public UsbDeviceConnection getConnection() {
-        return connection;
-    }
-
-    public UsbDevice getDevice() {
-        return device;
-    }
-
-    public UsbEndpoint getUsbEndpoint() {
-        return usbEndpoint;
+    /**
+     * @return a reference to the Service
+     */
+    public FadecandyService getService() {
+        return fadecandyService;
     }
 }

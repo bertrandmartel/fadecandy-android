@@ -23,21 +23,42 @@
  */
 package fr.bmartel.android.fadecandy.constant;
 
-import fr.bmartel.android.fadecandy.ServiceType;
+import fr.bmartel.android.fadecandy.model.ServiceType;
 
 /**
+ * Fadecandy project constants
+ *
  * @author Bertrand Martel
  */
 public class Constants {
 
+    /**
+     * default server port.
+     */
     public final static int DEFAULT_SERVER_PORT = 7890;
+
+    /**
+     * defaul server address.
+     */
     public final static String DEFAULT_SERVER_ADDRESS = "127.0.0.1";
 
+    /**
+     * service is persistent by default.
+     */
     public final static ServiceType DEFAULT_SERVICE_TYPE = ServiceType.PERSISTENT_SERVICE;
 
+    /**
+     * Fadecandy vendor id.
+     */
     public final static int FC_VENDOR = 7504;
+
+    /**
+     * Fadecandy product id.
+     */
     public final static int FC_PRODUCT = 24698;
 
+
+    //Fadecandy configuration variables
     public final static String CONFIG_LISTEN = "listen";
     public final static String CONFIG_VERBOSE = "verbose";
     public final static String CONFIG_COLOR = "color";
@@ -47,13 +68,20 @@ public class Constants {
     public final static String CONFIG_TYPE = "type";
     public final static String CONFIG_MAP = "map";
 
+    //shared preference field/variables
     public final static String PREFERENCE_PREFS = "prefs";
     public final static String PREFERENCE_CONFIG = "config";
     public final static String PREFERENCE_SERVICE_TYPE = "serviceType";
     public final static String PREFERENCE_PORT = "port";
     public final static String PREFERENCE_IP_ADDRESS = "ipAddress";
 
+    /**
+     * extra given to the intent in onStartCommand to match an activity to be launched when user click on notification.
+     */
     public final static String SERVICE_EXTRA_ACTIVITY = "activity";
 
-    public static final int MAX_LED = 512 ;
+    /**
+     * number max of LED.
+     */
+    public static final int MAX_LED = 512;
 }

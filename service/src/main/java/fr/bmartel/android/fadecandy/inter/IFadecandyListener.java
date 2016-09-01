@@ -21,40 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.bmartel.android.fadecandy.model;
+package fr.bmartel.android.fadecandy.inter;
 
-import android.hardware.usb.UsbDevice;
-import android.hardware.usb.UsbDeviceConnection;
-import android.hardware.usb.UsbEndpoint;
+import fr.bmartel.android.fadecandy.model.ServerError;
 
 /**
- * Compose an UsbDevice, a UsbConnection & UsbEndpoint.
+ * Fadecandy Server listener.
  *
  * @author Bertrand Martel
  */
-public class UsbItem {
+public interface IFadecandyListener {
 
-    private UsbDevice device;
+    /**
+     * called when Fadecandy server is started.
+     */
+    void onServerStart();
 
-    private UsbDeviceConnection connection;
+    /**
+     * called when Fadecandy server is closed.
+     */
+    void onServerClose();
 
-    private UsbEndpoint usbEndpoint;
-
-    public UsbItem(UsbDevice device, UsbDeviceConnection connection, UsbEndpoint usbEndpoint) {
-        this.device = device;
-        this.connection = connection;
-        this.usbEndpoint = usbEndpoint;
-    }
-
-    public UsbDeviceConnection getConnection() {
-        return connection;
-    }
-
-    public UsbDevice getDevice() {
-        return device;
-    }
-
-    public UsbEndpoint getUsbEndpoint() {
-        return usbEndpoint;
-    }
+    /**
+     * called when an error occured.
+     *
+     * @param error
+     */
+    void onServerError(ServerError error);
 }

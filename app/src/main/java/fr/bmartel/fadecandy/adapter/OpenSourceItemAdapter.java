@@ -46,6 +46,14 @@ public class OpenSourceItemAdapter extends BaseAdapter {
                     "https://github.com/scanlime/rapidjson"},
             {"libwebsockets",
                     "https://github.com/akinaru/libwebsockets"},
+            {"DiscreteSeekBar",
+                    "https://github.com/AnderWeb/discreteSeekBar"},
+            {"BottomBar",
+                    "https://github.com/roughike/BottomBar"},
+            {"Android Holo ColorPicker",
+                    "https://github.com/LarsWerkman/HoloColorPicker"},
+            {"Open Pixel Control Library",
+                    "https://github.com/akinaru/opc-java"},
             {"highlight.js",
                     "https://highlightjs.org/"}
     };

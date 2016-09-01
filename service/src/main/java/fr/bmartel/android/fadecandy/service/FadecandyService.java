@@ -50,70 +50,140 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import fr.bmartel.android.fadecandy.FadecandyServiceBinder;
-import fr.bmartel.android.fadecandy.ServiceType;
 import fr.bmartel.android.fadecandy.activity.UsbEventReceiverActivity;
 import fr.bmartel.android.fadecandy.constant.Constants;
 import fr.bmartel.android.fadecandy.inter.IUsbListener;
 import fr.bmartel.android.fadecandy.model.FadecandyColor;
 import fr.bmartel.android.fadecandy.model.FadecandyConfig;
 import fr.bmartel.android.fadecandy.model.FadecandyDevice;
+import fr.bmartel.android.fadecandy.model.ServiceType;
 import fr.bmartel.android.fadecandy.model.UsbItem;
 import fr.bmartel.android.fadecandy.utils.ManualResetEvent;
 import fr.bmartel.android.fadecandy.utils.NotificationHelper;
 
 /**
+ * Fadecandy Server service.
+ *
  * @author Bertrand Martel
  */
 public class FadecandyService extends Service {
 
     private final static String TAG = FadecandyService.class.getSimpleName();
 
+    /**
+     * broadcast action received when user accept USB permission.
+     */
     private static final String ACTION_USB_PERMISSION = "fr.bmartel.fadecandy.USB_PERMISSION";
 
+    /**
+     * broadcast action received when user click to remove service notification.
+     */
     public static final String ACTION_EXIT = "exit";
 
+    /**
+     * Usb manager instance.
+     */
     private UsbManager mUsbManager;
 
+    /**
+     * List of Fadecandy USB device attached.
+     */
     private HashMap<Integer, UsbItem> mUsbDevices = new HashMap<>();
 
+    /**
+     * Fadecandy server configuration.
+     */
     private FadecandyConfig mConfig;
 
+    /**
+     * Service type persistent or non persistent.
+     */
     private ServiceType mServiceType;
 
+    /**
+     * Server address.
+     */
     private String mServerAddress;
 
+    /**
+     * Server port.
+     */
     private int mServerPort;
 
+    /**
+     * Start Fadecandy server.
+     *
+     * @param config Fadecandy configuration in Json string.
+     * @return start status (0 : OK | 1 : ERROR)
+     */
     public native int startFcServer(String config);
 
+    /**
+     * Stop fadecandy server (async)
+     */
     public native void stopFcServer();
 
+    /**
+     * notify Fadecandy server that a Fadecandy USB device has been attached and provide all its characteristics.
+     *
+     * @param vendorId       Fadecandy device vendor ID
+     * @param productId      Fadecandy device product ID
+     * @param serialNumber   Fadecandy device serial number (depend on Android version)
+     * @param fileDescriptor USB file descriptor (what is used to identify the USB device)
+     */
     public native void usbDeviceArrived(int vendorId, int productId, String serialNumber, int fileDescriptor);
 
+    /**
+     * notify Fadecandy server that a Fadecandy USB device has been detached.
+     *
+     * @param fileDescriptor
+     */
     public native void usbDeviceLeft(int fileDescriptor);
 
+    /**
+     * define that server is started or not.
+     */
     private boolean mIsServerRunning;
 
+    /**
+     * max time to wait for server close callback (in millis)
+     */
     private final static int STOP_SERVER_TIMEOUT = 400;
 
+    /**
+     * list of USB listeners.
+     */
     private List<IUsbListener> mUsbListeners = new ArrayList<>();
 
+    /**
+     * monitoring object used to wait for server close before starting server if already started.
+     */
     private ManualResetEvent eventManager = new ManualResetEvent(false);
 
-    // Load the .so
+    /**
+     * Shared preferences used by Service.
+     */
+    private SharedPreferences prefs;
+
+    /**
+     * define if user has click on notification to close Service.
+     */
+    private boolean mExit = false;
+
+    /**
+     * define if USB device list has been initialized once before.
+     */
+    private boolean mUsbInit = false;
+
+    /**
+     * load shared libraries.
+     */
     static {
         System.loadLibrary("websockets");
         System.loadLibrary("fadecandy-server");
     }
 
-    private SharedPreferences prefs;
 
-    private boolean mExit = false;
-
-    private boolean mUsbInit = false;
-
-    // Setup
     @Override
     public void onCreate() {
         super.onCreate();
@@ -158,10 +228,20 @@ public class FadecandyService extends Service {
         registerReceiver(receiver, filter);
     }
 
+    /**
+     * add an usb listener to listen for Fadecandy device attached  / detached.
+     *
+     * @param listener
+     */
     public void addUsbListener(IUsbListener listener) {
         mUsbListeners.add(listener);
     }
 
+    /**
+     * remove an usb listener.
+     *
+     * @param listener
+     */
     public void removeUsbListener(IUsbListener listener) {
         mUsbListeners.remove(listener);
     }
@@ -192,6 +272,9 @@ public class FadecandyService extends Service {
         startServer();
     }
 
+    /**
+     * stop server & unregister receiver.
+     */
     public void clean() {
         stopFcServer();
 
@@ -208,6 +291,7 @@ public class FadecandyService extends Service {
 
         super.onDestroy();
 
+        //@todo find why a process still exist at this moment
         if (mExit) {
             android.os.Process.killProcess(android.os.Process.myPid());
         }
@@ -352,6 +436,12 @@ public class FadecandyService extends Service {
         }
     };
 
+    /**
+     * append USB device to usb list & pass to native interface
+     *
+     * @param device USB device object
+     * @param fd     USB device file descriptor
+     */
     private void dispatchUsb(UsbItem device, int fd) {
 
         String serialNum = "";
@@ -381,6 +471,7 @@ public class FadecandyService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
+        //this is the activity which will be opened when user click on notification
         Intent testIntent = new Intent();
         testIntent.setComponent(ComponentName.unflattenFromString(intent.getStringExtra(Constants.SERVICE_EXTRA_ACTIVITY)));
 
@@ -397,6 +488,11 @@ public class FadecandyService extends Service {
         return START_NOT_STICKY;
     }
 
+    /**
+     * start Fadecandy server
+     *
+     * @return server status (0 : started | 1 : not stated (error))
+     */
     public int startServer() {
 
         if (isServerRunning()) {
@@ -431,6 +527,11 @@ public class FadecandyService extends Service {
         return status;
     }
 
+    /**
+     * Stop Fadecandy server.
+     *
+     * @return stop status
+     */
     public int stopServer() {
         Log.v(TAG, "stop server");
         stopFcServer();
@@ -438,14 +539,30 @@ public class FadecandyService extends Service {
         return 0;
     }
 
+    /**
+     * define if server is started or not.
+     *
+     * @return
+     */
     public boolean isServerRunning() {
         return mIsServerRunning;
     }
 
+    /**
+     * called from native to notify server has been closed successfully.
+     */
     private void onServerClose() {
         eventManager.set();
     }
 
+    /**
+     * called from native to process USB transfer.
+     *
+     * @param fileDescriptor USB device file descriptor.
+     * @param timeout        transfer timeout.
+     * @param data           data to be transferred.
+     * @return transfer status
+     */
     private int bulkTransfer(int fileDescriptor, int timeout, byte[] data) {
 
         if (mUsbDevices.containsKey(fileDescriptor)) {
@@ -458,6 +575,12 @@ public class FadecandyService extends Service {
         return -1;
     }
 
+    /**
+     * Open USB device & choose USBEndpoint.
+     *
+     * @param device Usb device object.
+     * @return Ubs item composed of USBDevice , USBEndpoint & UsbConnection
+     */
     private UsbItem openDevice(UsbDevice device) {
 
         UsbManager manager = (UsbManager) getSystemService(Context.USB_SERVICE);
@@ -498,33 +621,68 @@ public class FadecandyService extends Service {
         return null;
     }
 
+    /**
+     * Retrieve service type (persistent or non persistent).
+     *
+     * @return
+     */
     public ServiceType getServiceType() {
         return mServiceType;
     }
 
+    /**
+     * Set service type.
+     *
+     * @param serviceType
+     */
     public void setServiceType(ServiceType serviceType) {
         this.mServiceType = serviceType;
         prefs.edit().putInt(Constants.PREFERENCE_SERVICE_TYPE, ServiceType.getState(serviceType)).apply();
     }
 
+    /**
+     * Retrieve server port.
+     *
+     * @return
+     */
     public int getServerPort() {
         return mServerPort;
     }
 
+    /**
+     * Retrieve server addresss.
+     *
+     * @return
+     */
     public String getIpAddress() {
         return mServerAddress;
     }
 
+    /**
+     * Set server port.
+     *
+     * @param port
+     */
     public void setServerPort(int port) {
         this.mServerPort = port;
         prefs.edit().putInt(Constants.PREFERENCE_PORT, port).apply();
     }
 
+    /**
+     * Set server address.
+     *
+     * @param ip
+     */
     public void setServerAddress(String ip) {
         this.mServerAddress = ip;
         prefs.edit().putString(Constants.PREFERENCE_IP_ADDRESS, ip).apply();
     }
 
+    /**
+     * Retrieve list of Fadecandy USB device attached.
+     *
+     * @return
+     */
     public HashMap<Integer, UsbItem> getUsbDeviceMap() {
         return mUsbDevices;
     }

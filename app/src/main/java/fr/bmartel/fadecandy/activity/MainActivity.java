@@ -36,7 +36,7 @@ import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;
 
-import fr.bmartel.android.fadecandy.ServiceType;
+import fr.bmartel.android.fadecandy.model.ServiceType;
 import fr.bmartel.android.fadecandy.model.UsbItem;
 import fr.bmartel.fadecandy.FadecandySingleton;
 import fr.bmartel.fadecandy.R;
@@ -46,12 +46,23 @@ import fr.bmartel.fadecandy.fragment.TemperatureFragment;
 import fr.bmartel.fadecandy.inter.IFragment;
 import fr.bmartel.fadecandy.listener.ISingletonListener;
 
+/**
+ * Fadecandy Main activity.
+ *
+ * @author Bertrand Martel
+ */
 public class MainActivity extends BaseActivity {
 
     private final static String TAG = MainActivity.class.getSimpleName();
 
+    /**
+     * define if this is the first time server has been started after a connect().
+     */
     private boolean mStarted;
 
+    /**
+     * the current fragment.
+     */
     private Fragment mFragment;
 
     @Override
@@ -113,6 +124,9 @@ public class MainActivity extends BaseActivity {
         super.onResume();
     }
 
+    /**
+     * Singleton listener used to notify server stop/start/error.
+     */
     private ISingletonListener mListener = new ISingletonListener() {
         @Override
         public void onServerStart() {
@@ -162,12 +176,7 @@ public class MainActivity extends BaseActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-
-                    String deviceTxt = "device";
-                    if (mSingleton.getUsbDevices().size() > 1) {
-                        deviceTxt = "devices";
-                    }
-                    getSupportActionBar().setTitle(getResources().getString(R.string.app_title) + " (" + mSingleton.getUsbDevices().size() + " " + deviceTxt + ")");
+                    setToolbarTitle();
                 }
             });
         }
@@ -177,12 +186,7 @@ public class MainActivity extends BaseActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-
-                    String deviceTxt = "device";
-                    if (mSingleton.getUsbDevices().size() > 1) {
-                        deviceTxt = "devices";
-                    }
-                    getSupportActionBar().setTitle(getResources().getString(R.string.app_title) + " (" + mSingleton.getUsbDevices().size() + " " + deviceTxt + ")");
+                    setToolbarTitle();
                 }
             });
         }

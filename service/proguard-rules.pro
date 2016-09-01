@@ -19,10 +19,10 @@
 -keepattributes SourceFile,LineNumberTable
 -allowaccessmodification
 
--keep public class fr.bmartel.android.fadecandy.FadecandyClient {
+-keep public class fr.bmartel.android.fadecandy.client.FadecandyClient {
   public protected *;
 }
--keep public class fr.bmartel.android.fadecandy.IFadecandyListener {
+-keep public class fr.bmartel.android.fadecandy.inter.IFadecandyListener {
   public protected *;
 }
 -keep public class fr.bmartel.android.fadecandy.model.FadecandyConfig {
@@ -43,10 +43,10 @@
 -keep public class fr.bmartel.android.fadecandy.model.FadecandyColor {
   public protected *;
 }
--keep public class fr.bmartel.android.fadecandy.ServerError {
+-keep public class fr.bmartel.android.fadecandy.model.ServerError {
   public protected *;
 }
--keep public class fr.bmartel.android.fadecandy.ServiceType {
+-keep public class fr.bmartel.android.fadecandy.model.ServiceType {
   public protected *;
 }
 
