@@ -23,6 +23,7 @@
  */
 package fr.bmartel.fadecandy.activity;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -65,6 +66,8 @@ public class MainActivity extends BaseActivity {
      * the current fragment.
      */
     private Fragment mFragment;
+
+    private Dialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -211,6 +214,10 @@ public class MainActivity extends BaseActivity {
         super.onDestroy();
         Log.v(TAG, "onDestroy()");
 
+        if (mDialog != null) {
+            mDialog.dismiss();
+        }
+        
         mSingleton.removeListener(mListener);
 
         mStarted = false;
@@ -322,6 +329,11 @@ public class MainActivity extends BaseActivity {
             mSingleton.setServerMode(androidServerMode);
             diplayHideStartStopServer();
         }
+    }
+
+    @Override
+    public void setCurrentDialog(Dialog dialog) {
+        mDialog = dialog;
     }
 
 
