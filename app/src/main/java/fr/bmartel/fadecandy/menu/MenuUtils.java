@@ -32,7 +32,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.MenuItem;
 
-import fr.bmartel.android.fadecandy.ServiceType;
+import fr.bmartel.android.fadecandy.model.ServiceType;
 import fr.bmartel.fadecandy.R;
 import fr.bmartel.fadecandy.dialog.AboutDialog;
 import fr.bmartel.fadecandy.dialog.ConfigurationDialog;

@@ -28,9 +28,13 @@ import android.content.Intent;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.util.Log;
 
 /**
+ * Activity used to receive ACTION_USB_DEVICE_ATTACHED events.
+ * An activity is necessary to receive this event. If it is catched in service, permission will not be recorded if user press "remind this device for future use".
+ * <p/>
+ * This solution is extracted from ; http://stackoverflow.com/questions/12388914/usb-device-access-pop-up-supression/15151075#15151075
+ *
  * @author Bertrand Martel
  */
 public class UsbEventReceiverActivity extends Activity {

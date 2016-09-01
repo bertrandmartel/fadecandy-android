@@ -23,38 +23,39 @@
  */
 package fr.bmartel.android.fadecandy.model;
 
-import android.hardware.usb.UsbDevice;
-import android.hardware.usb.UsbDeviceConnection;
-import android.hardware.usb.UsbEndpoint;
-
 /**
- * Compose an UsbDevice, a UsbConnection & UsbEndpoint.
+ * Service Type : persistent or non persistent.
  *
  * @author Bertrand Martel
  */
-public class UsbItem {
+public enum ServiceType {
 
-    private UsbDevice device;
+    PERSISTENT_SERVICE(0),
+    NON_PERSISTENT_SERVICE(1);
 
-    private UsbDeviceConnection connection;
+    private int mState;
 
-    private UsbEndpoint usbEndpoint;
-
-    public UsbItem(UsbDevice device, UsbDeviceConnection connection, UsbEndpoint usbEndpoint) {
-        this.device = device;
-        this.connection = connection;
-        this.usbEndpoint = usbEndpoint;
+    private ServiceType(int state) {
+        mState = state;
     }
 
-    public UsbDeviceConnection getConnection() {
-        return connection;
+    public static int getState(ServiceType type) {
+        switch (type) {
+            case PERSISTENT_SERVICE:
+                return 0;
+            case NON_PERSISTENT_SERVICE:
+                return 1;
+        }
+        return 0;
     }
 
-    public UsbDevice getDevice() {
-        return device;
-    }
-
-    public UsbEndpoint getUsbEndpoint() {
-        return usbEndpoint;
+    public static ServiceType getServiceType(int serviceType) {
+        switch (serviceType) {
+            case 0:
+                return PERSISTENT_SERVICE;
+            case 1:
+                return NON_PERSISTENT_SERVICE;
+        }
+        return PERSISTENT_SERVICE;
     }
 }

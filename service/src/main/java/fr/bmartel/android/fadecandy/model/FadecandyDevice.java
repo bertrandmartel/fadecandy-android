@@ -33,6 +33,8 @@ import java.util.List;
 import fr.bmartel.android.fadecandy.constant.Constants;
 
 /**
+ * Fadecandy device object.
+ *
  * @author Bertrand Martel
  */
 public class FadecandyDevice {

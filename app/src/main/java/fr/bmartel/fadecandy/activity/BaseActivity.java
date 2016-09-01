@@ -46,8 +46,6 @@ import fr.bmartel.fadecandy.menu.MenuUtils;
  */
 public abstract class BaseActivity extends AppCompatActivity implements IFc {
 
-    private final static String TAG = BaseActivity.class.getSimpleName();
-
     /**
      * application toolbar
      */
@@ -82,8 +80,9 @@ public abstract class BaseActivity extends AppCompatActivity implements IFc {
         layoutId = resId;
     }
 
-    protected boolean openingDrawer = false;
-
+    /**
+     * Fadecandy singleton.
+     */
     protected FadecandySingleton mSingleton;
 
     @Override
@@ -96,12 +95,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IFc {
         toolbar = (Toolbar) findViewById(R.id.toolbar_item);
         setSupportActionBar(toolbar);
 
-        String deviceTxt = "device";
-        if (mSingleton.getUsbDevices().size() > 1) {
-            deviceTxt = "devices";
-        }
-
-        getSupportActionBar().setTitle(getResources().getString(R.string.app_title) + " (" + mSingleton.getUsbDevices().size() + " " + deviceTxt + ")");
+        setToolbarTitle();
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.inflateMenu(R.menu.toolbar_menu);
@@ -114,6 +108,19 @@ public abstract class BaseActivity extends AppCompatActivity implements IFc {
 
         // Setup drawer view
         setupDrawerContent(nvDrawer);
+    }
+
+    /**
+     * Set toolbar title in initialization or when USB device event occurs
+     */
+    protected void setToolbarTitle() {
+
+        String deviceTxt = "device";
+        if (mSingleton.getUsbDevices().size() > 1) {
+            deviceTxt = "devices";
+        }
+
+        getSupportActionBar().setTitle(getResources().getString(R.string.app_title) + " (" + mSingleton.getUsbDevices().size() + " " + deviceTxt + ")");
     }
 
     /**
@@ -146,12 +153,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IFc {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 super.onDrawerSlide(drawerView, slideOffset);
-
-                if (slideOffset == 0) {
-                    openingDrawer = false;
-                } else if (slideOffset == 1) {
-                    openingDrawer = true;
-                }
             }
 
             @Override

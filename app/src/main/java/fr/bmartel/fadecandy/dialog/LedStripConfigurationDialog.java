@@ -1,3 +1,26 @@
+/**
+ * The MIT License (MIT)
+ * <p/>
+ * Copyright (c) 2016 Bertrand Martel
+ * <p/>
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * <p/>
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * <p/>
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package fr.bmartel.fadecandy.dialog;
 
 import android.app.AlertDialog;
@@ -12,7 +35,9 @@ import fr.bmartel.fadecandy.R;
 import fr.bmartel.fadecandy.inter.IFc;
 
 /**
- * Created by akinaru on 31/08/16.
+ * Led count configuration.
+ *
+ * @author Bertrand Martel
  */
 public class LedStripConfigurationDialog extends AlertDialog {
 
@@ -41,7 +66,7 @@ public class LedStripConfigurationDialog extends AlertDialog {
             }
         });
 
-        setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+        setButton(DialogInterface.BUTTON_NEGATIVE, activity.getContext().getString(R.string.cancel_button), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
@@ -63,7 +88,7 @@ public class LedStripConfigurationDialog extends AlertDialog {
                     mActivity.setLedCount(Integer.parseInt(mLedCountEditText.getText().toString()));
                     dismiss();
                 } else {
-                    Toast.makeText(mActivity.getContext(), "Led count must be > 0 and <= " + Constants.MAX_LED, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity.getContext(), mActivity.getContext().getString(R.string.led_count_errorcase) + " " + Constants.MAX_LED, Toast.LENGTH_SHORT).show();
                 }
             }
         });
