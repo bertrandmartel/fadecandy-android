@@ -475,7 +475,15 @@ public class FadecandyService extends Service {
         Intent testIntent = new Intent();
         testIntent.setComponent(ComponentName.unflattenFromString(intent.getStringExtra(Constants.SERVICE_EXTRA_ACTIVITY)));
 
-        switch (mServiceType) {
+        ServiceType serviceTypeOverride;
+
+        if (intent.hasExtra(Constants.SERVICE_EXTRA_SERVICE_TYPE)) {
+            serviceTypeOverride = ServiceType.getServiceType(intent.getIntExtra(Constants.SERVICE_EXTRA_SERVICE_TYPE, ServiceType.NON_PERSISTENT_SERVICE.ordinal()));
+        } else {
+            serviceTypeOverride = mServiceType;
+        }
+
+        switch (serviceTypeOverride) {
             case NON_PERSISTENT_SERVICE:
                 Log.v(TAG, "NON_PERSISTENT_SERVICE");
                 return START_NOT_STICKY;

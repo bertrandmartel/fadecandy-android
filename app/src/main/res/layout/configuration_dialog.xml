@@ -6,6 +6,13 @@
     android:orientation="vertical"
     android:padding="10dp">
 
+    <CheckBox
+        android:id="@+id/start_server_cb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:checked="false"
+        android:text="@string/start_server_checkbox" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,6 +24,12 @@
         android:id="@+id/ip_spinner"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/local_server_edit"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
 
     <TextView
         android:layout_width="match_parent"

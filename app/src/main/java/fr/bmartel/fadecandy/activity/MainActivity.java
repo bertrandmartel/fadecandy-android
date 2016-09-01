@@ -36,6 +36,7 @@ import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;
 
+import fr.bmartel.android.fadecandy.client.FadecandyClient;
 import fr.bmartel.android.fadecandy.model.ServiceType;
 import fr.bmartel.android.fadecandy.model.UsbItem;
 import fr.bmartel.fadecandy.FadecandySingleton;
@@ -260,7 +261,7 @@ public class MainActivity extends BaseActivity {
         if (mSingleton != null) {
             return mSingleton.getServerPort();
         }
-        return 0;
+        return FadecandyClient.DEFAULT_PORT;
     }
 
     @Override
@@ -304,6 +305,22 @@ public class MainActivity extends BaseActivity {
     public void restartServer() {
         if (mSingleton != null) {
             mSingleton.restartServer();
+        }
+    }
+
+    @Override
+    public boolean isServerMode() {
+        if (mSingleton != null) {
+            return mSingleton.isServerMode();
+        }
+        return false;
+    }
+
+    @Override
+    public void setServerMode(boolean androidServerMode) {
+        if (mSingleton != null) {
+            mSingleton.setServerMode(androidServerMode);
+            diplayHideStartStopServer();
         }
     }
 

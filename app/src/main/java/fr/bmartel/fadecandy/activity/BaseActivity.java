@@ -106,8 +106,24 @@ public abstract class BaseActivity extends AppCompatActivity implements IFc {
         mDrawer.setDrawerListener(drawerToggle);
         nvDrawer = (NavigationView) findViewById(R.id.nvView);
 
+        diplayHideStartStopServer();
+
         // Setup drawer view
         setupDrawerContent(nvDrawer);
+    }
+
+    protected void diplayHideStartStopServer() {
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (!mSingleton.isServerMode()) {
+                    nvDrawer.getMenu().findItem(R.id.server_status).setVisible(false);
+                } else {
+                    nvDrawer.getMenu().findItem(R.id.server_status).setVisible(true);
+                }
+            }
+        });
     }
 
     /**

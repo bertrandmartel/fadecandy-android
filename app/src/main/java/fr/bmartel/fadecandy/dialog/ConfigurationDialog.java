@@ -28,6 +28,8 @@ import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -51,6 +53,12 @@ public class ConfigurationDialog extends AlertDialog {
         View dialoglayout = inflater.inflate(R.layout.configuration_dialog, null);
         setView(dialoglayout);
 
+        final CheckBox startServerCheckbox = (CheckBox) dialoglayout.findViewById(R.id.start_server_cb);
+
+        boolean serverMode = activity.isServerMode();
+
+        startServerCheckbox.setChecked(serverMode);
+
         List<String> spinnerArray = Utils.getIPAddress(true);
         String defaultAddr = activity.getIpAddress();
         int defaultPos = 0;
@@ -71,14 +79,49 @@ public class ConfigurationDialog extends AlertDialog {
         portEditText.setText("" + activity.getServerPort());
         portEditText.setSelection(portEditText.getText().length());
 
+        final EditText localServerEditText = (EditText) dialoglayout.findViewById(R.id.local_server_edit);
+        localServerEditText.setText(defaultAddr);
+
+        if (!serverMode) {
+            sItems.setVisibility(View.GONE);
+            localServerEditText.setVisibility(View.VISIBLE);
+        }
+
+        startServerCheckbox.setOnCheckedChangeListener(
+                new CompoundButton.OnCheckedChangeListener() {
+
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (isChecked) {
+                            sItems.setVisibility(View.VISIBLE);
+                            localServerEditText.setVisibility(View.GONE);
+                        } else {
+                            sItems.setVisibility(View.GONE);
+                            localServerEditText.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+        );
+
         setTitle(R.string.configuration_server_title);
 
         setButton(DialogInterface.BUTTON_POSITIVE, activity.getContext().getResources().getString(R.string.dialog_ok), new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                activity.setServerAddress(sItems.getSelectedItem().toString());
+
+                if (startServerCheckbox.isChecked()) {
+                    activity.setServerAddress(sItems.getSelectedItem().toString());
+                } else {
+                    activity.setServerAddress(localServerEditText.getText().toString());
+                }
+
                 activity.setServerPort(Integer.parseInt(portEditText.getText().toString()));
-                activity.restartServer();
+
+                activity.setServerMode(startServerCheckbox.isChecked());
+
+                if (startServerCheckbox.isChecked()) {
+                    activity.restartServer();
+                }
             }
         });
 

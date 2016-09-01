@@ -81,7 +81,13 @@ public class Constants {
     public final static String SERVICE_EXTRA_ACTIVITY = "activity";
 
     /**
+     * extra given to the intent in onStartCommand to override the service type.
+     */
+    public static final String SERVICE_EXTRA_SERVICE_TYPE = "serviceType";
+
+    /**
      * number max of LED.
      */
     public static final int MAX_LED = 512;
+
 }

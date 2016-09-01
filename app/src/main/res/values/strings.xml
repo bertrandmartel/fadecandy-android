@@ -35,4 +35,5 @@
     <string name="configuration_led_title">Led configuration</string>
     <string name="cancel_button">Cancel</string>
     <string name="led_count_errorcase"><![CDATA[Led count must be > 0 and <=]]></string>
+    <string name="start_server_checkbox">start a local server</string>
 </resources>
