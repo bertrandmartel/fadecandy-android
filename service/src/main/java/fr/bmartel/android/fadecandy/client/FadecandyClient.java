@@ -34,7 +34,6 @@ import android.util.Log;
 
 import java.util.HashMap;
 
-import fr.bmartel.android.fadecandy.service.FadecandyServiceBinder;
 import fr.bmartel.android.fadecandy.constant.Constants;
 import fr.bmartel.android.fadecandy.inter.IFadecandyListener;
 import fr.bmartel.android.fadecandy.inter.IUsbListener;
@@ -43,6 +42,7 @@ import fr.bmartel.android.fadecandy.model.ServerError;
 import fr.bmartel.android.fadecandy.model.ServiceType;
 import fr.bmartel.android.fadecandy.model.UsbItem;
 import fr.bmartel.android.fadecandy.service.FadecandyService;
+import fr.bmartel.android.fadecandy.service.FadecandyServiceBinder;
 
 /**
  * Fadecandy client wrapper to be used to bind service & call service API.
