@@ -24,12 +24,12 @@
 package fr.bmartel.fadecandy.menu;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.MenuItem;
 
 import fr.bmartel.android.fadecandy.model.ServiceType;
@@ -60,29 +60,29 @@ public class MenuUtils {
 
         switch (menuItem.getItemId()) {
             case R.id.server_status: {
-                Log.v(TAG, "switch server_status");
                 fcActivity.switchServerStatus();
                 break;
             }
             case R.id.server_config: {
-                Log.v(TAG, "server_config");
                 if (fcActivity != null) {
                     ConfigurationDialog dialog = new ConfigurationDialog(fcActivity);
+                    fcActivity.setCurrentDialog(dialog);
                     dialog.show();
                 }
                 break;
             }
             case R.id.ledstrip_config: {
-                Log.v(TAG, "ledsrip");
                 if (fcActivity != null) {
                     LedStripConfigurationDialog dialog = new LedStripConfigurationDialog(fcActivity);
+                    fcActivity.setCurrentDialog(dialog);
                     dialog.show();
                 }
                 break;
             }
             case R.id.open_source_components: {
-                OpenSourceItemsDialog d = new OpenSourceItemsDialog(context);
-                d.show();
+                OpenSourceItemsDialog dialog = new OpenSourceItemsDialog(context);
+                fcActivity.setCurrentDialog(dialog);
+                dialog.show();
                 break;
             }
             case R.id.rate_app: {
@@ -91,6 +91,7 @@ public class MenuUtils {
             }
             case R.id.about_app: {
                 AboutDialog dialog = new AboutDialog(context);
+                fcActivity.setCurrentDialog(dialog);
                 dialog.show();
                 break;
             }
@@ -106,13 +107,12 @@ public class MenuUtils {
 
                 CharSequence[] array = {"persistent", "non persistent"};
 
-                Log.i(TAG, "current type : " + fcActivity.getServiceType());
                 int indexCheck = 0;
                 if (fcActivity.getServiceType() == ServiceType.NON_PERSISTENT_SERVICE) {
                     indexCheck = 1;
                 }
 
-                new AlertDialog.Builder(context)
+                Dialog dialog = new AlertDialog.Builder(context)
                         .setSingleChoiceItems(array, indexCheck, null)
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
@@ -131,6 +131,8 @@ public class MenuUtils {
                             }
                         })
                         .show();
+                fcActivity.setCurrentDialog(dialog);
+
                 break;
             }
         }
