@@ -69,7 +69,6 @@ public class TemperatureFragment extends MainFragment {
 
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
-                Log.v(TAG, "value : " + value);
                 int color = 0xFFFF00 + (value * 255 / 100);
                 mSingleton.setTemperature(color);
             }

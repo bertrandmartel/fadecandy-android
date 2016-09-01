@@ -105,9 +105,6 @@ public class SparkFragment extends MainFragment implements ColorPicker.OnColorCh
 
     @Override
     public void onColorChanged(int color) {
-
-        Log.v(TAG, "color changed : " + Color.red(color) + " - " + Color.green(color) + " - " + Color.blue(color));
-
         mSingleton.spark(color);
     }
 

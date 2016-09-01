@@ -208,8 +208,6 @@ public class FadecandyService extends Service {
             e.printStackTrace();
         }
 
-        Log.v(TAG, "Fadecandy config : " + mConfig.toJsonString());
-
         mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
 
         initBroadcastReceiver();
@@ -406,13 +404,11 @@ public class FadecandyService extends Service {
 
                 if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
 
-                    Log.v(TAG, "Received permission result OK");
+                    Log.v(TAG, "Received permission result");
 
                     UsbDevice device = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
 
                     if (device != null) {
-
-                        Log.v(TAG, "Openning device");
 
                         UsbItem item = openDevice(device);
 
@@ -485,11 +481,11 @@ public class FadecandyService extends Service {
 
         switch (serviceTypeOverride) {
             case NON_PERSISTENT_SERVICE:
-                Log.v(TAG, "NON_PERSISTENT_SERVICE");
+                Log.v(TAG, "starting NON_PERSISTENT_SERVICE...");
                 return START_NOT_STICKY;
             case PERSISTENT_SERVICE:
                 startForeground(4242, NotificationHelper.createNotification(this, null, testIntent));
-                Log.v(TAG, "PERSISTENT_SERVICE");
+                Log.v(TAG, "starting PERSISTENT_SERVICE...");
                 return START_STICKY;
         }
 

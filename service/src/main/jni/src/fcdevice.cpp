@@ -121,8 +121,6 @@ bool FCDevice::submitTransfer(FCDevice *device, void *buffer, int length)
 {
   uint8_t *data = (uint8_t*) buffer;
 
-  __android_log_print(ANDROID_LOG_VERBOSE, APP_NAME, "in Transfer\n");
-
   if (FCServer::jvm != 0) {
 
     int getEnvStat = FCServer::jvm->GetEnv((void **)&FCServer::env, JNI_VERSION_1_6);
@@ -150,8 +148,6 @@ bool FCDevice::submitTransfer(FCDevice *device, void *buffer, int length)
 
   jmethodID methodId = FCServer::env->GetMethodID(FCServer::someClass, "bulkTransfer", "(II[B)I");
   jint result = FCServer::env->CallIntMethod(FCServer::thisClass, methodId, fd, 2000, data_ba);
-
-  __android_log_print(ANDROID_LOG_VERBOSE, APP_NAME, "bulk_transfer : %d\n", result);
 
   FCServer::env->DeleteLocalRef(data_ba);
 
@@ -304,9 +300,6 @@ void FCDevice::writeMessage(Document &msg)
    * intended to be the fast path for regular applications, but it can be used
    * by configuration tools that need to operate regardless of the mapping setup.
    */
-
-  __android_log_print(ANDROID_LOG_VERBOSE, APP_NAME, "FCDevice::writeMessage\n");
-
   const char *type = msg["type"].GetString();
 
   if (!strcmp(type, "device_options")) {
@@ -338,9 +331,6 @@ void FCDevice::writeDevicePixels(Document &msg)
    *
    * Pixel values are clamped to [0, 255], for convenience.
    */
-
-  __android_log_print(ANDROID_LOG_VERBOSE, APP_NAME, "writeDevicePixels\n");
-
   const Value &pixels = msg["pixels"];
   if (!pixels.IsArray()) {
     msg.AddMember("error", "Pixel array is missing", msg.GetAllocator());
@@ -372,14 +362,10 @@ void FCDevice::writeMessage(const OPC::Message &msg)
   /*
    * Dispatch an incoming OPC command
    */
-
-  __android_log_print(ANDROID_LOG_VERBOSE, APP_NAME, "FCDevice::writeMessage\n");
-
   switch (msg.command) {
 
   case OPC::SetPixelColors:
     opcSetPixelColors(msg);
-    __android_log_print(ANDROID_LOG_VERBOSE, APP_NAME, "before FCDevice::writeFramebuffer\n");
     writeFramebuffer();
     return;
 
@@ -422,7 +408,6 @@ void FCDevice::opcSysEx(const OPC::Message &msg)
 
 void FCDevice::opcSetPixelColors(const OPC::Message &msg)
 {
-  __android_log_print(ANDROID_LOG_VERBOSE, APP_NAME, "FCDevice::opcSetPixelColors\n");
   /*
    * Parse through our device's mapping, and store any relevant portions of 'msg'
    * in the framebuffer.
