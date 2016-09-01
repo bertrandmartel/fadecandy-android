@@ -101,4 +101,10 @@ public interface IFc {
      * @param ledCount
      */
     void setLedCount(int ledCount);
+
+    /**
+     * restart Fadecandy server.
+     */
+    void restartServer();
+
 }

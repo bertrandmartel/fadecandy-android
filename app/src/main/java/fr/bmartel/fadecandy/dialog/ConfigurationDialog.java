@@ -78,6 +78,7 @@ public class ConfigurationDialog extends AlertDialog {
             public void onClick(DialogInterface dialog, int which) {
                 activity.setServerAddress(sItems.getSelectedItem().toString());
                 activity.setServerPort(Integer.parseInt(portEditText.getText().toString()));
+                activity.restartServer();
             }
         });
 

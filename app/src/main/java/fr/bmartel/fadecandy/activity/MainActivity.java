@@ -300,4 +300,12 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void restartServer() {
+        if (mSingleton != null) {
+            mSingleton.restartServer();
+        }
+    }
+
+
 }
