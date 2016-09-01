@@ -65,11 +65,38 @@ public class FadecandyClient {
 
     private Intent fadecandyServiceIntent;
 
+    /**
+     * default port if service is down.
+     */
+    public final static int DEFAULT_PORT = 7890;
+
+    /**
+     * Service type to override if connect was called with ServiceType argument.
+     */
+    private ServiceType mOverrideServiceType;
+
+    /**
+     * define if service type should be override when calling startService.
+     */
+    private boolean mShouldOverrideServiceType;
+
     public FadecandyClient(Context context, IFadecandyListener listener, IUsbListener usbListener, String activityName) {
         mContext = context;
         mListener = listener;
         mUsbListener = usbListener;
         mActivity = activityName;
+    }
+
+    /**
+     * connect with override of service type
+     *
+     * @param serviceType
+     */
+    public void connect(ServiceType serviceType) {
+        mShouldOverrideServiceType = true;
+        mOverrideServiceType = serviceType;
+        bindService();
+        registerReceiver();
     }
 
     public void connect() {
@@ -103,7 +130,6 @@ public class FadecandyClient {
     public void disconnect() {
         if (mBound) {
             Log.v(TAG, "unbind");
-            fadecandyService.removeUsbListener(mUsbListener);
             mContext.unbindService(mServiceConnection);
             mContext.unregisterReceiver(receiver);
             mBound = false;
@@ -113,11 +139,20 @@ public class FadecandyClient {
         }
     }
 
+    public void stopService() {
+        mContext.stopService(fadecandyServiceIntent);
+    }
+
     private void bindService() {
 
         fadecandyServiceIntent = new Intent();
         fadecandyServiceIntent.setClassName(mContext, SERVICE_NAME);
         fadecandyServiceIntent.putExtra(Constants.SERVICE_EXTRA_ACTIVITY, mActivity);
+
+        if (mShouldOverrideServiceType) {
+            fadecandyServiceIntent.putExtra(Constants.SERVICE_EXTRA_SERVICE_TYPE, mOverrideServiceType.ordinal());
+        }
+
         mContext.startService(fadecandyServiceIntent);
 
         mBound = mContext.bindService(fadecandyServiceIntent, mServiceConnection,
@@ -224,7 +259,7 @@ public class FadecandyClient {
         if (mBound && fadecandyService != null) {
             return fadecandyService.getServerPort();
         }
-        return 0;
+        return DEFAULT_PORT;
     }
 
     public String getIpAddress() {

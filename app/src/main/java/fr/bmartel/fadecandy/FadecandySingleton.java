@@ -125,6 +125,21 @@ public class FadecandySingleton {
     private final static String PREFERENCE_FIELD_LEDCOUNT = "ledCount";
 
     /**
+     * preference server mode field name.
+     */
+    private final static String PREFERENCE_FIELD_SERVER_MODE = "serverMode";
+
+    /**
+     * define if Android server is used (true) or antoher Fadecandy server on LAN (false).
+     */
+    private boolean mServerMode;
+
+    /**
+     * default server mode is Android server mode.
+     */
+    private final static boolean DEFAULT_SERVER_MODE = true;
+
+    /**
      * current number of led.
      */
     private int mLedCount;
@@ -174,6 +189,7 @@ public class FadecandySingleton {
 
         prefs = context.getSharedPreferences(Constants.PREFERENCE_PREFS, Context.MODE_PRIVATE);
         mLedCount = prefs.getInt(PREFERENCE_FIELD_LEDCOUNT, DEFAULT_LED_COUNT);
+        mServerMode = prefs.getBoolean(PREFERENCE_FIELD_SERVER_MODE, DEFAULT_SERVER_MODE);
 
         mExecutorService = Executors.newSingleThreadExecutor();
 
@@ -225,8 +241,9 @@ public class FadecandySingleton {
             }
         }, "fr.bmartel.fadecandy/.activity.MainActivity");
 
-
-        mFadecandyClient.startServer();
+        if (mServerMode) {
+            mFadecandyClient.startServer();
+        }
     }
 
     /**
@@ -342,7 +359,7 @@ public class FadecandySingleton {
         if (mFadecandyClient != null) {
             return mFadecandyClient.getServerPort();
         }
-        return 0;
+        return FadecandyClient.DEFAULT_PORT;
     }
 
     /**
@@ -411,7 +428,11 @@ public class FadecandySingleton {
      */
     public void connect() {
         if (mFadecandyClient != null) {
-            mFadecandyClient.connect();
+            if (!mServerMode) {
+                mFadecandyClient.connect(ServiceType.NON_PERSISTENT_SERVICE);
+            } else {
+                mFadecandyClient.connect();
+            }
         }
     }
 
@@ -559,4 +580,22 @@ public class FadecandySingleton {
         }
     }
 
+    public boolean isServerMode() {
+        return mServerMode;
+    }
+
+    public void setServerMode(boolean serverMode) {
+        if (mServerMode && !serverMode) {
+            mServerMode = serverMode;
+            //stop server & unbind service
+            closeServer();
+            disconnect();
+            mFadecandyClient.stopService();
+        } else if (!mServerMode && serverMode) {
+            //bind server & start server
+            mServerMode = serverMode;
+            startServer();
+        }
+        prefs.edit().putBoolean(PREFERENCE_FIELD_SERVER_MODE, mServerMode).apply();
+    }
 }
