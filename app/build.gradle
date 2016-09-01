@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "fr.bmartel.fadecandy"
-        minSdkVersion 12
+        minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
