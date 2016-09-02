@@ -56,4 +56,15 @@ public interface ISingletonListener {
      */
     void onUsbDeviceDetached(UsbItem usbItem);
 
+    /**
+     * called when connection to server fail in host mode.
+     */
+    void onServerConnectionFailure();
+
+    /**
+     * called when Fadecandy USB device list change
+     *
+     * @param size
+     */
+    void onConnectedDeviceChanged(int size);
 }

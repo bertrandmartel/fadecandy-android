@@ -43,6 +43,8 @@ import fr.bmartel.android.fadecandy.model.UsbItem;
 import fr.bmartel.fadecandy.FadecandySingleton;
 import fr.bmartel.fadecandy.R;
 import fr.bmartel.fadecandy.fragment.FullColorFragment;
+import fr.bmartel.fadecandy.fragment.MixerFragment;
+import fr.bmartel.fadecandy.fragment.PulseFragment;
 import fr.bmartel.fadecandy.fragment.SparkFragment;
 import fr.bmartel.fadecandy.fragment.TemperatureFragment;
 import fr.bmartel.fadecandy.inter.IFragment;
@@ -101,6 +103,14 @@ public class MainActivity extends BaseActivity {
                         break;
                     case R.id.tab_temperature:
                         mFragment = new TemperatureFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame, mFragment).commit();
+                        break;
+                    case R.id.tab_mixer:
+                        mFragment = new MixerFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame, mFragment).commit();
+                        break;
+                    case R.id.tab_pulse:
+                        mFragment = new PulseFragment();
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame, mFragment).commit();
                         break;
                 }
@@ -194,6 +204,26 @@ public class MainActivity extends BaseActivity {
                 }
             });
         }
+
+        @Override
+        public void onServerConnectionFailure() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(MainActivity.this, getString(R.string.server_connection_failure), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        @Override
+        public void onConnectedDeviceChanged(final int size) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setToolbarTitle(size);
+                }
+            });
+        }
     };
 
     @Override
@@ -217,7 +247,7 @@ public class MainActivity extends BaseActivity {
         if (mDialog != null) {
             mDialog.dismiss();
         }
-        
+
         mSingleton.removeListener(mListener);
 
         mStarted = false;
@@ -336,5 +366,53 @@ public class MainActivity extends BaseActivity {
         mDialog = dialog;
     }
 
+    @Override
+    public void restartRemoteConnection() {
+        if (mSingleton != null) {
+            mSingleton.restartRemoteConnection();
+        }
+    }
 
+    @Override
+    public void setRemoteServerIp(String ip) {
+        if (mSingleton != null) {
+            mSingleton.setRemoteServerIp(ip);
+        }
+    }
+
+    @Override
+    public void setRemoteServerPort(int port) {
+        if (mSingleton != null) {
+            mSingleton.setRemoteServerPort(port);
+        }
+    }
+
+    public String getRemoteServerIp() {
+        if (mSingleton != null) {
+            return mSingleton.getRemoteServerIp();
+        }
+        return "";
+    }
+
+    public int getRemoteServerPort() {
+        if (mSingleton != null) {
+            return mSingleton.getRemoteServerPort();
+        }
+        return 0;
+    }
+
+    @Override
+    public int getSparkSpan() {
+        if (mSingleton != null) {
+            return mSingleton.getSparkSpan();
+        }
+        return FadecandySingleton.DEFAULT_SPARK_SPAN;
+    }
+
+    @Override
+    public void setSparkSpan(int sparkSpan) {
+        if (mSingleton != null) {
+            mSingleton.setSparkSpan(sparkSpan);
+        }
+    }
 }

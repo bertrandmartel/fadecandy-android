@@ -24,7 +24,6 @@
 package fr.bmartel.fadecandy.fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,12 +82,9 @@ public class TemperatureFragment extends MainFragment {
             }
         });
 
-        if (mSingleton.getTemperature() != -1) {
+        int value = (mSingleton.getTemperature() - 0xFFFF00) * 100 / 255;
 
-            int value = (mSingleton.getTemperature() - 0xFFFF00) * 100 / 255;
-
-            temperatureSeekbar.setProgress(value);
-        }
+        temperatureSeekbar.setProgress(value);
 
         Button button_all_off = (Button) view.findViewById(R.id.button_all_off);
 

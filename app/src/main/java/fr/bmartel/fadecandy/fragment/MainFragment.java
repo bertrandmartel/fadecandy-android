@@ -47,7 +47,7 @@ public abstract class MainFragment extends android.support.v4.app.Fragment imple
 
     public void onCreate(View view) {
 
-        mSingleton = FadecandySingleton.getInstance(getActivity().getApplicationContext());
+        onCreateCommon();
 
         mBrightnessSeekBar = (DiscreteSeekBar) view.findViewById(R.id.seekbar_brightness);
 
@@ -89,6 +89,10 @@ public abstract class MainFragment extends android.support.v4.app.Fragment imple
         } else {
             mBrightnessSeekBar.setProgress(mSingleton.getCurrentColorCorrection());
         }
+    }
+
+    public void onCreateCommon() {
+        mSingleton = FadecandySingleton.getInstance(getActivity().getApplicationContext());
     }
 
     @Override

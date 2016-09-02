@@ -7,7 +7,8 @@
     android:layout_marginLeft="20dp"
     android:layout_marginRight="20dp"
     android:layout_marginTop="5dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="5dp">
 
     <TextView
         android:layout_width="match_parent"
@@ -34,51 +35,19 @@
         android:layout_height="wrap_content"
         android:paddingBottom="20dp"
         android:paddingTop="10dp"
-        android:text="@string/speed" />
+        android:text="@string/mixer_delay" />
 
     <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
-        android:id="@+id/seekbar_speed"
+        android:id="@+id/seekbar_mixer_delay"
         android:layout_width="match_parent"
         android:layout_height="62dp"
-        android:paddingBottom="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        app:dsb_indicatorColor="#342347"
-        app:dsb_max="100"
-        app:dsb_min="0"
-        app:dsb_progressColor="#342347"
-        app:dsb_value="1" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:paddingBottom="20dp"
-        android:paddingTop="10dp"
-        android:text="@string/span_spark" />
-
-    <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
-        android:id="@+id/seekbar_span"
-        android:layout_width="match_parent"
-        android:layout_height="62dp"
-        android:paddingBottom="10dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         app:dsb_indicatorColor="#342347"
-        app:dsb_max="64"
+        app:dsb_max="50"
         app:dsb_min="1"
         app:dsb_progressColor="#342347"
         app:dsb_value="1" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/color" />
-
-    <com.larswerkman.holocolorpicker.ColorPicker
-        android:id="@+id/picker"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_gravity="center"
-        android:layout_weight="1" />
 
 </LinearLayout>

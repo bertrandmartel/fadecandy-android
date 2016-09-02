@@ -23,15 +23,13 @@
  */
 package fr.bmartel.fadecandy.fragment;
 
-import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.larswerkman.holocolorpicker.ColorPicker;
+import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
 import fr.bmartel.fadecandy.R;
 
@@ -40,50 +38,49 @@ import fr.bmartel.fadecandy.R;
  *
  * @author Bertrand Martel
  */
-public class FullColorFragment extends MainFragment implements ColorPicker.OnColorChangedListener {
+public class MixerFragment extends MainFragment {
 
-    private final static String TAG = FullColorFragment.class.getSimpleName();
-
-    public FullColorFragment() {
-
+    public MixerFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.full_color_fragment, container, false);
-
-        mIsSpark = false;
+        View view = inflater.inflate(R.layout.mixer_fragment, container, false);
 
         super.onCreate(view);
 
-        //init color picker
-        final ColorPicker picker = (ColorPicker) view.findViewById(R.id.picker);
-        picker.setOnColorChangedListener(this);
-        picker.setShowOldCenterColor(false);
+        DiscreteSeekBar delaySeekbar = (DiscreteSeekBar) view.findViewById(R.id.seekbar_mixer_delay);
 
-        if (mSingleton.getColor() != -1) {
-            picker.setColor(mSingleton.getColor());
-        }
-
-        Button button_all_off = (Button) view.findViewById(R.id.button_all_off);
-
-        button_all_off.setOnClickListener(new View.OnClickListener() {
+        delaySeekbar.setNumericTransformer(new DiscreteSeekBar.NumericTransformer() {
             @Override
-            public void onClick(View v) {
-
-                mSingleton.clearPixel();
+            public int transform(int value) {
+                return value * 1;
             }
         });
 
-        return view;
-    }
+        delaySeekbar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
 
-    @Override
-    public void onColorChanged(int color) {
-        Log.i(TAG, Color.red(color) + " - " + Color.green(color) + " - " + Color.blue(color));
-        mSingleton.setFullColor(color);
+            @Override
+            public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
+                mSingleton.setMixerDelay(value);
+            }
+
+            @Override
+            public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
+
+            }
+        });
+        delaySeekbar.setProgress(mSingleton.getMixerDelay());
+
+        mSingleton.mixer();
+
+        return view;
     }
 
 }

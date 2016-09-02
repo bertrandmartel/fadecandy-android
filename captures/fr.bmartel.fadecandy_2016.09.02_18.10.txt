@@ -1,0 +1,100 @@
+TASK fr.bmartel.fadecandy id=106
+  ACTIVITY fr.bmartel.fadecandy/.activity.MainActivity 43a71c90 pid=15954
+    Local FragmentActivity 428f5330 State:
+      mCreated=truemResumed=true mStopped=false mReallyStopped=false
+      mLoadersStarted=true
+    Active Fragments in 428f71e0:
+      #0: SparkFragment{42aa6930 #0 id=0x7f0d0071}
+        mFragmentId=#7f0d0071 mContainerId=#7f0d0071 mTag=null
+        mState=5 mIndex=0 mWho=android:fragment:0 mBackStackNesting=0
+        mAdded=true mRemoving=false mFromLayout=false mInLayout=false
+        mHidden=false mDetached=false mMenuVisible=true mHasMenu=false
+        mRetainInstance=false mRetaining=false mUserVisibleHint=true
+        mFragmentManager=FragmentManager{428f71e0 in HostCallbacks{428f62e8}}
+        mHost=android.support.v4.app.FragmentActivity$HostCallbacks@428f62e8
+        mContainer=android.widget.FrameLayout{42950e78 V.E..... ........ 0,112-720,1110 #7f0d0071 app:id/fragment_frame}
+        mView=android.widget.LinearLayout{42aa7508 V.E..... ........ 40,10-680,998}
+        mInnerView=android.widget.LinearLayout{42aa7508 V.E..... ........ 40,10-680,998}
+        Child FragmentManager{42aa7210 in SparkFragment{42aa6930}}:
+          FragmentManager misc state:
+            mHost=android.support.v4.app.FragmentActivity$HostCallbacks@428f62e8
+            mContainer=android.support.v4.app.Fragment$1@42aa7290
+            mParent=SparkFragment{42aa6930 #0 id=0x7f0d0071}
+            mCurState=5 mStateSaved=false mDestroyed=false
+    Added Fragments:
+      #0: SparkFragment{42aa6930 #0 id=0x7f0d0071}
+    FragmentManager misc state:
+      mHost=android.support.v4.app.FragmentActivity$HostCallbacks@428f62e8
+      mContainer=android.support.v4.app.FragmentActivity$HostCallbacks@428f62e8
+      mCurState=5 mStateSaved=false mDestroyed=false
+    View Hierarchy:
+      com.android.internal.policy.impl.PhoneWindow$DecorView{42924610 V.E..... ... 0,0-720,1280}
+        android.widget.LinearLayout{42925058 V.E..... ... 0,0-720,1280}
+          android.view.ViewStub{4292c990 G.E..... ... 0,0-0,0 #10203bb}
+          android.widget.FrameLayout{4292ce80 V.E..... ... 0,50-720,1280}
+            android.support.v7.widget.FitWindowsLinearLayout{42923100 V.E..... ... 0,0-720,1230 #7f0d0058 app:id/action_bar_root}
+              android.support.v7.widget.ViewStubCompat{42931340 G.E..... ... 0,0-0,0 #7f0d0059 app:id/action_mode_bar_stub}
+              android.support.v7.widget.ContentFrameLayout{42931c98 V.ED.... ... 0,0-720,1230 #1020002 android:id/content}
+                android.support.v4.widget.DrawerLayout{429369d8 VFE..... F.. 0,0-720,1230 #7f0d0070 app:id/drawer_layout}
+                  android.widget.LinearLayout{4293e870 V.E..... ... 0,0-720,1230}
+                    android.support.v7.widget.Toolbar{4293fbb8 V.E..... ... 0,0-720,112 #7f0d00a1 app:id/toolbar_item}
+                      android.widget.TextView{429dde18 V.ED.... ... 120,29-502,82}
+                      android.widget.ImageButton{429cf640 VFED..C. ... 0,0-112,112}
+                      android.support.v7.widget.ActionMenuView{429df8d8 V.E..... ... 720,0-720,112}
+                    android.widget.FrameLayout{42950e78 V.E..... ... 0,112-720,1110 #7f0d0071 app:id/fragment_frame}
+                      android.widget.LinearLayout{42aa7508 V.E..... ... 40,10-680,998}
+                        android.support.v7.widget.AppCompatTextView{42aa78e8 V.ED.... ... 0,0-640,98}
+                        org.adw.library.widgets.discreteseekbar.DiscreteSeekBar{42aa8170 VFED.... ... 0,98-640,182 #7f0d0089 app:id/seekbar_brightness}
+                        android.support.v7.widget.AppCompatTextView{42aac258 V.ED.... ... 0,182-640,280}
+                        org.adw.library.widgets.discreteseekbar.DiscreteSeekBar{42aaca78 VFED.... ... 0,280-640,364 #7f0d009e app:id/seekbar_speed}
+                        android.support.v7.widget.AppCompatTextView{42ab0b60 V.ED.... ... 0,364-640,462}
+                        org.adw.library.widgets.discreteseekbar.DiscreteSeekBar{42ab1380 VFED.... ... 0,462-640,546 #7f0d009f app:id/seekbar_span}
+                        android.support.v7.widget.AppCompatTextView{42ab5418 V.ED.... ... 0,546-640,584}
+                        com.larswerkman.holocolorpicker.ColorPicker{42ab5c88 V.ED.... ... 118,584-522,988 #7f0d008a app:id/picker}
+                    com.roughike.bottombar.BottomBar{4295f050 V.E..... ... 0,1110-720,1230 #7f0d0072 app:id/bottomBar}
+                      android.support.v7.widget.AppCompatImageView{42960a20 V.ED.... ... 0,0-720,8 #7f0d0075 app:id/bb_bottom_bar_shadow}
+                      android.widget.FrameLayout{42963440 V.E..... ... 0,8-720,120 #7f0d0076 app:id/bb_bottom_bar_outer_container}
+                        android.view.View{429662b0 I.ED.... ... 0,0-720,112 #7f0d0077 app:id/bb_bottom_bar_background_overlay}
+                        android.widget.LinearLayout{429665b0 V.E..... ... 0,0-720,112 #7f0d0078 app:id/bb_bottom_bar_item_container}
+                          com.roughike.bottombar.BottomBarTab{429682f0 V.E...CL ... 0,0-144,112 #7f0d00a2 app:id/tab_fullcolor}
+                            android.support.v7.widget.AppCompatImageView{42969f20 V.ED.... ... 48,0-96,64 #7f0d0079 app:id/bb_bottom_bar_icon}
+                            android.support.v7.widget.AppCompatTextView{4296a740 V.ED.... ... 12,64-132,112 #7f0d007a app:id/bb_bottom_bar_title}
+                          com.roughike.bottombar.BottomBarTab{42968b98 V.E...CL ... 144,0-288,112 #7f0d00a3 app:id/tab_spark}
+                            android.support.v7.widget.AppCompatImageView{42973278 V.ED.... ... 48,0-96,60 #7f0d0079 app:id/bb_bottom_bar_icon}
+                            android.support.v7.widget.AppCompatTextView{42973670 V.ED.... ... 36,60-108,110 #7f0d007a app:id/bb_bottom_bar_title}
+                          com.roughike.bottombar.BottomBarTab{42968f80 V.E...CL ... 288,0-432,112 #7f0d00a4 app:id/tab_temperature}
+                            android.support.v7.widget.AppCompatImageView{42978d80 V.ED.... ... 48,0-96,64 #7f0d0079 app:id/bb_bottom_bar_icon}
+                            android.support.v7.widget.AppCompatTextView{42979178 V.ED.... ... 0,64-144,112 #7f0d007a app:id/bb_bottom_bar_title}
+                          com.roughike.bottombar.BottomBarTab{42969378 V.E...CL ... 432,0-576,112 #7f0d00a5 app:id/tab_mixer}
+                            android.support.v7.widget.AppCompatImageView{4297e848 V.ED.... ... 48,0-96,64 #7f0d0079 app:id/bb_bottom_bar_icon}
+                            android.support.v7.widget.AppCompatTextView{4297ec40 V.ED.... ... 36,64-107,112 #7f0d007a app:id/bb_bottom_bar_title}
+                          com.roughike.bottombar.BottomBarTab{42969760 V.E...CL ... 576,0-720,112 #7f0d00a6 app:id/tab_pulse}
+                            android.support.v7.widget.AppCompatImageView{429843d8 V.ED.... ... 48,0-96,64 #7f0d0079 app:id/bb_bottom_bar_icon}
+                            android.support.v7.widget.AppCompatTextView{429847d0 V.ED.... ... 36,64-107,112 #7f0d007a app:id/bb_bottom_bar_title}
+                  android.support.design.widget.NavigationView{4298b8c0 I.E..... ... -560,112-0,1230 #7f0d0073 app:id/nvView}
+                    android.support.design.internal.NavigationMenuView{42999630 VFED.V.. ... 0,0-560,1118 #7f0d0085 app:id/design_navigation_view}
+                      android.widget.LinearLayout{429a9980 V.E..... ... 0,0-560,16 #7f0d0084 app:id/navigation_header_container}
+                      android.support.design.internal.NavigationMenuItemView{42a44170 VFED..C. ... 0,16-560,112}
+                        android.support.v7.widget.AppCompatCheckedTextView{42a449c8 V.ED.... ... 32,0-528,96 #7f0d0086 app:id/design_menu_item_text}
+                        android.widget.FrameLayout{42a45da0 V.E..... ... 528,0-528,96 #7f0d0088 app:id/design_menu_item_action_area}
+                      android.support.design.internal.NavigationMenuItemView{42a46690 VFED..C. ... 0,112-560,208}
+                        android.support.v7.widget.AppCompatCheckedTextView{42a46ee8 V.ED.... ... 32,0-528,96 #7f0d0086 app:id/design_menu_item_text}
+                        android.widget.FrameLayout{42a482c0 V.E..... ... 528,0-528,96 #7f0d0088 app:id/design_menu_item_action_area}
+                      android.support.design.internal.NavigationMenuItemView{42a48bb0 VFED..C. ... 0,208-560,304}
+                        android.support.v7.widget.AppCompatCheckedTextView{42a49408 V.ED.... ... 32,0-528,96 #7f0d0086 app:id/design_menu_item_text}
+                        android.widget.FrameLayout{42a4a7e0 V.E..... ... 528,0-528,96 #7f0d0088 app:id/design_menu_item_action_area}
+                      android.support.design.internal.NavigationMenuItemView{42a4b0d0 VFED..C. ... 0,304-560,400}
+                        android.support.v7.widget.AppCompatCheckedTextView{42a4b928 V.ED.... ... 32,0-528,96 #7f0d0086 app:id/design_menu_item_text}
+                        android.widget.FrameLayout{42a4cd00 V.E..... ... 528,0-528,96 #7f0d0088 app:id/design_menu_item_action_area}
+                      android.support.design.internal.NavigationMenuItemView{42a4d5f0 VFED..C. ... 0,400-560,496}
+                        android.support.v7.widget.AppCompatCheckedTextView{42a4de48 V.ED.... ... 32,0-528,96 #7f0d0086 app:id/design_menu_item_text}
+                        android.widget.FrameLayout{42a4f220 V.E..... ... 528,0-528,96 #7f0d0088 app:id/design_menu_item_action_area}
+                      android.support.design.internal.NavigationMenuItemView{42a5f2e0 VFED..C. ... 0,496-560,592}
+                        android.support.v7.widget.AppCompatCheckedTextView{42a5fb38 V.ED.... ... 32,0-528,96 #7f0d0086 app:id/design_menu_item_text}
+                        android.widget.FrameLayout{42a60f10 V.E..... ... 528,0-528,96 #7f0d0088 app:id/design_menu_item_action_area}
+                      android.support.design.internal.NavigationMenuItemView{42a61800 VFED..C. ... 0,592-560,688}
+                        android.support.v7.widget.AppCompatCheckedTextView{42a62058 V.ED.... ... 32,0-528,96 #7f0d0086 app:id/design_menu_item_text}
+                        android.widget.FrameLayout{42a63430 V.E..... ... 528,0-528,96 #7f0d0088 app:id/design_menu_item_action_area}
+                      android.support.design.internal.NavigationMenuItemView{42a63d20 VFED..C. ... 0,688-560,784}
+                        android.support.v7.widget.AppCompatCheckedTextView{42a64578 V.ED.... ... 32,0-528,96 #7f0d0086 app:id/design_menu_item_text}
+                        android.widget.FrameLayout{42a65950 V.E..... ... 528,0-528,96 #7f0d0088 app:id/design_menu_item_action_area}

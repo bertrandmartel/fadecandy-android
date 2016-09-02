@@ -126,17 +126,21 @@ public abstract class BaseActivity extends AppCompatActivity implements IFc {
         });
     }
 
-    /**
-     * Set toolbar title in initialization or when USB device event occurs
-     */
-    protected void setToolbarTitle() {
+    protected void setToolbarTitle(int size) {
 
         String deviceTxt = "device";
         if (mSingleton.getUsbDevices().size() > 1) {
             deviceTxt = "devices";
         }
 
-        getSupportActionBar().setTitle(getResources().getString(R.string.app_title) + " (" + mSingleton.getUsbDevices().size() + " " + deviceTxt + ")");
+        getSupportActionBar().setTitle(getResources().getString(R.string.app_title) + " (" + size + " " + deviceTxt + ")");
+    }
+
+    /**
+     * Set toolbar title in initialization or when USB device event occurs
+     */
+    protected void setToolbarTitle() {
+        setToolbarTitle(mSingleton.getUsbDevices().size());
     }
 
     /**

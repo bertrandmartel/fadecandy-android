@@ -12,4 +12,13 @@
         icon="@drawable/ic_action_temperature"
         id="@+id/tab_temperature"
         title="Temperature" />
+    <tab
+        icon="@drawable/ic_action_wizard"
+        id="@+id/tab_mixer"
+        title="Mixer" />
+
+    <tab
+        icon="@drawable/ic_hdr_strong"
+        id="@+id/tab_pulse"
+        title="Pulse" />
 </tabs>
