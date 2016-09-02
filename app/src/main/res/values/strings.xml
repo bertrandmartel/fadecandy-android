@@ -36,4 +36,11 @@
     <string name="cancel_button">Cancel</string>
     <string name="led_count_errorcase"><![CDATA[Led count must be > 0 and <=]]></string>
     <string name="start_server_checkbox">start a local server</string>
+    <string name="server_connection_failure">connection to server failed</string>
+    <string name="span_spark">Span</string>
+    <string name="mixer_delay">Mixer delay (ms)</string>
+    <string name="brightness_min">Brightness minimum</string>
+    <string name="brightness_max">Brightness maximum</string>
+    <string name="pulse_delay">Delay (ms)</string>
+    <string name="pulse_pause">Pulse pause (ms)</string>
 </resources>

@@ -32,7 +32,6 @@ import com.larswerkman.holocolorpicker.ColorPicker;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
-import fr.bmartel.fadecandy.FadecandySingleton;
 import fr.bmartel.fadecandy.R;
 
 /**
@@ -40,22 +39,20 @@ import fr.bmartel.fadecandy.R;
  *
  * @author Bertrand Martel
  */
-public class SparkFragment extends MainFragment implements ColorPicker.OnColorChangedListener {
+public class PulseFragment extends MainFragment implements ColorPicker.OnColorChangedListener {
 
     private final static String TAG = FullColorFragment.class.getSimpleName();
 
-    public SparkFragment() {
+    public PulseFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.spark_fragment, container, false);
+        View view = inflater.inflate(R.layout.pulse_fragment, container, false);
 
-        mIsSpark = true;
-
-        super.onCreate(view);
+        super.onCreateCommon();
 
         //init color picker
         ColorPicker picker = (ColorPicker) view.findViewById(R.id.picker);
@@ -66,20 +63,47 @@ public class SparkFragment extends MainFragment implements ColorPicker.OnColorCh
             picker.setColor(mSingleton.getColor());
         }
 
-        DiscreteSeekBar speedSeekbar = (DiscreteSeekBar) view.findViewById(R.id.seekbar_speed);
+        DiscreteSeekBar delaySeekbar = (DiscreteSeekBar) view.findViewById(R.id.seekbar_delay);
 
-        speedSeekbar.setNumericTransformer(new DiscreteSeekBar.NumericTransformer() {
+        delaySeekbar.setNumericTransformer(new DiscreteSeekBar.NumericTransformer() {
             @Override
             public int transform(int value) {
                 return value * 1;
             }
         });
 
-        speedSeekbar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
+        delaySeekbar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
 
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
-                mSingleton.setSpeed(value);
+                mSingleton.setPulseDelay(value);
+            }
+
+            @Override
+            public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
+
+            }
+        });
+        delaySeekbar.setProgress(mSingleton.getPulseDelay());
+
+        DiscreteSeekBar pauseSeekbar = (DiscreteSeekBar) view.findViewById(R.id.seekbar_pause);
+
+        pauseSeekbar.setNumericTransformer(new DiscreteSeekBar.NumericTransformer() {
+            @Override
+            public int transform(int value) {
+                return value * 1;
+            }
+        });
+
+        pauseSeekbar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
+
+            @Override
+            public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
+                mSingleton.setPulsePause(value);
             }
 
             @Override
@@ -92,50 +116,14 @@ public class SparkFragment extends MainFragment implements ColorPicker.OnColorCh
             }
         });
 
-        DiscreteSeekBar spanSeekbar = (DiscreteSeekBar) view.findViewById(R.id.seekbar_span);
-
-        spanSeekbar.setNumericTransformer(new DiscreteSeekBar.NumericTransformer() {
-            @Override
-            public int transform(int value) {
-                return value * 1;
-            }
-        });
-
-        spanSeekbar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
-
-            @Override
-            public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
-                mSingleton.setSparkSpan(value);
-            }
-
-            @Override
-            public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
-
-            }
-        });
-
-        if (mSingleton.getSpeed() != -1) {
-            speedSeekbar.setProgress(mSingleton.getSpeed());
-        } else {
-            speedSeekbar.setProgress(FadecandySingleton.DEFAULT_SPARK_SPEED);
-        }
-
-        if (mSingleton.getSparkSpan() != -1) {
-            spanSeekbar.setProgress(mSingleton.getSparkSpan());
-        } else {
-            spanSeekbar.setProgress(FadecandySingleton.DEFAULT_SPARK_SPAN);
-        }
+        pauseSeekbar.setProgress(mSingleton.getPulsePause());
 
         return view;
     }
 
     @Override
     public void onColorChanged(int color) {
-        mSingleton.spark(color);
+        mSingleton.pulse(color);
     }
 
     @Override

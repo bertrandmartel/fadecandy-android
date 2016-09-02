@@ -129,4 +129,51 @@ public interface IFc {
      */
     void setCurrentDialog(Dialog dialog);
 
+    /**
+     * restart connection to remote websocket server.
+     */
+    void restartRemoteConnection();
+
+    /**
+     * set remote server ip.
+     *
+     * @param ip
+     */
+    void setRemoteServerIp(String ip);
+
+    /**
+     * set remote server port.
+     *
+     * @param port
+     */
+    void setRemoteServerPort(int port);
+
+    /**
+     * get remote server ip
+     *
+     * @return
+     */
+    String getRemoteServerIp();
+
+    /**
+     * get remote server port.
+     *
+     * @return
+     */
+    int getRemoteServerPort();
+
+    /**
+     * get spark span value
+     *
+     * @return
+     */
+    int getSparkSpan();
+
+    /**
+     * set spark span value.
+     *
+     * @param sparkSpan
+     */
+    void setSparkSpan(int sparkSpan);
+
 }

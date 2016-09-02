@@ -469,7 +469,9 @@ public class FadecandyService extends Service {
 
         //this is the activity which will be opened when user click on notification
         Intent testIntent = new Intent();
-        testIntent.setComponent(ComponentName.unflattenFromString(intent.getStringExtra(Constants.SERVICE_EXTRA_ACTIVITY)));
+        if (intent.hasExtra(Constants.SERVICE_EXTRA_ACTIVITY)) {
+            testIntent.setComponent(ComponentName.unflattenFromString(intent.getStringExtra(Constants.SERVICE_EXTRA_ACTIVITY)));
+        }
 
         ServiceType serviceTypeOverride;
 

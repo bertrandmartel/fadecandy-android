@@ -76,11 +76,16 @@ public class ConfigurationDialog extends AlertDialog {
         sItems.setSelection(defaultPos);
 
         final EditText portEditText = (EditText) dialoglayout.findViewById(R.id.port_edit);
-        portEditText.setText("" + activity.getServerPort());
+
+        if (serverMode) {
+            portEditText.setText("" + activity.getServerPort());
+        } else {
+            portEditText.setText("" + activity.getRemoteServerPort());
+        }
         portEditText.setSelection(portEditText.getText().length());
 
         final EditText localServerEditText = (EditText) dialoglayout.findViewById(R.id.local_server_edit);
-        localServerEditText.setText(defaultAddr);
+        localServerEditText.setText(activity.getRemoteServerIp());
 
         if (!serverMode) {
             sItems.setVisibility(View.GONE);
@@ -111,16 +116,22 @@ public class ConfigurationDialog extends AlertDialog {
 
                 if (startServerCheckbox.isChecked()) {
                     activity.setServerAddress(sItems.getSelectedItem().toString());
+                    activity.setServerPort(Integer.parseInt(portEditText.getText().toString()));
                 } else {
-                    activity.setServerAddress(localServerEditText.getText().toString());
+                    activity.setRemoteServerIp(localServerEditText.getText().toString());
+                    activity.setRemoteServerPort(Integer.parseInt(portEditText.getText().toString()));
                 }
 
-                activity.setServerPort(Integer.parseInt(portEditText.getText().toString()));
+                boolean oldMode = activity.isServerMode();
 
                 activity.setServerMode(startServerCheckbox.isChecked());
 
                 if (startServerCheckbox.isChecked()) {
                     activity.restartServer();
+                }
+
+                if (oldMode == false && startServerCheckbox.isChecked() == false) {
+                    activity.restartRemoteConnection();
                 }
             }
         });
