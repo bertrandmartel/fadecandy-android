@@ -24,7 +24,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         app:dsb_indicatorColor="#342347"
-        app:dsb_max="1000"
+        app:dsb_max="100"
         app:dsb_min="1"
         app:dsb_progressColor="#342347"
         app:dsb_value="1" />
@@ -44,8 +44,8 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         app:dsb_indicatorColor="#342347"
-        app:dsb_max="3000"
-        app:dsb_min="500"
+        app:dsb_max="1000"
+        app:dsb_min="200"
         app:dsb_progressColor="#342347"
         app:dsb_value="1" />
 
