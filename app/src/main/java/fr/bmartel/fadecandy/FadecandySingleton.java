@@ -435,8 +435,13 @@ public class FadecandySingleton {
      * @return
      */
     public int getServerPort() {
-        if (mFadecandyClient != null) {
-            return mFadecandyClient.getServerPort();
+
+        if (mServerMode) {
+            if (mFadecandyClient != null) {
+                return mFadecandyClient.getServerPort();
+            }
+        } else {
+            return mRemoteServerPort;
         }
         return FadecandyClient.DEFAULT_PORT;
     }
@@ -447,8 +452,13 @@ public class FadecandySingleton {
      * @return
      */
     public String getIpAddress() {
-        if (mFadecandyClient != null) {
-            return mFadecandyClient.getIpAddress();
+
+        if (mServerMode) {
+            if (mFadecandyClient != null) {
+                return mFadecandyClient.getIpAddress();
+            }
+        } else {
+            return mRemoteServerIp;
         }
         return "";
     }
