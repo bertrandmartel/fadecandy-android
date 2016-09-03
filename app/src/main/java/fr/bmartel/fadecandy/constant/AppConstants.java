@@ -145,4 +145,9 @@ public class AppConstants {
      * default gamma correction used in open pixel control operation.
      */
     public final static float DEFAULT_GAMMA_CORRECTION = 2.5f;
+
+    /**
+     * websocket connection timeout.
+     */
+    public final static int WEBSOCKET_CONNECT_TIMEOUT = 1000;
 }
