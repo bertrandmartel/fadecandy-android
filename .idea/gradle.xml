@@ -8,15 +8,15 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/service" />
+            <option value="$PROJECT_DIR$/fadecandy-app" />
+            <option value="$PROJECT_DIR$/fadecandy-service" />
           </set>
         </option>
         <option name="myModules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/service" />
+            <option value="$PROJECT_DIR$/fadecandy-app" />
+            <option value="$PROJECT_DIR$/fadecandy-service" />
           </set>
         </option>
       </GradleProjectSettings>

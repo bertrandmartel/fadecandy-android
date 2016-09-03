@@ -1,1 +1,1 @@
-include ':service',':app'
+include ':fadecandy-service', ':fadecandy-app'
