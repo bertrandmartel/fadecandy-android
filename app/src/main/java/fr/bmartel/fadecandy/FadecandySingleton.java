@@ -784,16 +784,28 @@ public class FadecandySingleton {
                         try {
                             JSONObject messageJson = new JSONObject(message);
 
-                            if (messageJson.has("type") &&
-                                    messageJson.getString("type").equals("connected_devices_changed") &&
-                                    messageJson.has("devices")) {
+                            if (messageJson.has("type")) {
 
-                                JSONArray devices = (JSONArray) messageJson.get("devices");
+                                String type = messageJson.getString("type");
 
-                                for (int i = 0; i < mListeners.size(); i++) {
-                                    mListeners.get(i).onConnectedDeviceChanged(devices.length());
+                                if (type.equals("connected_devices_changed")) {
+
+                                    JSONArray devices = (JSONArray) messageJson.get("devices");
+
+                                    for (int i = 0; i < mListeners.size(); i++) {
+                                        mListeners.get(i).onConnectedDeviceChanged(devices.length());
+                                    }
+
+                                } else if (type.equals("list_connected_devices")) {
+
+                                    JSONArray devices = (JSONArray) messageJson.get("devices");
+
+                                    for (int i = 0; i < mListeners.size(); i++) {
+                                        mListeners.get(i).onConnectedDeviceChanged(devices.length());
+                                    }
                                 }
                             }
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -817,6 +829,8 @@ public class FadecandySingleton {
                 for (int i = 0; i < mListeners.size(); i++) {
                     mListeners.get(i).onServerConnectionSuccess();
                 }
+
+                sendListConnectedDevices();
             }
         };
         AsyncHttpClient asyncHttpClient = AsyncHttpClient.getDefaultInstance();
@@ -824,6 +838,16 @@ public class FadecandySingleton {
         mWebsocketFuture = asyncHttpClient.websocket("ws://" + getRemoteServerIp() + ":" + getRemoteServerPort() + "/", null, mWebSocketConnectCallback);
 
 
+    }
+
+    private void sendListConnectedDevices() {
+        try {
+            JSONObject req = new JSONObject();
+            req.put("type", "list_connected_devices");
+            mWebsocket.send(req.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private void closeWebsocket() {
