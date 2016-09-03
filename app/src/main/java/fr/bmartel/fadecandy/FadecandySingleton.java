@@ -51,6 +51,7 @@ import fr.bmartel.android.fadecandy.model.FadecandyConfig;
 import fr.bmartel.android.fadecandy.model.ServerError;
 import fr.bmartel.android.fadecandy.model.ServiceType;
 import fr.bmartel.android.fadecandy.model.UsbItem;
+import fr.bmartel.fadecandy.constant.AppConstants;
 import fr.bmartel.fadecandy.ledcontrol.ColorUtils;
 import fr.bmartel.fadecandy.ledcontrol.Spark;
 import fr.bmartel.fadecandy.listener.ISingletonListener;
@@ -108,7 +109,7 @@ public class FadecandySingleton {
     /**
      * spark speed current config.
      */
-    private int mSparkSpeed = -1;
+    private int mSparkSpeed;
 
     /**
      * led temperature current config.
@@ -116,109 +117,9 @@ public class FadecandySingleton {
     private int mTemperature;
 
     /**
-     * default number of led is one full strand.
-     */
-    public final static int DEFAULT_LED_COUNT = 64;
-
-    /**
-     * default temperature color
-     */
-    public final static int DEFAULT_TEMPERATURE = 0xFFFFFF;
-
-    /**
-     * default speed for spark animation.
-     */
-    public final static int DEFAULT_SPARK_SPEED = 60;
-
-    /**
-     * preference led count field name.
-     */
-    private final static String PREFERENCE_FIELD_LEDCOUNT = "ledCount";
-
-    /**
-     * preference server mode field name.
-     */
-    private final static String PREFERENCE_FIELD_SERVER_MODE = "serverMode";
-
-    /**
-     * preference remote server port.
-     */
-    private final static String PREFERENCE_FIELD_REMOTE_SERVER_PORT = "remoteServerPort";
-
-    /**
-     * preference remote server IP.
-     */
-    private final static String PREFERENCE_FIELD_REMOTE_SERVER_IP = "remoteServerIp";
-
-    /**
-     * preferences for spark span.
-     */
-    private final static String PREFERENCE_FIELD_SPARK_SPAN = "sparkSpan";
-
-    /**
-     * preference for spark speed.
-     */
-    private final static String PREFERENCE_FIELD_SPARK_SPEED = "sparkSpeed";
-
-    /**
-     * preference for mixer delay.
-     */
-    private final static String PREFERENCE_FIELD_MIXER_DELAY = "mixerDelay";
-
-    /**
-     * preference pulse delay.
-     */
-    private final static String PREFERENCE_FIELD_PULSE_DELAY = "pulseDelay";
-
-    /**
-     * preference pulse pause.
-     */
-    private final static String PREFERENCE_FIELD_PULSE_PAUSE = "pulsePause";
-
-    /**
-     * preference temperature.
-     */
-    private final static String PREFERENCE_FIELD_TEMPERATURE = "temperature";
-
-    /**
      * define if Android server is used (true) or antoher Fadecandy server on LAN (false).
      */
     private boolean mServerMode;
-
-    /**
-     * default server mode is Android server mode.
-     */
-    private final static boolean DEFAULT_SERVER_MODE = true;
-
-    /**
-     * default remote server ip.
-     */
-    private final static String DEFAULT_SERVER_IP = "127.0.0.1";
-
-    /**
-     * default remote server port.
-     */
-    private final static int DEFAULT_SERVER_PORT = 7890;
-
-    /**
-     * default spark span.
-     */
-    public final static int DEFAULT_SPARK_SPAN = 5;
-
-    /**
-     * default delay for mixer animation.
-     */
-    public final static int DEFAULT_MIXER_DELAY = 10;
-
-    /**
-     * pulse animation default delay.
-     */
-    public final static int DEFAULT_PULSE_DELAY = 10;
-
-    /**
-     * pulse animation default pause
-     */
-    public final static int DEFAULT_PULSE_PAUSE = 1000;
 
     /**
      * current number of led.
@@ -268,7 +169,7 @@ public class FadecandySingleton {
     private int mPulseDelay;
 
     /**
-     * pulse pause between 2 pulses
+     * pulse pause between 2 pulses.
      */
     private int mPulsePause;
 
@@ -278,9 +179,19 @@ public class FadecandySingleton {
     private boolean mIsPulsing;
 
     /**
-     * define if mix animation is running
+     * define if mix animation is running.
      */
     private boolean mIsMixing;
+
+    /**
+     * define if spark animation is running.
+     */
+    private boolean mIsSparking;
+
+    /**
+     * define if open pixel control request is pending
+     */
+    private boolean mIsSendingRequest;
 
     /**
      * Get the static singleton instance.
@@ -321,16 +232,16 @@ public class FadecandySingleton {
     public FadecandySingleton(Context context) {
 
         prefs = context.getSharedPreferences(Constants.PREFERENCE_PREFS, Context.MODE_PRIVATE);
-        mLedCount = prefs.getInt(PREFERENCE_FIELD_LEDCOUNT, DEFAULT_LED_COUNT);
-        mServerMode = prefs.getBoolean(PREFERENCE_FIELD_SERVER_MODE, DEFAULT_SERVER_MODE);
-        mRemoteServerIp = prefs.getString(PREFERENCE_FIELD_REMOTE_SERVER_IP, DEFAULT_SERVER_IP);
-        mRemoteServerPort = prefs.getInt(PREFERENCE_FIELD_REMOTE_SERVER_PORT, DEFAULT_SERVER_PORT);
-        mSparkSpan = prefs.getInt(PREFERENCE_FIELD_SPARK_SPAN, DEFAULT_SPARK_SPAN);
-        mSparkSpeed = prefs.getInt(PREFERENCE_FIELD_SPARK_SPEED, DEFAULT_SPARK_SPEED);
-        mMixerDelay = prefs.getInt(PREFERENCE_FIELD_MIXER_DELAY, DEFAULT_MIXER_DELAY);
-        mPulseDelay = prefs.getInt(PREFERENCE_FIELD_PULSE_DELAY, DEFAULT_PULSE_DELAY);
-        mPulsePause = prefs.getInt(PREFERENCE_FIELD_PULSE_PAUSE, DEFAULT_PULSE_PAUSE);
-        mTemperature = prefs.getInt(PREFERENCE_FIELD_TEMPERATURE, DEFAULT_TEMPERATURE);
+        mLedCount = prefs.getInt(AppConstants.PREFERENCE_FIELD_LEDCOUNT, AppConstants.DEFAULT_LED_COUNT);
+        mServerMode = prefs.getBoolean(AppConstants.PREFERENCE_FIELD_SERVER_MODE, AppConstants.DEFAULT_SERVER_MODE);
+        mRemoteServerIp = prefs.getString(AppConstants.PREFERENCE_FIELD_REMOTE_SERVER_IP, AppConstants.DEFAULT_SERVER_IP);
+        mRemoteServerPort = prefs.getInt(AppConstants.PREFERENCE_FIELD_REMOTE_SERVER_PORT, AppConstants.DEFAULT_SERVER_PORT);
+        mSparkSpan = prefs.getInt(AppConstants.PREFERENCE_FIELD_SPARK_SPAN, AppConstants.DEFAULT_SPARK_SPAN);
+        mSparkSpeed = prefs.getInt(AppConstants.PREFERENCE_FIELD_SPARK_SPEED, AppConstants.DEFAULT_SPARK_SPEED);
+        mMixerDelay = prefs.getInt(AppConstants.PREFERENCE_FIELD_MIXER_DELAY, AppConstants.DEFAULT_MIXER_DELAY);
+        mPulseDelay = prefs.getInt(AppConstants.PREFERENCE_FIELD_PULSE_DELAY, AppConstants.DEFAULT_PULSE_DELAY);
+        mPulsePause = prefs.getInt(AppConstants.PREFERENCE_FIELD_PULSE_PAUSE, AppConstants.DEFAULT_PULSE_PAUSE);
+        mTemperature = prefs.getInt(AppConstants.PREFERENCE_FIELD_TEMPERATURE, AppConstants.DEFAULT_TEMPERATURE);
 
         mExecutorService = Executors.newSingleThreadExecutor();
 
@@ -394,13 +305,25 @@ public class FadecandySingleton {
      */
     public void clearPixel() {
 
-        mExecutorService.execute(new Runnable() {
-            @Override
-            public void run() {
-                checkJoinThread();
-                ColorUtils.clear(getIpAddress(), getServerPort(), mLedCount);
-            }
-        });
+        if (!mIsSendingRequest) {
+
+            mIsSendingRequest = true;
+
+            mExecutorService.execute(new Runnable() {
+                @Override
+                public void run() {
+                    checkJoinThread();
+
+                    if (ColorUtils.clear(getIpAddress(), getServerPort(), mLedCount) == -1) {
+                        //error occured
+                        for (int i = 0; i < mListeners.size(); i++) {
+                            mListeners.get(i).onServerConnectionFailure();
+                        }
+                    }
+                    mIsSendingRequest = false;
+                }
+            });
+        }
     }
 
     /**
@@ -428,14 +351,26 @@ public class FadecandySingleton {
 
         mColor = color;
 
-        mExecutorService.execute(new Runnable() {
-            @Override
-            public void run() {
+        if (!mIsSendingRequest) {
 
-                checkJoinThread();
-                ColorUtils.setFullColor(getIpAddress(), getServerPort(), mLedCount, color);
-            }
-        });
+            mIsSendingRequest = true;
+
+            mExecutorService.execute(new Runnable() {
+                @Override
+                public void run() {
+
+                    checkJoinThread();
+
+                    if (ColorUtils.setFullColor(getIpAddress(), getServerPort(), mLedCount, color) == -1) {
+                        //error occured
+                        for (int i = 0; i < mListeners.size(); i++) {
+                            mListeners.get(i).onServerConnectionFailure();
+                        }
+                    }
+                    mIsSendingRequest = false;
+                }
+            });
+        }
     }
 
     /**
@@ -598,14 +533,26 @@ public class FadecandySingleton {
 
         mCurrentBrightness = value;
 
-        mExecutorService.execute(new Runnable() {
-            @Override
-            public void run() {
+        if (!mIsSendingRequest) {
 
-                checkJoinThread();
-                ColorUtils.setBrightness(getIpAddress(), getServerPort(), (value / 100f));
-            }
-        });
+            mIsSendingRequest = true;
+
+            mExecutorService.execute(new Runnable() {
+                @Override
+                public void run() {
+
+                    checkJoinThread();
+
+                    if (ColorUtils.setBrightness(getIpAddress(), getServerPort(), (value / 100f)) == -1) {
+                        //error occured
+                        for (int i = 0; i < mListeners.size(); i++) {
+                            mListeners.get(i).onServerConnectionFailure();
+                        }
+                    }
+                    mIsSendingRequest = false;
+                }
+            });
+        }
     }
 
     /**
@@ -629,18 +576,43 @@ public class FadecandySingleton {
 
         mColor = color;
 
-        checkJoinThread();
-        Spark.CONTROL = true;
-        mAnimating = true;
-        workerThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (mAnimating) {
-                    Spark.draw(getIpAddress(), getServerPort(), mLedCount, color, mSparkSpan);
+        if (!mIsSparking) {
+
+            mIsSparking = true;
+
+            mExecutorService.execute(new Runnable() {
+                @Override
+                public void run() {
+
+                    checkJoinThread();
+                    Spark.CONTROL = true;
+                    mAnimating = true;
+
+                    workerThread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            while (mAnimating) {
+
+                                if (Spark.draw(getIpAddress(), getServerPort(), mLedCount, color, mSparkSpan) == -1) {
+                                    //error occured
+                                    for (int i = 0; i < mListeners.size(); i++) {
+                                        mListeners.get(i).onServerConnectionFailure();
+                                    }
+                                    Spark.CONTROL = false;
+                                    mAnimating = false;
+                                    mIsSparking = false;
+                                    return;
+                                }
+                            }
+                            mIsSparking = false;
+                        }
+                    });
+                    workerThread.start();
+
                 }
-            }
-        });
-        workerThread.start();
+            });
+        }
     }
 
     /**
@@ -650,7 +622,7 @@ public class FadecandySingleton {
      */
     public void setSpeed(int speed) {
         mSparkSpeed = speed;
-        prefs.edit().putInt(PREFERENCE_FIELD_SPARK_SPEED, speed).apply();
+        prefs.edit().putInt(AppConstants.PREFERENCE_FIELD_SPARK_SPEED, speed).apply();
         Spark.setSpeed(speed);
     }
 
@@ -670,7 +642,7 @@ public class FadecandySingleton {
      */
     public void setTemperature(int temperature) {
         mTemperature = temperature;
-        prefs.edit().putInt(PREFERENCE_FIELD_TEMPERATURE, mTemperature).apply();
+        prefs.edit().putInt(AppConstants.PREFERENCE_FIELD_TEMPERATURE, mTemperature).apply();
         setFullColor(temperature);
     }
 
@@ -711,7 +683,7 @@ public class FadecandySingleton {
      */
     public void setLedCount(int ledCount) {
         this.mLedCount = ledCount;
-        prefs.edit().putInt(PREFERENCE_FIELD_LEDCOUNT, mLedCount).apply();
+        prefs.edit().putInt(AppConstants.PREFERENCE_FIELD_LEDCOUNT, mLedCount).apply();
     }
 
     /**
@@ -742,7 +714,7 @@ public class FadecandySingleton {
             mServerMode = serverMode;
             startServer();
         }
-        prefs.edit().putBoolean(PREFERENCE_FIELD_SERVER_MODE, mServerMode).apply();
+        prefs.edit().putBoolean(AppConstants.PREFERENCE_FIELD_SERVER_MODE, mServerMode).apply();
     }
 
     private void createWebsocketClient() {
@@ -806,6 +778,10 @@ public class FadecandySingleton {
                         return null;
                     }
                 });
+
+                for (int i = 0; i < mListeners.size(); i++) {
+                    mListeners.get(i).onServerConnectionSuccess();
+                }
             }
         };
         AsyncHttpClient asyncHttpClient = AsyncHttpClient.getDefaultInstance();
@@ -839,12 +815,12 @@ public class FadecandySingleton {
 
     public void setRemoteServerIp(String ip) {
         mRemoteServerIp = ip;
-        prefs.edit().putString(PREFERENCE_FIELD_REMOTE_SERVER_IP, ip).apply();
+        prefs.edit().putString(AppConstants.PREFERENCE_FIELD_REMOTE_SERVER_IP, ip).apply();
     }
 
     public void setRemoteServerPort(int port) {
         mRemoteServerPort = port;
-        prefs.edit().putInt(PREFERENCE_FIELD_REMOTE_SERVER_PORT, port).apply();
+        prefs.edit().putInt(AppConstants.PREFERENCE_FIELD_REMOTE_SERVER_PORT, port).apply();
     }
 
     public int getSparkSpan() {
@@ -853,13 +829,13 @@ public class FadecandySingleton {
 
     public void setSparkSpan(int sparkSpan) {
         mSparkSpan = sparkSpan;
-        prefs.edit().putInt(PREFERENCE_FIELD_SPARK_SPAN, sparkSpan).apply();
+        prefs.edit().putInt(AppConstants.PREFERENCE_FIELD_SPARK_SPAN, sparkSpan).apply();
         Spark.SPAN = sparkSpan;
     }
 
     public void setMixerDelay(int mixerDelay) {
         mMixerDelay = mixerDelay;
-        prefs.edit().putInt(PREFERENCE_FIELD_MIXER_DELAY, mixerDelay).apply();
+        prefs.edit().putInt(AppConstants.PREFERENCE_FIELD_MIXER_DELAY, mixerDelay).apply();
     }
 
     public int getMixerDelay() {
@@ -883,7 +859,12 @@ public class FadecandySingleton {
                         @Override
                         public void run() {
                             mAnimating = true;
-                            ColorUtils.mixer(getIpAddress(), getServerPort(), mLedCount, mMixerDelay, FadecandySingleton.this);
+                            if (ColorUtils.mixer(getIpAddress(), getServerPort(), mLedCount, mMixerDelay, FadecandySingleton.this) == -1) {
+                                //error occured
+                                for (int i = 0; i < mListeners.size(); i++) {
+                                    mListeners.get(i).onServerConnectionFailure();
+                                }
+                            }
                             mAnimating = false;
                             mIsMixing = false;
                         }
@@ -916,7 +897,12 @@ public class FadecandySingleton {
                         @Override
                         public void run() {
                             mAnimating = true;
-                            ColorUtils.pulse(getIpAddress(), getServerPort(), mLedCount, FadecandySingleton.this);
+                            if (ColorUtils.pulse(getIpAddress(), getServerPort(), mLedCount, FadecandySingleton.this) == -1) {
+                                //error occured
+                                for (int i = 0; i < mListeners.size(); i++) {
+                                    mListeners.get(i).onServerConnectionFailure();
+                                }
+                            }
                             mIsPulsing = false;
                             mAnimating = false;
                         }
@@ -938,11 +924,11 @@ public class FadecandySingleton {
 
     public void setPulseDelay(int pulseDelay) {
         mPulseDelay = pulseDelay;
-        prefs.edit().putInt(PREFERENCE_FIELD_PULSE_DELAY, mPulseDelay).apply();
+        prefs.edit().putInt(AppConstants.PREFERENCE_FIELD_PULSE_DELAY, mPulseDelay).apply();
     }
 
     public void setPulsePause(int pulsePause) {
         mPulsePause = pulsePause;
-        prefs.edit().putInt(PREFERENCE_FIELD_PULSE_PAUSE, mPulsePause).apply();
+        prefs.edit().putInt(AppConstants.PREFERENCE_FIELD_PULSE_PAUSE, mPulsePause).apply();
     }
 }

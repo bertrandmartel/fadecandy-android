@@ -32,7 +32,6 @@ import com.larswerkman.holocolorpicker.ColorPicker;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
-import fr.bmartel.fadecandy.FadecandySingleton;
 import fr.bmartel.fadecandy.R;
 
 /**
@@ -118,17 +117,8 @@ public class SparkFragment extends MainFragment implements ColorPicker.OnColorCh
             }
         });
 
-        if (mSingleton.getSpeed() != -1) {
-            speedSeekbar.setProgress(mSingleton.getSpeed());
-        } else {
-            speedSeekbar.setProgress(FadecandySingleton.DEFAULT_SPARK_SPEED);
-        }
-
-        if (mSingleton.getSparkSpan() != -1) {
-            spanSeekbar.setProgress(mSingleton.getSparkSpan());
-        } else {
-            spanSeekbar.setProgress(FadecandySingleton.DEFAULT_SPARK_SPAN);
-        }
+        speedSeekbar.setProgress(mSingleton.getSpeed());
+        spanSeekbar.setProgress(mSingleton.getSparkSpan());
 
         return view;
     }

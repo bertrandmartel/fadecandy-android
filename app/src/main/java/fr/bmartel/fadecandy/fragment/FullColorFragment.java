@@ -82,7 +82,6 @@ public class FullColorFragment extends MainFragment implements ColorPicker.OnCol
 
     @Override
     public void onColorChanged(int color) {
-        Log.i(TAG, Color.red(color) + " - " + Color.green(color) + " - " + Color.blue(color));
         mSingleton.setFullColor(color);
     }
 

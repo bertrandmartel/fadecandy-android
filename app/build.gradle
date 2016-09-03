@@ -32,7 +32,7 @@ dependencies {
     compile 'com.larswerkman:HoloColorPicker:1.5'
     compile 'org.adw.library:discrete-seekbar:1.0.1'
     compile 'com.roughike:bottom-bar:2.0.2'
-    compile 'com.github.akinaru:opc:1.01'
+    compile 'com.github.akinaru:opc:1.07'
     compile 'com.koushikdutta.async:androidasync:2.+'
 }
 
