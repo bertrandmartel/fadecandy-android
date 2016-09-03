@@ -38,16 +38,6 @@
             android:id="@+id/about_app"
             android:icon="@drawable/ic_info_outline"
             android:title="@string/menu_title_about" />
-        <!--
-        <item
-            android:id="@+id/update_server_config"
-            android:icon="@drawable/ic_config"
-            android:title="@string/menu_update_server_config" />
-
-        <item
-            android:id="@+id/update_led_count"
-            android:icon="@drawable/ic_led_count"
-            android:title="@string/menu_led_count" />   -->
 
     </group>
 </menu>

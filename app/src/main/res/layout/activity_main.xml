@@ -39,6 +39,7 @@
         android:layout_gravity="start"
         android:layout_marginTop="@dimen/abc_action_bar_default_height_material"
         android:background="@android:color/white"
+        app:headerLayout="@layout/nav_header_main"
         app:itemTextColor="#000000"
         app:menu="@menu/drawer_view" />
 

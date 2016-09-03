@@ -136,6 +136,10 @@ public abstract class BaseActivity extends AppCompatActivity implements IFc {
         getSupportActionBar().setTitle(getResources().getString(R.string.app_title) + " (" + size + " " + deviceTxt + ")");
     }
 
+    protected void setToolbarTitle(String text) {
+        getSupportActionBar().setTitle(getResources().getString(R.string.app_title) + " (" + text + ")");
+    }
+
     /**
      * Set toolbar title in initialization or when USB device event occurs
      */
