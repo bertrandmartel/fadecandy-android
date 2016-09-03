@@ -67,4 +67,9 @@ public interface ISingletonListener {
      * @param size
      */
     void onConnectedDeviceChanged(int size);
+
+    /**
+     * called when connection to server is successfull in host mode.
+     */
+    void onServerConnectionSuccess();
 }

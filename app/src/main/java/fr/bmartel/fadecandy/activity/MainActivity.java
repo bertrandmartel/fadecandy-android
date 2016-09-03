@@ -42,6 +42,7 @@ import fr.bmartel.android.fadecandy.model.ServiceType;
 import fr.bmartel.android.fadecandy.model.UsbItem;
 import fr.bmartel.fadecandy.FadecandySingleton;
 import fr.bmartel.fadecandy.R;
+import fr.bmartel.fadecandy.constant.AppConstants;
 import fr.bmartel.fadecandy.fragment.FullColorFragment;
 import fr.bmartel.fadecandy.fragment.MixerFragment;
 import fr.bmartel.fadecandy.fragment.PulseFragment;
@@ -210,7 +211,7 @@ public class MainActivity extends BaseActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(MainActivity.this, getString(R.string.server_connection_failure), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, getString(R.string.server_connection) + " " + mSingleton.getRemoteServerIp() + ":" + mSingleton.getServerPort() + " failed", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -221,6 +222,16 @@ public class MainActivity extends BaseActivity {
                 @Override
                 public void run() {
                     setToolbarTitle(size);
+                }
+            });
+        }
+
+        @Override
+        public void onServerConnectionSuccess() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(MainActivity.this, getString(R.string.server_connection) + " " + mSingleton.getRemoteServerIp() + ":" + mSingleton.getServerPort(), Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -406,7 +417,7 @@ public class MainActivity extends BaseActivity {
         if (mSingleton != null) {
             return mSingleton.getSparkSpan();
         }
-        return FadecandySingleton.DEFAULT_SPARK_SPAN;
+        return AppConstants.DEFAULT_SPARK_SPAN;
     }
 
     @Override

@@ -2,12 +2,13 @@ package fr.bmartel.fadecandy.ledcontrol;
 
 
 import android.graphics.Color;
-import android.util.Log;
 
 import com.github.akinaru.Animation;
 import com.github.akinaru.OpcClient;
 import com.github.akinaru.OpcDevice;
 import com.github.akinaru.PixelStrip;
+
+import fr.bmartel.fadecandy.constant.AppConstants;
 
 /**
  * Display a moving white pixel with trailing orange/red flames
@@ -62,26 +63,37 @@ public class Spark extends Animation {
         return (p + numPixels - i) % numPixels;
     }
 
-    public static void draw(String host, int port, int stripCount, int color, int sparkSpan) {
+    public static int draw(String host, int port, int stripCount, int color, int sparkSpan) {
 
         OpcClient server = new OpcClient(host, port);
+
+        server.setSoTimeout(AppConstants.SOCKET_TIMEOUT);
+        server.setSoConTimeout(AppConstants.SOCKET_CONNECTION_TIMEOUT);
+
         OpcDevice fadeCandy = server.addDevice();
         PixelStrip strip = fadeCandy.addPixelStrip(0, stripCount);
 
         strip.setAnimation(new Spark(buildColors(color, sparkSpan)));
 
+        int status = 0;
+
         while (Spark.CONTROL) {
 
-            server.animate();
+            status = server.animate();
+            if (status == -1) {
+                return -1;
+            }
 
             if (COLOR_CORRECTION != -1) {
-                fadeCandy.setColorCorrection(2.5f, COLOR_CORRECTION, COLOR_CORRECTION, COLOR_CORRECTION);
+                status = fadeCandy.setColorCorrection(AppConstants.DEFAULT_GAMMA_CORRECTION, COLOR_CORRECTION, COLOR_CORRECTION, COLOR_CORRECTION);
+                if (status == -1) {
+                    return -1;
+                }
                 COLOR_CORRECTION = -1;
             }
 
             if (SPAN != -1) {
                 sparkSpan = SPAN;
-                Log.i(TAG, "setAnimation2" + sparkSpan);
                 strip.clear();
                 strip.setAnimation(new Spark(buildColors(color, sparkSpan)));
                 SPAN = -1;
@@ -95,6 +107,7 @@ public class Spark extends Animation {
         }
 
         server.close();
+        return 0;
     }
 
     private static int[] buildColors(int color, int sparkSpan) {
