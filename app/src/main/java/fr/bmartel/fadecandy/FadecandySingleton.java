@@ -38,9 +38,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import fr.bmartel.android.fadecandy.client.FadecandyClient;
 import fr.bmartel.android.fadecandy.constant.Constants;
@@ -71,7 +73,7 @@ public class FadecandySingleton {
     /**
      * an executor to launch task on a new thread.
      */
-    private ExecutorService mExecutorService;
+    private ScheduledExecutorService mExecutorService;
 
     /**
      * fadecandy client used to wrap Fadecandy service interface.
@@ -242,7 +244,7 @@ public class FadecandySingleton {
         mPulsePause = prefs.getInt(AppConstants.PREFERENCE_FIELD_PULSE_PAUSE, AppConstants.DEFAULT_PULSE_PAUSE);
         mTemperature = prefs.getInt(AppConstants.PREFERENCE_FIELD_TEMPERATURE, AppConstants.DEFAULT_TEMPERATURE);
 
-        mExecutorService = Executors.newSingleThreadExecutor();
+        mExecutorService = Executors.newSingleThreadScheduledExecutor();
 
         mContext = context;
 
@@ -730,16 +732,32 @@ public class FadecandySingleton {
 
         Log.v(TAG, "connecting to websocket server");
 
+        final ScheduledFuture cancelTask = mExecutorService.schedule(new Runnable() {
+            @Override
+            public void run() {
+
+                if (mWebsocketFuture != null) {
+                    mWebsocketFuture.cancel(true);
+                }
+                for (int i = 0; i < mListeners.size(); i++) {
+                    mListeners.get(i).onServerConnectionFailure();
+                }
+            }
+        }, AppConstants.WEBSOCKET_CONNECT_TIMEOUT, TimeUnit.MILLISECONDS);
+
         AsyncHttpClient.WebSocketConnectCallback mWebSocketConnectCallback = new AsyncHttpClient.WebSocketConnectCallback() {
             @Override
             public void onCompleted(Exception ex, WebSocket webSocket) {
 
                 Log.v(TAG, "onCompleted");
 
+                if (cancelTask != null) {
+                    cancelTask.cancel(true);
+                }
+
                 mWebsocket = webSocket;
 
                 if (ex != null) {
-                    ex.printStackTrace();
                     for (int i = 0; i < mListeners.size(); i++) {
                         mListeners.get(i).onServerConnectionFailure();
                     }
@@ -788,6 +806,7 @@ public class FadecandySingleton {
         AsyncHttpClient asyncHttpClient = AsyncHttpClient.getDefaultInstance();
 
         mWebsocketFuture = asyncHttpClient.websocket("ws://" + getRemoteServerIp() + ":" + getRemoteServerPort() + "/", null, mWebSocketConnectCallback);
+
 
     }
 
