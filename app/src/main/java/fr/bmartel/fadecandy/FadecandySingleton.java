@@ -56,6 +56,7 @@ import fr.bmartel.fadecandy.constant.AppConstants;
 import fr.bmartel.fadecandy.ledcontrol.ColorUtils;
 import fr.bmartel.fadecandy.ledcontrol.Spark;
 import fr.bmartel.fadecandy.listener.ISingletonListener;
+import fr.bmartel.fadecandy.utils.ManualResetEvent;
 
 /**
  * Singleton used to bind service and wrap around it.
@@ -193,6 +194,16 @@ public class FadecandySingleton {
      * define if open pixel control request is pending
      */
     private boolean mIsSendingRequest;
+
+    /**
+     * monitoring object used to wait for server close before starting server if already started.
+     */
+    private ManualResetEvent eventManager = new ManualResetEvent(false);
+
+    /**
+     * define  if websocket will be closed manually so we dont dispatch error listener when this is set to true.
+     */
+    private boolean mWebsocketClose = false;
 
     /**
      * Get the static singleton instance.
@@ -792,9 +803,14 @@ public class FadecandySingleton {
                 webSocket.setClosedCallback(new CompletedCallback() {
                     @Override
                     public void onCompleted(Exception ex) {
-                        for (int i = 0; i < mListeners.size(); i++) {
-                            mListeners.get(i).onServerConnectionClosed();
+
+                        if (!mWebsocketClose) {
+
+                            for (int i = 0; i < mListeners.size(); i++) {
+                                mListeners.get(i).onServerConnectionClosed();
+                            }
                         }
+                        eventManager.set();
                     }
                 });
 
@@ -812,9 +828,22 @@ public class FadecandySingleton {
 
     private void closeWebsocket() {
 
+        eventManager.reset();
+
+        mWebsocketClose = true;
+
         if (mWebsocket != null) {
             mWebsocket.close();
         }
+
+        try {
+            eventManager.waitOne(AppConstants.STOP_WEBSOCKET_TIMEOUT);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        mWebsocketClose = false;
+
         if (mWebsocketFuture != null) {
             mWebsocketFuture.cancel(true);
         }

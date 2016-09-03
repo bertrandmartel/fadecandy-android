@@ -150,4 +150,10 @@ public class AppConstants {
      * websocket connection timeout.
      */
     public final static int WEBSOCKET_CONNECT_TIMEOUT = 1000;
+
+    /**
+     * websocket disconnection timeout.
+     */
+    public final static int STOP_WEBSOCKET_TIMEOUT = 400;
+
 }
