@@ -3,7 +3,7 @@
     <tab
         icon="@drawable/ic_color_lens"
         id="@+id/tab_fullcolor"
-        title="Full Color" />
+        title="Color" />
     <tab
         icon="@drawable/ic_star_border"
         id="@+id/tab_spark"
@@ -11,7 +11,7 @@
     <tab
         icon="@drawable/ic_action_temperature"
         id="@+id/tab_temperature"
-        title="Temperature" />
+        title="Temp." />
     <tab
         icon="@drawable/ic_action_wizard"
         id="@+id/tab_mixer"

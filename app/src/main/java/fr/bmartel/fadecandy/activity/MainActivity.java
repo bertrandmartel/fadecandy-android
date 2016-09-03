@@ -166,6 +166,7 @@ public class MainActivity extends BaseActivity {
 
                     if (mStarted) {
                         showToast(getString(R.string.server_started));
+                        setToolbarTitle();
                     } else {
                         ((IFragment) mFragment).onServerFirstStart();
                     }
@@ -188,6 +189,7 @@ public class MainActivity extends BaseActivity {
 
                     if (mStarted) {
                         showToast(getString(R.string.server_closed));
+                        setToolbarTitle("disconnected");
                     }
                 }
             });
@@ -220,6 +222,7 @@ public class MainActivity extends BaseActivity {
                 @Override
                 public void run() {
                     showToast(getString(R.string.server_connection) + " " + mSingleton.getRemoteServerIp() + ":" + mSingleton.getServerPort() + " " + getString(R.string.failed));
+                    setToolbarTitle("disconnected");
                 }
             });
         }
@@ -250,6 +253,7 @@ public class MainActivity extends BaseActivity {
                 @Override
                 public void run() {
                     showToast(getString(R.string.server_connection) + " " + mSingleton.getRemoteServerIp() + ":" + mSingleton.getServerPort() + " " + getString(R.string.closed));
+                    setToolbarTitle("disconnected");
                 }
             });
         }
