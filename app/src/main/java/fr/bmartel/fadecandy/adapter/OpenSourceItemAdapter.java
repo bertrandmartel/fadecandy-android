@@ -54,8 +54,10 @@ public class OpenSourceItemAdapter extends BaseAdapter {
                     "https://github.com/LarsWerkman/HoloColorPicker"},
             {"Open Pixel Control Library",
                     "https://github.com/akinaru/opc-java"},
-            {"highlight.js",
-                    "https://highlightjs.org/"}
+            {"AndroidAsync",
+                    "https://github.com/koush/AndroidAsync"},
+            {"Led Icon by Kenneth Appiah, CA (Pulic Domain)",
+                    "https://thenounproject.com/search/?q=led&i=3156"}
     };
 
     private LayoutInflater mInflater;

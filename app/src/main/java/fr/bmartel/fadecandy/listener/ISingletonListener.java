@@ -72,4 +72,9 @@ public interface ISingletonListener {
      * called when connection to server is successfull in host mode.
      */
     void onServerConnectionSuccess();
+
+    /**
+     * called when connection to server is closed.
+     */
+    void onServerConnectionClosed();
 }
