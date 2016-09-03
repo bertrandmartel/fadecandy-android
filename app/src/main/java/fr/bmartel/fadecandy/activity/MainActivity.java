@@ -72,6 +72,8 @@ public class MainActivity extends BaseActivity {
 
     private Dialog mDialog;
 
+    private Toast mToast;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -132,6 +134,12 @@ public class MainActivity extends BaseActivity {
             }
         });
 
+        mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
+    }
+
+    private void showToast(String text) {
+        mToast.setText(text);
+        mToast.show();
     }
 
     @Override
@@ -157,7 +165,7 @@ public class MainActivity extends BaseActivity {
                     }
 
                     if (mStarted) {
-                        Toast.makeText(MainActivity.this, "server started", Toast.LENGTH_SHORT).show();
+                        showToast(getString(R.string.server_started));
                     } else {
                         ((IFragment) mFragment).onServerFirstStart();
                     }
@@ -179,7 +187,7 @@ public class MainActivity extends BaseActivity {
                     }
 
                     if (mStarted) {
-                        Toast.makeText(MainActivity.this, "server closed", Toast.LENGTH_SHORT).show();
+                        showToast(getString(R.string.server_closed));
                     }
                 }
             });
@@ -211,7 +219,7 @@ public class MainActivity extends BaseActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(MainActivity.this, getString(R.string.server_connection) + " " + mSingleton.getRemoteServerIp() + ":" + mSingleton.getServerPort() + " failed", Toast.LENGTH_SHORT).show();
+                    showToast(getString(R.string.server_connection) + " " + mSingleton.getRemoteServerIp() + ":" + mSingleton.getServerPort() + " " + getString(R.string.failed));
                 }
             });
         }
@@ -231,7 +239,17 @@ public class MainActivity extends BaseActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(MainActivity.this, getString(R.string.server_connection) + " " + mSingleton.getRemoteServerIp() + ":" + mSingleton.getServerPort(), Toast.LENGTH_SHORT).show();
+                    showToast(getString(R.string.server_connected) + " " + mSingleton.getRemoteServerIp() + ":" + mSingleton.getServerPort());
+                }
+            });
+        }
+
+        @Override
+        public void onServerConnectionClosed() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    showToast(getString(R.string.server_connection) + " " + mSingleton.getRemoteServerIp() + ":" + mSingleton.getServerPort() + " " + getString(R.string.closed));
                 }
             });
         }

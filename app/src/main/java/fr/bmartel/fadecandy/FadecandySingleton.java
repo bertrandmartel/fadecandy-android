@@ -27,10 +27,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.koushikdutta.async.callback.CompletedCallback;
 import com.koushikdutta.async.http.AsyncHttpClient;
-import com.koushikdutta.async.http.Multimap;
 import com.koushikdutta.async.http.WebSocket;
-import com.koushikdutta.async.http.server.AsyncHttpServerRequestImpl;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -772,20 +771,12 @@ public class FadecandySingleton {
                     }
                 });
 
-                webSocket.setClosedCallback(new AsyncHttpServerRequestImpl() {
+                webSocket.setClosedCallback(new CompletedCallback() {
                     @Override
-                    protected void onHeadersReceived() {
-
-                    }
-
-                    @Override
-                    public String getPath() {
-                        return null;
-                    }
-
-                    @Override
-                    public Multimap getQuery() {
-                        return null;
+                    public void onCompleted(Exception ex) {
+                        for (int i = 0; i < mListeners.size(); i++) {
+                            mListeners.get(i).onServerConnectionClosed();
+                        }
                     }
                 });
 

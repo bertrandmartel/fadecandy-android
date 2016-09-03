@@ -37,10 +37,15 @@
     <string name="led_count_errorcase"><![CDATA[Led count must be > 0 and <=]]></string>
     <string name="start_server_checkbox">start a local server</string>
     <string name="server_connection">connection to </string>
+    <string name="server_connected">connected to </string>
     <string name="span_spark">Span</string>
     <string name="mixer_delay">Mixer delay (ms)</string>
     <string name="brightness_min">Brightness minimum</string>
     <string name="brightness_max">Brightness maximum</string>
     <string name="pulse_delay">Delay (ms)</string>
     <string name="pulse_pause">Pulse pause (ms)</string>
+    <string name="server_started">server started</string>
+    <string name="server_closed">server closed</string>
+    <string name="failed">failed</string>
+    <string name="closed">closed</string>
 </resources>
