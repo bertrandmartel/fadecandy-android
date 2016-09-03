@@ -46,8 +46,8 @@ import java.util.concurrent.TimeUnit;
 
 import fr.bmartel.android.fadecandy.client.FadecandyClient;
 import fr.bmartel.android.fadecandy.constant.Constants;
-import fr.bmartel.android.fadecandy.inter.IFadecandyListener;
-import fr.bmartel.android.fadecandy.inter.IUsbListener;
+import fr.bmartel.android.fadecandy.inter.IFcServerEventListener;
+import fr.bmartel.android.fadecandy.inter.IUsbEventListener;
 import fr.bmartel.android.fadecandy.model.FadecandyConfig;
 import fr.bmartel.android.fadecandy.model.ServerError;
 import fr.bmartel.android.fadecandy.model.ServiceType;
@@ -261,7 +261,7 @@ public class FadecandySingleton {
 
         //build Fadecandy client to bind Fadecandy service & start server
 
-        mFadecandyClient = new FadecandyClient(mContext, new IFadecandyListener() {
+        mFadecandyClient = new FadecandyClient(mContext, new IFcServerEventListener() {
 
             @Override
             public void onServerStart() {
@@ -289,7 +289,7 @@ public class FadecandySingleton {
 
             }
 
-        }, new IUsbListener() {
+        }, new IUsbEventListener() {
             @Override
             public void onUsbDeviceAttached(UsbItem usbItem) {
                 for (int i = 0; i < mListeners.size(); i++) {
@@ -840,16 +840,24 @@ public class FadecandySingleton {
 
     }
 
+    /**
+     * get connected devices list from websocket connection.
+     */
     private void sendListConnectedDevices() {
         try {
             JSONObject req = new JSONObject();
             req.put("type", "list_connected_devices");
-            mWebsocket.send(req.toString());
+            if (mWebsocket != null) {
+                mWebsocket.send(req.toString());
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * close websocket connection.
+     */
     private void closeWebsocket() {
 
         eventManager.reset();
@@ -873,24 +881,47 @@ public class FadecandySingleton {
         }
     }
 
+    /**
+     * restart websocket connection.
+     */
     public void restartRemoteConnection() {
         closeWebsocket();
         createWebsocketClient();
     }
 
+    /**
+     * get remote server address.
+     *
+     * @return
+     */
     public String getRemoteServerIp() {
         return mRemoteServerIp;
     }
 
+    /**
+     * get remote server port.
+     *
+     * @return
+     */
     public int getRemoteServerPort() {
         return mRemoteServerPort;
     }
 
+    /**
+     * set remote server address.
+     *
+     * @param ip
+     */
     public void setRemoteServerIp(String ip) {
         mRemoteServerIp = ip;
         prefs.edit().putString(AppConstants.PREFERENCE_FIELD_REMOTE_SERVER_IP, ip).apply();
     }
 
+    /**
+     * set remote server port.
+     *
+     * @param port
+     */
     public void setRemoteServerPort(int port) {
         mRemoteServerPort = port;
         prefs.edit().putInt(AppConstants.PREFERENCE_FIELD_REMOTE_SERVER_PORT, port).apply();
@@ -915,6 +946,9 @@ public class FadecandySingleton {
         return mMixerDelay;
     }
 
+    /**
+     * mixer effect.
+     */
     public void mixer() {
 
         if (!mIsMixing) {
@@ -952,6 +986,11 @@ public class FadecandySingleton {
         return mAnimating;
     }
 
+    /**
+     * pulse effect.
+     *
+     * @param color
+     */
     public void pulse(int color) {
 
         mColor = color;

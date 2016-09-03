@@ -25,8 +25,6 @@ LOCAL_SRC_FILES := $(LOCAL_PATH)/android_main.cpp \
 	$(LOCAL_PATH)/$(FADECANDY_SRC_PATH)/tinythread.cpp \
 	$(LOCAL_PATH)/$(FADECANDY_SRC_PATH)/httpdocs.cpp \
 
-# $(LOCAL_PATH)/$(FADECANDY_SRC_PATH)/enttecdmxdevice.cpp \
-
 LOCAL_CPP_FEATURES += exceptions
 
 LOCAL_CFLAGS += -Wall -DLIBUSB_DESCRIBE="" -O3 -fno-builtin-printf -fno-builtin-fprintf -DFCSERVER_VERSION=$(VERSION)

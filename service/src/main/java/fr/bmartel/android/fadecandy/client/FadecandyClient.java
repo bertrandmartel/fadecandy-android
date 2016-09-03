@@ -35,8 +35,8 @@ import android.util.Log;
 import java.util.HashMap;
 
 import fr.bmartel.android.fadecandy.constant.Constants;
-import fr.bmartel.android.fadecandy.inter.IFadecandyListener;
-import fr.bmartel.android.fadecandy.inter.IUsbListener;
+import fr.bmartel.android.fadecandy.inter.IFcServerEventListener;
+import fr.bmartel.android.fadecandy.inter.IUsbEventListener;
 import fr.bmartel.android.fadecandy.model.FadecandyConfig;
 import fr.bmartel.android.fadecandy.model.ServerError;
 import fr.bmartel.android.fadecandy.model.ServiceType;
@@ -53,16 +53,34 @@ public class FadecandyClient {
 
     private final static String TAG = FadecandyClient.class.getSimpleName();
 
+    /**
+     * Fadecandy service instance.
+     */
     private FadecandyService fadecandyService;
 
+    /**
+     * define if fadecandy service is bound.
+     */
     private boolean mBound;
 
+    /**
+     * android context.
+     */
     private Context mContext;
 
+    /**
+     * define if server should be started.
+     */
     private boolean mShouldStartServer;
 
+    /**
+     * activity intent name that will be opened when user click on service notification.
+     */
     private String mActivity;
 
+    /**
+     * intent used to launch fadecandy service.
+     */
     private Intent fadecandyServiceIntent;
 
     /**
@@ -80,11 +98,19 @@ public class FadecandyClient {
      */
     private boolean mShouldOverrideServiceType;
 
-    public FadecandyClient(Context context, IFadecandyListener listener, IUsbListener usbListener, String activityName) {
+    /**
+     * Build Fadecandy client
+     *
+     * @param context        Android context.
+     * @param listener       fadecandy listener.
+     * @param usbListener    usb event listener
+     * @param activityIntent activity intent name
+     */
+    public FadecandyClient(Context context, IFcServerEventListener listener, IUsbEventListener usbListener, String activityIntent) {
         mContext = context;
         mListener = listener;
         mUsbListener = usbListener;
-        mActivity = activityName;
+        mActivity = activityIntent;
     }
 
     /**
@@ -99,11 +125,17 @@ public class FadecandyClient {
         registerReceiver();
     }
 
+    /**
+     * bind service and register receiver.
+     */
     public void connect() {
         bindService();
         registerReceiver();
     }
 
+    /**
+     * broadcast receiver used to catch user click on service notification.
+     */
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -115,18 +147,33 @@ public class FadecandyClient {
         }
     };
 
+    /**
+     * register receiver.
+     */
     private void registerReceiver() {
         IntentFilter filter = new IntentFilter();
         filter.addAction(FadecandyService.ACTION_EXIT);
         mContext.registerReceiver(receiver, filter);
     }
 
-    private IFadecandyListener mListener;
+    /**
+     * Fadecandy server event listener.
+     */
+    private IFcServerEventListener mListener;
 
-    private IUsbListener mUsbListener;
+    /**
+     * Fadencandy USB event listener.
+     */
+    private IUsbEventListener mUsbListener;
 
+    /**
+     * service intent name.
+     */
     public static final String SERVICE_NAME = "fr.bmartel.android.fadecandy.service.FadecandyService";
 
+    /**
+     * disconnect from service (that will not close server if service is not destroyed eg service not in persistent mode).
+     */
     public void disconnect() {
         if (mBound) {
             Log.v(TAG, "unbind");
@@ -139,10 +186,16 @@ public class FadecandyClient {
         }
     }
 
+    /**
+     * force service to stop.
+     */
     public void stopService() {
         mContext.stopService(fadecandyServiceIntent);
     }
 
+    /**
+     * bind to Fadecandy service.
+     */
     private void bindService() {
 
         fadecandyServiceIntent = new Intent();
@@ -165,11 +218,16 @@ public class FadecandyClient {
         }
     }
 
+    /**
+     * Fadecandy service connection.
+     */
     private ServiceConnection mServiceConnection = new ServiceConnection() {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
+
             Log.v(TAG, "fadecandy service connected");
+
             fadecandyService = ((FadecandyServiceBinder) service).getService();
 
             if (mUsbListener != null) {
@@ -196,6 +254,9 @@ public class FadecandyClient {
         }
     };
 
+    /**
+     * start Fadecandy server. If service is not started/bounded, server will be started as soon as service is started & bounded.
+     */
     public void startServer() {
 
         if (mBound) {
@@ -215,6 +276,9 @@ public class FadecandyClient {
         }
     }
 
+    /**
+     * close Fadecandy server.
+     */
     public void closeServer() {
 
         if (mBound) {
@@ -232,6 +296,11 @@ public class FadecandyClient {
         }
     }
 
+    /**
+     * get server status.
+     *
+     * @return true if server is running, false if server is stopped
+     */
     public boolean isServerRunning() {
 
         if (mBound) {
@@ -242,6 +311,11 @@ public class FadecandyClient {
         return false;
     }
 
+    /**
+     * get service type (persistent or non persistent)
+     *
+     * @return
+     */
     public ServiceType getServiceType() {
         if (mBound && fadecandyService != null) {
             return fadecandyService.getServiceType();
@@ -249,12 +323,22 @@ public class FadecandyClient {
         return null;
     }
 
+    /**
+     * set service type (persistent or non persistent)
+     *
+     * @param serviceType
+     */
     public void setServiceType(ServiceType serviceType) {
         if (mBound && fadecandyService != null) {
             fadecandyService.setServiceType(serviceType);
         }
     }
 
+    /**
+     * get server port value
+     *
+     * @return
+     */
     public int getServerPort() {
         if (mBound && fadecandyService != null) {
             return fadecandyService.getServerPort();
@@ -262,6 +346,11 @@ public class FadecandyClient {
         return DEFAULT_PORT;
     }
 
+    /**
+     * get server ip/hostname value
+     *
+     * @return
+     */
     public String getIpAddress() {
         if (mBound && fadecandyService != null) {
             return fadecandyService.getIpAddress();
@@ -269,18 +358,33 @@ public class FadecandyClient {
         return "";
     }
 
+    /**
+     * set server port value.
+     *
+     * @param port
+     */
     public void setServerPort(int port) {
         if (mBound && fadecandyService != null) {
             fadecandyService.setServerPort(port);
         }
     }
 
+    /**
+     * set server IP/hostname value
+     *
+     * @param ip
+     */
     public void setServerAddress(String ip) {
         if (mBound && fadecandyService != null) {
             fadecandyService.setServerAddress(ip);
         }
     }
 
+    /**
+     * get Fadecandy local configuration.
+     *
+     * @return
+     */
     public FadecandyConfig getConfig() {
         if (mBound && fadecandyService != null) {
             return fadecandyService.getConfig();
@@ -288,6 +392,11 @@ public class FadecandyClient {
         return null;
     }
 
+    /**
+     * get list of Fadecandy USB device connected.
+     *
+     * @return
+     */
     public HashMap<Integer, UsbItem> getUsbDeviceMap() {
         if (mBound && fadecandyService != null) {
             return fadecandyService.getUsbDeviceMap();

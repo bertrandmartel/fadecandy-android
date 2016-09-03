@@ -30,7 +30,7 @@ import fr.bmartel.android.fadecandy.model.UsbItem;
  *
  * @author Bertrand Martel
  */
-public interface IUsbListener {
+public interface IUsbEventListener {
 
     /**
      * called when a Fadecandy USB device is attached (ie permission has been allowed)

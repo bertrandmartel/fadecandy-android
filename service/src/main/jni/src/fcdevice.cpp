@@ -1,7 +1,8 @@
 /*
  * Fadecandy device interface
  *
- * Copyright (c) 2013 Micah Elizabeth Scott
+ * Original work Copyright (c) 2013 Micah Elizabeth Scott
+ * Modified work Copyright (c) 2016 Bertrand Martel
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -147,7 +148,7 @@ bool FCDevice::submitTransfer(FCDevice *device, void *buffer, int length)
   FCServer::env->SetByteArrayRegion( data_ba, 0, length, (const jbyte*)data );
 
   jmethodID methodId = FCServer::env->GetMethodID(FCServer::someClass, "bulkTransfer", "(II[B)I");
-  jint result = FCServer::env->CallIntMethod(FCServer::thisClass, methodId, fd, 2000, data_ba);
+  FCServer::env->CallIntMethod(FCServer::thisClass, methodId, fd, 2000, data_ba);
 
   FCServer::env->DeleteLocalRef(data_ba);
 

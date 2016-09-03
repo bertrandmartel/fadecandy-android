@@ -5,7 +5,8 @@
  * connections on a single port. We use a fork of libwebsockets which supports serving
  * external non-HTTP protocols via a low-level receive callback.
  *
- * Copyright (c) 2013 Micah Elizabeth Scott
+ * Original work Copyright (c) 2013 Micah Elizabeth Scott
+ * Modified work Copyright (c) 2016 Bertrand Martel
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in

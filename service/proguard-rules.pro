@@ -22,7 +22,7 @@
 -keep public class fr.bmartel.android.fadecandy.client.FadecandyClient {
   public protected *;
 }
--keep public class fr.bmartel.android.fadecandy.inter.IFadecandyListener {
+-keep public class fr.bmartel.android.fadecandy.inter.IFcServerEventListener {
   public protected *;
 }
 -keep public class fr.bmartel.android.fadecandy.model.FadecandyConfig {
@@ -34,7 +34,7 @@
 -keep public class fr.bmartel.android.fadecandy.constant.Constants {
   public protected *;
 }
--keep public class fr.bmartel.android.fadecandy.inter.IUsbListener {
+-keep public class fr.bmartel.android.fadecandy.inter.IUsbEventListener {
   public protected *;
 }
 -keep public class fr.bmartel.android.fadecandy.model.FadecandyDevice {

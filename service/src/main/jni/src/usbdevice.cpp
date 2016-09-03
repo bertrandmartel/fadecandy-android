@@ -1,7 +1,8 @@
 /*
  * Abstract base class for USB-attached devices.
  *
- * Copyright (c) 2013 Micah Elizabeth Scott
+ * Original work Copyright (c) 2013 Micah Elizabeth Scott
+ * Modified work Copyright (c) 2016 Bertrand Martel
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -99,8 +100,6 @@ const USBDevice::Value *USBDevice::findConfigMap(const Value &config)
 
 void USBDevice::writeMessage(Document &msg)
 {
-    __android_log_print(ANDROID_LOG_VERBOSE, APP_NAME, "USBDevice::writeMessage\n");
-
     const char *type = msg["type"].GetString();
 
     if (!strcmp(type, "device_color_correction")) {
