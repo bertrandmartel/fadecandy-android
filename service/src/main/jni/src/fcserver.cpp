@@ -217,6 +217,7 @@ void FCServer::cbJsonMessage(libwebsocket *wsi, rapidjson::Document &message, vo
 }
 
 void FCServer::close(){
+    mUSBDevices.clear();
     mTcpNetServer.close();
 }
 
