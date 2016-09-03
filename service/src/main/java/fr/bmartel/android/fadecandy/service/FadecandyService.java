@@ -52,7 +52,7 @@ import java.util.Map;
 
 import fr.bmartel.android.fadecandy.activity.UsbEventReceiverActivity;
 import fr.bmartel.android.fadecandy.constant.Constants;
-import fr.bmartel.android.fadecandy.inter.IUsbListener;
+import fr.bmartel.android.fadecandy.inter.IUsbEventListener;
 import fr.bmartel.android.fadecandy.model.FadecandyColor;
 import fr.bmartel.android.fadecandy.model.FadecandyConfig;
 import fr.bmartel.android.fadecandy.model.FadecandyDevice;
@@ -153,7 +153,7 @@ public class FadecandyService extends Service {
     /**
      * list of USB listeners.
      */
-    private List<IUsbListener> mUsbListeners = new ArrayList<>();
+    private List<IUsbEventListener> mUsbListeners = new ArrayList<>();
 
     /**
      * monitoring object used to wait for server close before starting server if already started.
@@ -231,7 +231,7 @@ public class FadecandyService extends Service {
      *
      * @param listener
      */
-    public void addUsbListener(IUsbListener listener) {
+    public void addUsbListener(IUsbEventListener listener) {
         mUsbListeners.add(listener);
     }
 
@@ -240,7 +240,7 @@ public class FadecandyService extends Service {
      *
      * @param listener
      */
-    public void removeUsbListener(IUsbListener listener) {
+    public void removeUsbListener(IUsbEventListener listener) {
         mUsbListeners.remove(listener);
     }
 

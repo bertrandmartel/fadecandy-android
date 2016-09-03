@@ -30,7 +30,7 @@ import fr.bmartel.android.fadecandy.model.ServerError;
  *
  * @author Bertrand Martel
  */
-public interface IFadecandyListener {
+public interface IFcServerEventListener {
 
     /**
      * called when Fadecandy server is started.
