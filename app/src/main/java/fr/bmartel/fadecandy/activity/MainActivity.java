@@ -43,6 +43,7 @@ import fr.bmartel.android.fadecandy.model.UsbItem;
 import fr.bmartel.fadecandy.FadecandySingleton;
 import fr.bmartel.fadecandy.R;
 import fr.bmartel.fadecandy.constant.AppConstants;
+import fr.bmartel.fadecandy.dialog.ConfigurationDialog;
 import fr.bmartel.fadecandy.fragment.FullColorFragment;
 import fr.bmartel.fadecandy.fragment.MixerFragment;
 import fr.bmartel.fadecandy.fragment.PulseFragment;
@@ -70,9 +71,20 @@ public class MainActivity extends BaseActivity {
      */
     private Fragment mFragment;
 
+    /**
+     * one dialog to show above the activity. We dont want to have multiple Dialog above each other.
+     */
     private Dialog mDialog;
 
+    /**
+     * one toast for the whole activity. We dont want to have multiple Toast queued.
+     */
     private Toast mToast;
+
+    /**
+     * define if configuration dialog is showing.
+     */
+    private boolean mShowingConfiguration = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -223,6 +235,7 @@ public class MainActivity extends BaseActivity {
                 public void run() {
                     showToast(getString(R.string.server_connection) + " " + mSingleton.getRemoteServerIp() + ":" + mSingleton.getServerPort() + " " + getString(R.string.failed));
                     setToolbarTitle("disconnected");
+                    showConfigurationDialog();
                 }
             });
         }
@@ -254,10 +267,20 @@ public class MainActivity extends BaseActivity {
                 public void run() {
                     showToast(getString(R.string.server_connection) + " " + mSingleton.getRemoteServerIp() + ":" + mSingleton.getServerPort() + " " + getString(R.string.closed));
                     setToolbarTitle("disconnected");
+                    showConfigurationDialog();
                 }
             });
         }
     };
+
+    private void showConfigurationDialog() {
+        if (mDialog != null) {
+            mDialog.dismiss();
+        }
+        ConfigurationDialog dialog = new ConfigurationDialog(this);
+        setCurrentDialog(dialog);
+        dialog.show();
+    }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
