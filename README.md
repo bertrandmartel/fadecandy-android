@@ -80,7 +80,7 @@ For writing to USB device, Fadecandy server is calling from C++ a Java method to
 * with Gradle, from jcenter :
 
 ```
-compile 'com.github.akinaru:fadecandy-service:1.0'
+compile 'com.github.akinaru:fadecandy-service:1.1'
 ```
 
 ## How to use it ?

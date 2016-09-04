@@ -44,7 +44,7 @@ public abstract class MainFragment extends android.support.v4.app.Fragment imple
     protected DiscreteSeekBar mBrightnessSeekBar;
 
     protected boolean mIsSpark = false;
-
+    
     public void onCreate(View view) {
 
         onCreateCommon();
@@ -63,10 +63,14 @@ public abstract class MainFragment extends android.support.v4.app.Fragment imple
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
 
+                if (mSingleton.isServerMode() && !mSingleton.isServerRunning()) {
+                    return;
+                }
+
                 if (mIsSpark) {
                     mSingleton.setColorCorrectionSpark(value);
                 } else {
-                    mSingleton.setColorCorrection(value);
+                    mSingleton.setColorCorrection(value, false);
                 }
             }
 
