@@ -1,15 +1,15 @@
 language: android
 
 jdk:
-  - openjdk7
+  - oraclejdk8
 
 sudo: false
 
 android:
   components:
     - tools
-    - android-23
-    - build-tools-23.0.2
+    - android-24
+    - build-tools-23.0.3
     - extra-android-m2repository
 
 cache: false
