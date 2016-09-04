@@ -563,8 +563,6 @@ public class FadecandySingleton {
                 @Override
                 public void run() {
 
-                    checkJoinThread();
-
                     if (ColorUtils.setBrightness(getIpAddress(), getServerPort(), (value / 100f)) == -1) {
                         //error occured
                         for (int i = 0; i < mListeners.size(); i++) {
