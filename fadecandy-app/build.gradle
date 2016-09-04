@@ -74,13 +74,15 @@ if (build_param != "production") {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile('com.github.akinaru:fadecandy-service:1.0') {
-        exclude group: 'com.android.support'
+        exclude module: 'support-v4'
     }
     compile "com.android.support:appcompat-v7:23.3.0"
     compile 'com.android.support:design:23.3.0'
     compile 'com.android.support:recyclerview-v7:+'
     compile 'com.larswerkman:HoloColorPicker:1.5'
-    compile 'org.adw.library:discrete-seekbar:1.0.1'
+    compile('org.adw.library:discrete-seekbar:1.0.1') {
+        exclude module: 'support-v4'
+    }
     compile 'com.roughike:bottom-bar:2.0.2'
     compile 'com.github.akinaru:opc:1.07'
     compile 'com.koushikdutta.async:androidasync:2.+'
