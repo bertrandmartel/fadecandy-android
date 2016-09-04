@@ -998,7 +998,10 @@ public class FadecandySingleton {
         if (!mIsPulsing) {
 
             mIsPulsing = true;
+            mIsSendingRequest = false;
 
+            final int oldBrightness = getCurrentColorCorrection();
+            
             mExecutorService.execute(new Runnable() {
                 @Override
                 public void run() {
@@ -1017,6 +1020,8 @@ public class FadecandySingleton {
                             }
                             mIsPulsing = false;
                             mAnimating = false;
+
+                            setColorCorrection(oldBrightness, true);
                         }
                     });
                     workerThread.start();
