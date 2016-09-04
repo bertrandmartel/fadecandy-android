@@ -596,43 +596,36 @@ public class FadecandySingleton {
 
         mColor = color;
 
-        if (!mIsSparking) {
+        mExecutorService.execute(new Runnable() {
+            @Override
+            public void run() {
 
-            mIsSparking = true;
+                checkJoinThread();
+                Spark.CONTROL = true;
+                mAnimating = true;
 
-            mExecutorService.execute(new Runnable() {
-                @Override
-                public void run() {
+                workerThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
 
-                    checkJoinThread();
-                    Spark.CONTROL = true;
-                    mAnimating = true;
+                        while (mAnimating) {
 
-                    workerThread = new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            while (mAnimating) {
-
-                                if (Spark.draw(getIpAddress(), getServerPort(), mLedCount, color, mSparkSpan) == -1) {
-                                    //error occured
-                                    for (int i = 0; i < mListeners.size(); i++) {
-                                        mListeners.get(i).onServerConnectionFailure();
-                                    }
-                                    Spark.CONTROL = false;
-                                    mAnimating = false;
-                                    mIsSparking = false;
-                                    return;
+                            if (Spark.draw(getIpAddress(), getServerPort(), mLedCount, color, mSparkSpan) == -1) {
+                                //error occured
+                                for (int i = 0; i < mListeners.size(); i++) {
+                                    mListeners.get(i).onServerConnectionFailure();
                                 }
+                                Spark.CONTROL = false;
+                                mAnimating = false;
+                                return;
                             }
-                            mIsSparking = false;
                         }
-                    });
-                    workerThread.start();
+                    }
+                });
+                workerThread.start();
 
-                }
-            });
-        }
+            }
+        });
     }
 
     /**
