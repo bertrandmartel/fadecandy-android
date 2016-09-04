@@ -58,10 +58,7 @@ public class PulseFragment extends MainFragment implements ColorPicker.OnColorCh
         ColorPicker picker = (ColorPicker) view.findViewById(R.id.picker);
         picker.setOnColorChangedListener(this);
         picker.setShowOldCenterColor(false);
-
-        if (mSingleton.getColor() != -1) {
-            picker.setColor(mSingleton.getColor());
-        }
+        picker.setColor(mSingleton.getColor());
 
         DiscreteSeekBar delaySeekbar = (DiscreteSeekBar) view.findViewById(R.id.seekbar_delay);
 

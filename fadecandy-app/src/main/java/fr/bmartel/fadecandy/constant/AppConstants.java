@@ -95,6 +95,15 @@ public class AppConstants {
      */
     public final static String PREFERENCE_FIELD_TEMPERATURE = "temperature";
 
+    /**
+     * preference brightness.
+     */
+    public final static String PREFERENCE_FIELD_BRIGHTNESS = "brightness";
+
+    /**
+     * preference color.
+     */
+    public final static String PREFERENCE_FIELD_COLOR = "color";
 
     /**
      * default server mode is Android server mode.
@@ -156,4 +165,13 @@ public class AppConstants {
      */
     public final static int STOP_WEBSOCKET_TIMEOUT = 400;
 
+    /**
+     * default brightness value.
+     */
+    public final static int DEFAULT_BRIGHTNESS = 100;
+
+    /**
+     * default color value.
+     */
+    public final static int DEFAULT_COLOR = 0xFF0000;
 }

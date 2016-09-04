@@ -101,12 +101,12 @@ public class FadecandySingleton {
     /**
      * led brightness current config.
      */
-    private int mCurrentBrightness = -1;
+    private int mCurrentBrightness;
 
     /**
      * led color current config.
      */
-    private int mColor = -1;
+    private int mColor;
 
     /**
      * spark speed current config.
@@ -254,6 +254,8 @@ public class FadecandySingleton {
         mPulseDelay = prefs.getInt(AppConstants.PREFERENCE_FIELD_PULSE_DELAY, AppConstants.DEFAULT_PULSE_DELAY);
         mPulsePause = prefs.getInt(AppConstants.PREFERENCE_FIELD_PULSE_PAUSE, AppConstants.DEFAULT_PULSE_PAUSE);
         mTemperature = prefs.getInt(AppConstants.PREFERENCE_FIELD_TEMPERATURE, AppConstants.DEFAULT_TEMPERATURE);
+        mCurrentBrightness = prefs.getInt(AppConstants.PREFERENCE_FIELD_BRIGHTNESS, AppConstants.DEFAULT_BRIGHTNESS);
+        mColor = prefs.getInt(AppConstants.PREFERENCE_FIELD_COLOR, AppConstants.DEFAULT_COLOR);
 
         mExecutorService = Executors.newSingleThreadScheduledExecutor();
 
@@ -359,11 +361,14 @@ public class FadecandySingleton {
      *
      * @param color
      */
-    public void setFullColor(final int color) {
+    public void setFullColor(final int color, boolean storeColorVal, boolean force) {
 
         mColor = color;
+        if (storeColorVal) {
+            prefs.edit().putInt(AppConstants.PREFERENCE_FIELD_COLOR, mColor).apply();
+        }
 
-        if (!mIsSendingRequest) {
+        if (!mIsSendingRequest || force) {
 
             mIsSendingRequest = true;
 
@@ -551,11 +556,12 @@ public class FadecandySingleton {
      *
      * @param value
      */
-    public void setColorCorrection(final int value) {
+    public void setColorCorrection(final int value, boolean force) {
 
         mCurrentBrightness = value;
+        prefs.edit().putInt(AppConstants.PREFERENCE_FIELD_BRIGHTNESS, mCurrentBrightness).apply();
 
-        if (!mIsSendingRequest) {
+        if (!mIsSendingRequest || force) {
 
             mIsSendingRequest = true;
 
@@ -583,6 +589,7 @@ public class FadecandySingleton {
     public void setColorCorrectionSpark(final int value) {
 
         mCurrentBrightness = value;
+        prefs.edit().putInt(AppConstants.PREFERENCE_FIELD_BRIGHTNESS, mCurrentBrightness).apply();
 
         Spark.COLOR_CORRECTION = (value / 100f);
     }
@@ -595,6 +602,7 @@ public class FadecandySingleton {
     public void spark(final int color) {
 
         mColor = color;
+        prefs.edit().putInt(AppConstants.PREFERENCE_FIELD_COLOR, mColor).apply();
 
         mExecutorService.execute(new Runnable() {
             @Override
@@ -656,7 +664,7 @@ public class FadecandySingleton {
     public void setTemperature(int temperature) {
         mTemperature = temperature;
         prefs.edit().putInt(AppConstants.PREFERENCE_FIELD_TEMPERATURE, mTemperature).apply();
-        setFullColor(temperature);
+        setFullColor(temperature, false, false);
     }
 
     /**
@@ -985,6 +993,7 @@ public class FadecandySingleton {
     public void pulse(int color) {
 
         mColor = color;
+        prefs.edit().putInt(AppConstants.PREFERENCE_FIELD_COLOR, mColor).apply();
 
         if (!mIsPulsing) {
 
