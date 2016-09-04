@@ -171,11 +171,6 @@ public class FadecandyService extends Service {
     private boolean mExit = false;
 
     /**
-     * define if USB device list has been initialized once before.
-     */
-    private boolean mUsbInit = false;
-
-    /**
      * load shared libraries.
      */
     static {
@@ -248,6 +243,8 @@ public class FadecandyService extends Service {
      * initialize usb device list to request permission if not already given for already connected USB devices.
      */
     private void initUsbDeviceList() {
+
+        mUsbDevices.clear();
 
         HashMap<String, UsbDevice> deviceList = mUsbManager.getDeviceList();
 
@@ -518,10 +515,7 @@ public class FadecandyService extends Service {
 
         int status = startFcServer(mConfig.toJsonString());
 
-        if (!mUsbInit) {
-            initUsbDeviceList();
-            mUsbInit = true;
-        }
+        initUsbDeviceList();
 
         if (status == 0) {
             Log.v(TAG, "server running");
