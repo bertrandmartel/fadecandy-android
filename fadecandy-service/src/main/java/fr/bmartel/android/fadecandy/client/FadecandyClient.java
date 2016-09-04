@@ -259,7 +259,8 @@ public class FadecandyClient {
      */
     public void startServer() {
 
-        if (mBound) {
+        if (mBound && fadecandyService != null) {
+
             if (fadecandyService.startServer() == 0) {
                 if (mListener != null) {
                     mListener.onServerStart();
@@ -281,7 +282,8 @@ public class FadecandyClient {
      */
     public void closeServer() {
 
-        if (mBound) {
+        if (mBound && fadecandyService != null) {
+
             if (fadecandyService.stopServer() == 0) {
                 if (mListener != null) {
                     mListener.onServerClose();
@@ -303,7 +305,7 @@ public class FadecandyClient {
      */
     public boolean isServerRunning() {
 
-        if (mBound) {
+        if (mBound && fadecandyService != null) {
             return fadecandyService.isServerRunning();
         } else {
             Log.e(TAG, "service not started");
@@ -317,6 +319,7 @@ public class FadecandyClient {
      * @return
      */
     public ServiceType getServiceType() {
+
         if (mBound && fadecandyService != null) {
             return fadecandyService.getServiceType();
         }
@@ -329,6 +332,7 @@ public class FadecandyClient {
      * @param serviceType
      */
     public void setServiceType(ServiceType serviceType) {
+
         if (mBound && fadecandyService != null) {
             fadecandyService.setServiceType(serviceType);
         }
@@ -340,6 +344,7 @@ public class FadecandyClient {
      * @return
      */
     public int getServerPort() {
+
         if (mBound && fadecandyService != null) {
             return fadecandyService.getServerPort();
         }
@@ -352,6 +357,7 @@ public class FadecandyClient {
      * @return
      */
     public String getIpAddress() {
+
         if (mBound && fadecandyService != null) {
             return fadecandyService.getIpAddress();
         }
@@ -364,6 +370,7 @@ public class FadecandyClient {
      * @param port
      */
     public void setServerPort(int port) {
+
         if (mBound && fadecandyService != null) {
             fadecandyService.setServerPort(port);
         }
@@ -375,6 +382,7 @@ public class FadecandyClient {
      * @param ip
      */
     public void setServerAddress(String ip) {
+
         if (mBound && fadecandyService != null) {
             fadecandyService.setServerAddress(ip);
         }
@@ -386,6 +394,7 @@ public class FadecandyClient {
      * @return
      */
     public FadecandyConfig getConfig() {
+
         if (mBound && fadecandyService != null) {
             return fadecandyService.getConfig();
         }
@@ -398,6 +407,7 @@ public class FadecandyClient {
      * @return
      */
     public HashMap<Integer, UsbItem> getUsbDeviceMap() {
+
         if (mBound && fadecandyService != null) {
             return fadecandyService.getUsbDeviceMap();
         }
