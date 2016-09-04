@@ -15,6 +15,13 @@ Try Fadecandy server / client with the <a href="https://play.google.com/store/ap
 [![Download Fadecandy from Google Play](http://www.android.com/images/brand/android_app_on_play_large.png)](https://play.google.com/store/apps/details?id=fr.bmartel.fadecandy)
 [![Download latest debug from drone.io](https://raw.githubusercontent.com/kageiit/images-host/master/badges/drone-io-badge.png)](https://drone.io/github.com/akinaru/fadecandy-android/files/fadecandy-app/build/outputs/apk/fadecandy-app-debug.apk)
 
+![fadecandy](img/fadecandy.gif)
+
+You can control your Fadecandy device from :
+* Android smartphone
+* Android tablet
+* Android TV (the sample app is not available on Android TV Playstore but you can upload the apk anyway)
+
 ## What is Fadecandy ?
 
 Fadecandy is a USB controlled LED driver with on-board dithering. One Fadecandy device support up to 8 strips of 64 Leds that gives you a maximum of 512 Leds/Fadecandy device.
