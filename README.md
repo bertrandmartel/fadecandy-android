@@ -38,6 +38,8 @@ Check <a href="https://github.com/scanlime/fadecandy#open-pixel-control-server">
 
 ## How does it work ? 
 
+Fadecandy Android fork is available at https://github.com/akinaru/fadecandy
+
 Originally, Fadecandy server uses libusbx to interface with Fadecandy USB devices. In Android, a regular user has to grant permission for the application to open an USB device.
 
 Using <a href="https://play.google.com/store/apps/details?id=fr.bmartel.fadecandy">Fadecandy Android app</a>, when you plug a Fadecandy in your Android device, you will see this pop-up :
