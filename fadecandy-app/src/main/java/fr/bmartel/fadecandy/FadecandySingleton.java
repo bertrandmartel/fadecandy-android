@@ -27,6 +27,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.github.akinaru.ISocketListener;
+import com.github.akinaru.OpcClient;
+import com.github.akinaru.OpcDevice;
+import com.github.akinaru.PixelStrip;
 import com.koushikdutta.async.callback.CompletedCallback;
 import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.WebSocket;
@@ -220,6 +224,12 @@ public class FadecandySingleton {
      */
     private boolean mIsSpanUpdate;
 
+    private OpcClient mOpcClient;
+
+    private OpcDevice mOpcDevice;
+
+    private PixelStrip mPixelStrip;
+
     /**
      * Get the static singleton instance.
      *
@@ -292,6 +302,7 @@ public class FadecandySingleton {
                     mListeners.get(i).onServerStart();
                 }
 
+                initOpcClient();
             }
 
             @Override
@@ -330,6 +341,8 @@ public class FadecandySingleton {
         } else {
             createWebsocketClient();
         }
+
+        initOpcClient();
     }
 
     public boolean isBrightnessUpdate() {
@@ -362,7 +375,7 @@ public class FadecandySingleton {
                 public void run() {
                     checkJoinThread();
 
-                    if (ColorUtils.clear(getIpAddress(), getServerPort(), mLedCount) == -1) {
+                    if (ColorUtils.clear(FadecandySingleton.this) == -1) {
                         //error occured
                         for (int i = 0; i < mListeners.size(); i++) {
                             mListeners.get(i).onServerConnectionFailure();
@@ -411,7 +424,8 @@ public class FadecandySingleton {
 
                     checkJoinThread();
 
-                    if (ColorUtils.setFullColor(getIpAddress(), getServerPort(), mLedCount, color) == -1) {
+                    if (ColorUtils.setFullColor(FadecandySingleton.this) == -1) {
+                        Log.e(TAG, "error occured");
                         //error occured
                         for (int i = 0; i < mListeners.size(); i++) {
                             mListeners.get(i).onServerConnectionFailure();
@@ -602,7 +616,7 @@ public class FadecandySingleton {
                 @Override
                 public void run() {
 
-                    if (ColorUtils.setBrightness(getIpAddress(), getServerPort(), (value / 100f)) == -1) {
+                    if (ColorUtils.setBrightness(FadecandySingleton.this) == -1) {
                         //error occured
                         for (int i = 0; i < mListeners.size(); i++) {
                             mListeners.get(i).onServerConnectionFailure();
@@ -654,7 +668,7 @@ public class FadecandySingleton {
 
                             while (mAnimating) {
 
-                                if (Spark.draw(getIpAddress(), getServerPort(), FadecandySingleton.this) == -1) {
+                                if (Spark.draw(FadecandySingleton.this) == -1) {
                                     //error occured
                                     for (int i = 0; i < mListeners.size(); i++) {
                                         mListeners.get(i).onServerConnectionFailure();
@@ -862,7 +876,6 @@ public class FadecandySingleton {
                     public void onCompleted(Exception ex) {
 
                         if (!mWebsocketClose) {
-
                             for (int i = 0; i < mListeners.size(); i++) {
                                 mListeners.get(i).onServerConnectionClosed();
                             }
@@ -876,6 +889,7 @@ public class FadecandySingleton {
                 }
 
                 sendListConnectedDevices();
+                initOpcClient();
             }
         };
         AsyncHttpClient asyncHttpClient = AsyncHttpClient.getDefaultInstance();
@@ -960,6 +974,7 @@ public class FadecandySingleton {
     public void setRemoteServerIp(String ip) {
         mRemoteServerIp = ip;
         prefs.edit().putString(AppConstants.PREFERENCE_FIELD_REMOTE_SERVER_IP, ip).apply();
+        initOpcClient();
     }
 
     /**
@@ -970,6 +985,7 @@ public class FadecandySingleton {
     public void setRemoteServerPort(int port) {
         mRemoteServerPort = port;
         prefs.edit().putInt(AppConstants.PREFERENCE_FIELD_REMOTE_SERVER_PORT, port).apply();
+        initOpcClient();
     }
 
     public int getSparkSpan() {
@@ -1011,7 +1027,7 @@ public class FadecandySingleton {
                         @Override
                         public void run() {
                             mAnimating = true;
-                            if (ColorUtils.mixer(getIpAddress(), getServerPort(), mLedCount, FadecandySingleton.this) == -1) {
+                            if (ColorUtils.mixer(FadecandySingleton.this) == -1) {
                                 //error occured
                                 for (int i = 0; i < mListeners.size(); i++) {
                                     mListeners.get(i).onServerConnectionFailure();
@@ -1058,7 +1074,7 @@ public class FadecandySingleton {
                         @Override
                         public void run() {
                             mAnimating = true;
-                            if (ColorUtils.pulse(getIpAddress(), getServerPort(), mLedCount, FadecandySingleton.this) == -1) {
+                            if (ColorUtils.pulse(FadecandySingleton.this) == -1) {
                                 //error occured
                                 for (int i = 0; i < mListeners.size(); i++) {
                                     mListeners.get(i).onServerConnectionFailure();
@@ -1093,6 +1109,38 @@ public class FadecandySingleton {
     public void setPulsePause(int pulsePause) {
         mPulsePause = pulsePause;
         prefs.edit().putInt(AppConstants.PREFERENCE_FIELD_PULSE_PAUSE, mPulsePause).apply();
+    }
+
+    public void initOpcClient() {
+
+        mOpcClient = new OpcClient(getIpAddress(), getServerPort());
+
+        mOpcClient.setReuseAddress(true);
+        mOpcClient.setSoTimeout(AppConstants.SOCKET_TIMEOUT);
+        mOpcClient.setSoConTimeout(AppConstants.SOCKET_CONNECTION_TIMEOUT);
+
+        mOpcClient.addSocketListener(new ISocketListener() {
+            @Override
+            public void onSocketError(Exception e) {
+                for (int i = 0; i < mListeners.size(); i++) {
+                    mListeners.get(i).onServerConnectionFailure();
+                }
+            }
+        });
+        mOpcDevice = mOpcClient.addDevice();
+        mPixelStrip = mOpcDevice.addPixelStrip(0, getLedCount());
+    }
+
+    public OpcClient getOpcClient() {
+        return mOpcClient;
+    }
+
+    public OpcDevice getOpcDevice() {
+        return mOpcDevice;
+    }
+
+    public PixelStrip getPixelStrip() {
+        return mPixelStrip;
     }
 
 }

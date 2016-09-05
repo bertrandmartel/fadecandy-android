@@ -41,70 +41,40 @@ public class ColorUtils {
 
     /**
      * Set full color for all led
-     *
-     * @param host       server address
-     * @param port       server port
-     * @param stripCount number of led to be set
-     * @param color      color to set
      */
-    public static int setFullColor(String host, int port, int stripCount, int color) {
+    public static int setFullColor(FadecandySingleton singleton) {
 
-        OpcClient server = new OpcClient(host, port);
-        server.setSoTimeout(AppConstants.SOCKET_TIMEOUT);
-        server.setSoConTimeout(AppConstants.SOCKET_CONNECTION_TIMEOUT);
-
-        OpcDevice fadecandy = server.addDevice();
-        PixelStrip strip = fadecandy.addPixelStrip(0, stripCount);
-
-        for (int i = 0; i < stripCount; i++) {
-            strip.setPixelColor(i, color);
+        for (int i = 0; i < singleton.getLedCount(); i++) {
+            singleton.getPixelStrip().setPixelColor(i, singleton.getColor());
         }
 
-        int status = server.show();        // Display the pixel changes
-        server.close();
+        int status = singleton.getOpcClient().show();        // Display the pixel changes
 
         return status;
     }
 
     /**
      * set brightness (color correction) : will set the same correction for R, G & B
-     *
-     * @param host       server address
-     * @param port       server port
-     * @param correction color correction
      */
-    public static int setBrightness(String host, int port, float correction) {
+    public static int setBrightness(FadecandySingleton singleton) {
 
-        OpcClient server = new OpcClient(host, port);
-        server.setSoTimeout(AppConstants.SOCKET_TIMEOUT);
-        server.setSoConTimeout(AppConstants.SOCKET_CONNECTION_TIMEOUT);
-        OpcDevice fadecandy = server.addDevice();
-        fadecandy.setColorCorrection(AppConstants.DEFAULT_GAMMA_CORRECTION, correction, correction, correction);
+        singleton.getOpcDevice().setColorCorrection(AppConstants.DEFAULT_GAMMA_CORRECTION,
+                singleton.getCurrentColorCorrection() / 100f,
+                singleton.getCurrentColorCorrection() / 100f,
+                singleton.getCurrentColorCorrection() / 100f);
 
-        int status = server.show();
-        server.close();
+        int status = singleton.getOpcClient().show();
 
         return status;
     }
 
     /**
      * clear all led
-     *
-     * @param host       server address.
-     * @param port       server port.
-     * @param stripCount number of led to clear.
      */
-    public static int clear(String host, int port, int stripCount) {
+    public static int clear(FadecandySingleton singleton) {
 
-        OpcClient server = new OpcClient(host, port);
-        server.setSoTimeout(AppConstants.SOCKET_TIMEOUT);
-        server.setSoConTimeout(AppConstants.SOCKET_CONNECTION_TIMEOUT);
-        OpcDevice fadecandy = server.addDevice();
-        PixelStrip strip = fadecandy.addPixelStrip(0, stripCount);
-
-        strip.clear();
-        int status = server.show();        // Display the pixel changes
-        server.close();
+        singleton.getPixelStrip().clear();
+        int status = singleton.getOpcClient().show();        // Display the pixel changes
 
         return status;
     }
@@ -229,74 +199,53 @@ public class ColorUtils {
     /**
      * create a mixer effect.
      *
-     * @param host       open pixel control server address
-     * @param port       open pixel control server port
-     * @param stripCount led count
-     * @param singleton  singleton for vars
+     * @param singleton singleton for vars
      */
-    public static int mixer(String host, int port, int stripCount, FadecandySingleton singleton) {
+    public static int mixer(FadecandySingleton singleton) {
 
-        OpcClient server = new OpcClient(host, port);
-        server.setSoTimeout(AppConstants.SOCKET_TIMEOUT);
-        server.setSoConTimeout(AppConstants.SOCKET_CONNECTION_TIMEOUT);
-        OpcDevice fadecandy = server.addDevice();
-        PixelStrip strip = fadecandy.addPixelStrip(0, stripCount);
         int status = 0;
 
         while (singleton.isAnimating()) {
 
-            status = mixGreen(true, stripCount, strip, 255, 0, singleton, server);
+            status = mixGreen(true, singleton.getLedCount(), singleton.getPixelStrip(), 255, 0, singleton, singleton.getOpcClient());
             if (status == -1) {
                 return -1;
             }
-            status = mixBlue(false, stripCount, strip, 255, 0, singleton, server);
+            status = mixBlue(false, singleton.getLedCount(), singleton.getPixelStrip(), 255, 0, singleton, singleton.getOpcClient());
             if (status == -1) {
                 return -1;
             }
-            status = mixRed(true, stripCount, strip, 0, 255, singleton, server);
+            status = mixRed(true, singleton.getLedCount(), singleton.getPixelStrip(), 0, 255, singleton, singleton.getOpcClient());
             if (status == -1) {
                 return -1;
             }
-            status = mixGreen(false, stripCount, strip, 0, 255, singleton, server);
+            status = mixGreen(false, singleton.getLedCount(), singleton.getPixelStrip(), 0, 255, singleton, singleton.getOpcClient());
             if (status == -1) {
                 return -1;
             }
-            status = mixBlue(true, stripCount, strip, 0, 255, singleton, server);
+            status = mixBlue(true, singleton.getLedCount(), singleton.getPixelStrip(), 0, 255, singleton, singleton.getOpcClient());
             if (status == -1) {
                 return -1;
             }
-            status = mixRed(false, stripCount, strip, 255, 0, singleton, server);
+            status = mixRed(false, singleton.getLedCount(), singleton.getPixelStrip(), 255, 0, singleton, singleton.getOpcClient());
             if (status == -1) {
                 return -1;
             }
         }
-
-        server.close();
 
         return 0;
     }
 
     /**
      * create a pulse effect
-     *
-     * @param host       open pixel control server address
-     * @param port       open pixel control server port
-     * @param stripCount led count  (0-512)
-     * @param singleton  singleton to get vars
      */
-    public static int pulse(String host, int port, int stripCount, FadecandySingleton singleton) {
-
-        OpcClient server = new OpcClient(host, port);
-        server.setSoTimeout(AppConstants.SOCKET_TIMEOUT);
-        server.setSoConTimeout(AppConstants.SOCKET_CONNECTION_TIMEOUT);
-        OpcDevice fadecandy = server.addDevice();
-        PixelStrip strip = fadecandy.addPixelStrip(0, stripCount);
+    public static int pulse(FadecandySingleton singleton) {
 
         int status = 0;
 
         if (singleton.isAnimating()) {
-            fadecandy.setColorCorrection(AppConstants.DEFAULT_GAMMA_CORRECTION, 0.0f, 0.0f, 0.0f);
-            status = server.show();
+            singleton.getOpcDevice().setColorCorrection(AppConstants.DEFAULT_GAMMA_CORRECTION, 0.0f, 0.0f, 0.0f);
+            status = singleton.getOpcClient().show();
             if (status == -1) {
                 return -1;
             }
@@ -304,18 +253,18 @@ public class ColorUtils {
 
         while (singleton.isAnimating()) {
 
-            for (int i = 0; i < stripCount; i++) {
-                strip.setPixelColor(i, singleton.getColor());
+            for (int i = 0; i < singleton.getLedCount(); i++) {
+                singleton.getPixelStrip().setPixelColor(i, singleton.getColor());
             }
 
-            status = graduateColorCorrection(true, server, fadecandy, singleton);
+            status = graduateColorCorrection(true, singleton.getOpcClient(), singleton.getOpcDevice(), singleton);
             if (status == -1) {
                 return -1;
             } else if (status == 1) {
                 return 0;
             }
 
-            status = graduateColorCorrection(false, server, fadecandy, singleton);
+            status = graduateColorCorrection(false, singleton.getOpcClient(), singleton.getOpcDevice(), singleton);
             if (status == -1) {
                 return -1;
             } else if (status == 1) {
@@ -329,12 +278,10 @@ public class ColorUtils {
                     e.printStackTrace();
                 }
             } else {
-                server.close();
                 return 0;
             }
         }
 
-        server.close();
         return 0;
     }
 

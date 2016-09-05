@@ -4,8 +4,6 @@ package fr.bmartel.fadecandy.ledcontrol;
 import android.graphics.Color;
 
 import com.github.akinaru.Animation;
-import com.github.akinaru.OpcClient;
-import com.github.akinaru.OpcDevice;
 import com.github.akinaru.PixelStrip;
 
 import fr.bmartel.fadecandy.FadecandySingleton;
@@ -57,17 +55,9 @@ public class Spark extends Animation {
         return (p + numPixels - i) % numPixels;
     }
 
-    public static int draw(String host, int port, FadecandySingleton singleton) {
+    public static int draw(FadecandySingleton singleton) {
 
-        OpcClient server = new OpcClient(host, port);
-
-        server.setSoTimeout(AppConstants.SOCKET_TIMEOUT);
-        server.setSoConTimeout(AppConstants.SOCKET_CONNECTION_TIMEOUT);
-
-        OpcDevice fadeCandy = server.addDevice();
-        PixelStrip strip = fadeCandy.addPixelStrip(0, singleton.getLedCount());
-
-        strip.setAnimation(new Spark(buildColors(singleton.getColor(), singleton.getSparkSpan())));
+        singleton.getPixelStrip().setAnimation(new Spark(buildColors(singleton.getColor(), singleton.getSparkSpan())));
 
         int status = 0;
 
@@ -76,14 +66,14 @@ public class Spark extends Animation {
 
         while (singleton.isAnimating()) {
 
-            status = server.animate();
+            status = singleton.getOpcClient().animate();
             if (status == -1) {
                 return -1;
             }
 
             if (singleton.isBrightnessUpdate()) {
 
-                status = fadeCandy.setColorCorrection(AppConstants.DEFAULT_GAMMA_CORRECTION,
+                status = singleton.getOpcDevice().setColorCorrection(AppConstants.DEFAULT_GAMMA_CORRECTION,
                         singleton.getCurrentColorCorrection() / 100f,
                         singleton.getCurrentColorCorrection() / 100f,
                         singleton.getCurrentColorCorrection() / 100f);
@@ -96,8 +86,8 @@ public class Spark extends Animation {
             }
 
             if (singleton.isSpanUpdate() || singleton.ismIsSparkColorUpdate()) {
-                strip.clear();
-                strip.setAnimation(new Spark(buildColors(singleton.getColor(), singleton.getSparkSpan())));
+                singleton.getPixelStrip().clear();
+                singleton.getPixelStrip().setAnimation(new Spark(buildColors(singleton.getColor(), singleton.getSparkSpan())));
                 singleton.setSpanUpdate(false);
                 singleton.setmIsSparkColorUpdate(false);
             }
@@ -108,9 +98,7 @@ public class Spark extends Animation {
                 e.printStackTrace();
             }
         }
-
-        server.close();
-
+        
         return 0;
     }
 
