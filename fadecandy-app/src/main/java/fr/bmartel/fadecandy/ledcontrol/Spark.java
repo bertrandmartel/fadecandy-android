@@ -8,6 +8,7 @@ import com.github.akinaru.OpcClient;
 import com.github.akinaru.OpcDevice;
 import com.github.akinaru.PixelStrip;
 
+import fr.bmartel.fadecandy.FadecandySingleton;
 import fr.bmartel.fadecandy.constant.AppConstants;
 
 /**
@@ -16,28 +17,13 @@ import fr.bmartel.fadecandy.constant.AppConstants;
  */
 public class Spark extends Animation {
 
-    private static final String TAG = Spark.class.getSimpleName();
-    public static int SPAN = -1;
-
-    public static float COLOR_CORRECTION = -1f;
-    public static boolean CONTROL = false;
-
     int color[] = null;
 
     int currentPixel;
     int numPixels;
-    private static int speed = 25;
 
     public Spark(int[] colors) {
         this.color = colors;
-    }
-
-    public static void setSpeed(int speed) {
-        if (speed == 100) {
-            Spark.speed = 5;
-        } else {
-            Spark.speed = 100 - speed;
-        }
     }
 
     @Override
@@ -56,6 +42,14 @@ public class Spark extends Animation {
         return true;
     }
 
+    public static int convertSpeed(int speed) {
+        if (speed == 100) {
+            return 5;
+        } else {
+            return (100 - speed);
+        }
+    }
+
     /**
      * Return the pixel number that is i steps behind number p.
      */
@@ -63,7 +57,7 @@ public class Spark extends Animation {
         return (p + numPixels - i) % numPixels;
     }
 
-    public static int draw(String host, int port, int stripCount, int color, int sparkSpan) {
+    public static int draw(String host, int port, FadecandySingleton singleton) {
 
         OpcClient server = new OpcClient(host, port);
 
@@ -71,42 +65,52 @@ public class Spark extends Animation {
         server.setSoConTimeout(AppConstants.SOCKET_CONNECTION_TIMEOUT);
 
         OpcDevice fadeCandy = server.addDevice();
-        PixelStrip strip = fadeCandy.addPixelStrip(0, stripCount);
+        PixelStrip strip = fadeCandy.addPixelStrip(0, singleton.getLedCount());
 
-        strip.setAnimation(new Spark(buildColors(color, sparkSpan)));
+        strip.setAnimation(new Spark(buildColors(singleton.getColor(), singleton.getSparkSpan())));
 
         int status = 0;
 
-        while (Spark.CONTROL) {
+        singleton.setSpanUpdate(false);
+        singleton.setmIsSparkColorUpdate(false);
+
+        while (singleton.isAnimating()) {
 
             status = server.animate();
             if (status == -1) {
                 return -1;
             }
 
-            if (COLOR_CORRECTION != -1) {
-                status = fadeCandy.setColorCorrection(AppConstants.DEFAULT_GAMMA_CORRECTION, COLOR_CORRECTION, COLOR_CORRECTION, COLOR_CORRECTION);
+            if (singleton.isBrightnessUpdate()) {
+
+                status = fadeCandy.setColorCorrection(AppConstants.DEFAULT_GAMMA_CORRECTION,
+                        singleton.getCurrentColorCorrection() / 100f,
+                        singleton.getCurrentColorCorrection() / 100f,
+                        singleton.getCurrentColorCorrection() / 100f);
+
                 if (status == -1) {
+
                     return -1;
                 }
-                COLOR_CORRECTION = -1;
+                singleton.setBrightnessUpdate(false);
             }
 
-            if (SPAN != -1) {
-                sparkSpan = SPAN;
+            if (singleton.isSpanUpdate() || singleton.ismIsSparkColorUpdate()) {
                 strip.clear();
-                strip.setAnimation(new Spark(buildColors(color, sparkSpan)));
-                SPAN = -1;
+                strip.setAnimation(new Spark(buildColors(singleton.getColor(), singleton.getSparkSpan())));
+                singleton.setSpanUpdate(false);
+                singleton.setmIsSparkColorUpdate(false);
             }
 
             try {
-                Thread.sleep(speed);
+                Thread.sleep(convertSpeed(singleton.getSpeed()));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
 
         server.close();
+
         return 0;
     }
 

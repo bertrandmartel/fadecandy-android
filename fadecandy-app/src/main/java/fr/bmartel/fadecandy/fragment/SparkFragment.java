@@ -41,8 +41,6 @@ import fr.bmartel.fadecandy.R;
  */
 public class SparkFragment extends MainFragment implements ColorPicker.OnColorChangedListener {
 
-    private final static String TAG = FullColorFragment.class.getSimpleName();
-
     public SparkFragment() {
     }
 
@@ -116,6 +114,8 @@ public class SparkFragment extends MainFragment implements ColorPicker.OnColorCh
 
         speedSeekbar.setProgress(mSingleton.getSpeed());
         spanSeekbar.setProgress(mSingleton.getSparkSpan());
+
+        mSingleton.spark(mSingleton.getColor());
 
         return view;
     }
