@@ -1,6 +1,6 @@
-[submodule "fadecandy-service/src/main/jni/rapidjson"]
-	path = fadecandy-service/src/main/jni/rapidjson
-	url = git://github.com/scanlime/rapidjson.git
 [submodule "fadecandy-service/src/main/jni/libws/libwebsockets"]
 	path = fadecandy-service/src/main/jni/libws/libwebsockets
 	url = git://github.com/akinaru/libwebsockets.git
+[submodule "fadecandy-service/src/main/jni/fadecandy"]
+	path = fadecandy-service/src/main/jni/fadecandy
+	url = git@github.com:akinaru/fadecandy.git

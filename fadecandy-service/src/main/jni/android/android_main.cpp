@@ -58,7 +58,7 @@ extern "C" {
     {
         __android_log_print(ANDROID_LOG_VERBOSE, APP_NAME, "startServer()");
 
-        FCServer::thisClass = (jclass)env->NewGlobalRef(cls);
+        FCServer::localServiceClass = (jclass)env->NewGlobalRef(cls);
 
         const jsize len = env->GetStringUTFLength(config);
         const char* configChars = env->GetStringUTFChars(config, 0);
@@ -98,7 +98,7 @@ extern "C" {
     {
         __android_log_print(ANDROID_LOG_VERBOSE, APP_NAME, "usbDeviceArrived()");
 
-        FCServer::thisClass = (jclass)env->NewGlobalRef(cls);
+        FCServer::localServiceClass = (jclass)env->NewGlobalRef(cls);
 
         const jsize len = env->GetStringUTFLength(serialNumber);
         const char* serialChars = env->GetStringUTFChars(serialNumber, 0);
@@ -107,7 +107,7 @@ extern "C" {
 
         env->ReleaseStringUTFChars(serialNumber, serialChars);
 
-        server.usbDeviceArrived(vendorId, productId, serial, fileDescriptor);
+        server.usbDeviceArrived(vendorId, productId, serial.c_str(), fileDescriptor);
     }
 
 }
@@ -135,12 +135,12 @@ extern "C" {
         JNIEnv *jni_env;
         vm->GetEnv((void **)&jni_env, JNI_VERSION_1_6);
 
-        jclass someClass = jni_env->FindClass("fr/bmartel/android/fadecandy/service/FadecandyService");
+        jclass globalServiceClass = jni_env->FindClass("fr/bmartel/android/fadecandy/service/FadecandyService");
 
-        if (someClass == NULL) {
+        if (globalServiceClass == NULL) {
             return -1;
         }
-        FCServer::someClass = (jclass)jni_env->NewGlobalRef(someClass);
+        FCServer::globalServiceClass = (jclass)jni_env->NewGlobalRef(globalServiceClass);
 
         return JNI_VERSION_1_6;
     }
