@@ -4,30 +4,34 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE := fadecandy-server
 
-GLOBAL_PATH := ../
-FADECANDY_SRC_PATH := ../src
+FADECANDY_SERVER_PATH := ../fadecandy/server
+FADECANDY_SERVER_SRC_PATH := $(FADECANDY_SERVER_PATH)/src
+FADECANDY_HTTP_SCRIPT_PATH := $(FADECANDY_SERVER_PATH)/http
+FADECANDY_HTTP_SCRIPT_NAME := manifest.py
 LIBWEBSOCKETS_PATH := ../libws/libwebsockets/lib
 
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/$(FADECANDY_SRC_PATH)
-LOCAL_C_INCLUDES += $(LOCAL_PATH)/$(GLOBAL_PATH)
+$(shell cd $(LOCAL_PATH)/$(FADECANDY_HTTP_SCRIPT_PATH);python $(FADECANDY_HTTP_SCRIPT_NAME) > $(LOCAL_PATH)/$(FADECANDY_SERVER_SRC_PATH)/httpdocs.cpp;cd $(LOCAL_PATH))
+
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/$(FADECANDY_SERVER_SRC_PATH)
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/$(FADECANDY_SERVER_PATH)
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/$(LIBWEBSOCKETS_PATH)
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/../libwebsockets
 
-#VERSION := $(shell git describe --match "fcserver-*")
-VERSION := fcserver-android-1.0
+VERSION := $(shell cd $(LOCAL_PATH)/$(FADECANDY_HTTP_SCRIPT_PATH);git describe --match "fcserver-*";cd $(LOCAL_PATH))
 
 LOCAL_SRC_FILES := $(LOCAL_PATH)/android_main.cpp \
-	$(LOCAL_PATH)/$(FADECANDY_SRC_PATH)/tcpnetserver.cpp \
-	$(LOCAL_PATH)/$(FADECANDY_SRC_PATH)/usbdevice.cpp \
-	$(LOCAL_PATH)/$(FADECANDY_SRC_PATH)/fcdevice.cpp \
-	$(LOCAL_PATH)/$(FADECANDY_SRC_PATH)/fcserver.cpp \
-	$(LOCAL_PATH)/$(FADECANDY_SRC_PATH)/version.cpp \
-	$(LOCAL_PATH)/$(FADECANDY_SRC_PATH)/tinythread.cpp \
-	$(LOCAL_PATH)/$(FADECANDY_SRC_PATH)/httpdocs.cpp \
+	$(LOCAL_PATH)/$(FADECANDY_SERVER_SRC_PATH)/tcpnetserver.cpp \
+	$(LOCAL_PATH)/$(FADECANDY_SERVER_SRC_PATH)/usbdevice.cpp \
+	$(LOCAL_PATH)/$(FADECANDY_SERVER_SRC_PATH)/fcdevice.cpp \
+	$(LOCAL_PATH)/$(FADECANDY_SERVER_SRC_PATH)/fcserver.cpp \
+	$(LOCAL_PATH)/$(FADECANDY_SERVER_SRC_PATH)/version.cpp \
+	$(LOCAL_PATH)/$(FADECANDY_SERVER_SRC_PATH)/tinythread.cpp \
+	$(LOCAL_PATH)/$(FADECANDY_SERVER_SRC_PATH)/httpdocs.cpp \
+	$(LOCAL_PATH)/$(FADECANDY_SERVER_SRC_PATH)/enttecdmxdevice.cpp \
 
 LOCAL_CPP_FEATURES += exceptions
 
-LOCAL_CFLAGS += -Wall -DLIBUSB_DESCRIBE="" -O3 -fno-builtin-printf -fno-builtin-fprintf -DFCSERVER_VERSION=$(VERSION)
+LOCAL_CFLAGS += -Wall -Wno-strict-aliasing -DLIBUSB_DESCRIBE="" -O3 -fno-builtin-printf -fno-builtin-fprintf -DFCSERVER_VERSION=$(VERSION)
 
 LOCAL_SHARED_LIBRARIES := libwebsockets
 
