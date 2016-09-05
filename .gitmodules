@@ -3,4 +3,4 @@
 	url = git://github.com/akinaru/libwebsockets.git
 [submodule "fadecandy-service/src/main/jni/fadecandy"]
 	path = fadecandy-service/src/main/jni/fadecandy
-	url = git@github.com:akinaru/fadecandy.git
+	url = git://github.com/akinaru/fadecandy.git
