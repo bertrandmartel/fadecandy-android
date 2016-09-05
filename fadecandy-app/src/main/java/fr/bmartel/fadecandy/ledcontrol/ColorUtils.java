@@ -232,10 +232,9 @@ public class ColorUtils {
      * @param host       open pixel control server address
      * @param port       open pixel control server port
      * @param stripCount led count
-     * @param delay      delay between each color change
      * @param singleton  singleton for vars
      */
-    public static int mixer(String host, int port, int stripCount, int delay, FadecandySingleton singleton) {
+    public static int mixer(String host, int port, int stripCount, FadecandySingleton singleton) {
 
         OpcClient server = new OpcClient(host, port);
         server.setSoTimeout(AppConstants.SOCKET_TIMEOUT);

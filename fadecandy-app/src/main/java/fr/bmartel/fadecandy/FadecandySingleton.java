@@ -181,19 +181,29 @@ public class FadecandySingleton {
     private boolean mIsPulsing;
 
     /**
+     * define if sparkling animation is running.
+     */
+    private boolean mIsSparkling;
+
+    /**
      * define if mix animation is running.
      */
     private boolean mIsMixing;
 
     /**
-     * define if spark animation is running.
+     * define if animation brightness should be updated.
      */
-    private boolean mIsSparking;
+    private boolean mIsBrightnessUpdate;
 
     /**
      * define if open pixel control request is pending
      */
     private boolean mIsSendingRequest;
+
+    /**
+     * define if spark color shoudl be updated.
+     */
+    private boolean mIsSparkColorUpdate;
 
     /**
      * monitoring object used to wait for server close before starting server if already started.
@@ -204,6 +214,11 @@ public class FadecandySingleton {
      * define  if websocket will be closed manually so we dont dispatch error listener when this is set to true.
      */
     private boolean mWebsocketClose = false;
+
+    /**
+     * define if span should be updated.
+     */
+    private boolean mIsSpanUpdate;
 
     /**
      * Get the static singleton instance.
@@ -261,6 +276,9 @@ public class FadecandySingleton {
 
         mContext = context;
 
+        mIsBrightnessUpdate = false;
+        mIsSpanUpdate = false;
+
         //build Fadecandy client to bind Fadecandy service & start server
 
         mFadecandyClient = new FadecandyClient(mContext, new IFcServerEventListener() {
@@ -314,6 +332,22 @@ public class FadecandySingleton {
         }
     }
 
+    public boolean isBrightnessUpdate() {
+        return mIsBrightnessUpdate;
+    }
+
+    public void setBrightnessUpdate(boolean brightnessUpdate) {
+        mIsBrightnessUpdate = brightnessUpdate;
+    }
+
+    public boolean isSpanUpdate() {
+        return mIsSpanUpdate;
+    }
+
+    public void setSpanUpdate(boolean spanUpdate) {
+        mIsSpanUpdate = spanUpdate;
+    }
+
     /**
      * Clear all led.
      */
@@ -346,7 +380,6 @@ public class FadecandySingleton {
     public void checkJoinThread() {
 
         if (workerThread != null) {
-            Spark.CONTROL = false;
             mAnimating = false;
             try {
                 workerThread.join();
@@ -590,8 +623,7 @@ public class FadecandySingleton {
 
         mCurrentBrightness = value;
         prefs.edit().putInt(AppConstants.PREFERENCE_FIELD_BRIGHTNESS, mCurrentBrightness).apply();
-
-        Spark.COLOR_CORRECTION = (value / 100f);
+        mIsBrightnessUpdate = true;
     }
 
     /**
@@ -603,37 +635,52 @@ public class FadecandySingleton {
 
         mColor = color;
         prefs.edit().putInt(AppConstants.PREFERENCE_FIELD_COLOR, mColor).apply();
+        mIsSparkColorUpdate = true;
 
-        mExecutorService.execute(new Runnable() {
-            @Override
-            public void run() {
+        if (!mIsSparkling) {
 
-                checkJoinThread();
-                Spark.CONTROL = true;
-                mAnimating = true;
+            mIsSparkling = true;
 
-                workerThread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
+            mExecutorService.execute(new Runnable() {
+                @Override
+                public void run() {
 
-                        while (mAnimating) {
+                    checkJoinThread();
+                    mAnimating = true;
 
-                            if (Spark.draw(getIpAddress(), getServerPort(), mLedCount, color, mSparkSpan) == -1) {
-                                //error occured
-                                for (int i = 0; i < mListeners.size(); i++) {
-                                    mListeners.get(i).onServerConnectionFailure();
+                    workerThread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            while (mAnimating) {
+
+                                if (Spark.draw(getIpAddress(), getServerPort(), FadecandySingleton.this) == -1) {
+                                    //error occured
+                                    for (int i = 0; i < mListeners.size(); i++) {
+                                        mListeners.get(i).onServerConnectionFailure();
+                                    }
+                                    mAnimating = false;
+                                    mIsSparkling = false;
+                                    return;
                                 }
-                                Spark.CONTROL = false;
-                                mAnimating = false;
-                                return;
                             }
+                            mAnimating = false;
+                            mIsSparkling = false;
                         }
-                    }
-                });
-                workerThread.start();
+                    });
+                    workerThread.start();
 
-            }
-        });
+                }
+            });
+        }
+    }
+
+    public boolean ismIsSparkColorUpdate() {
+        return mIsSparkColorUpdate;
+    }
+
+    public void setmIsSparkColorUpdate(boolean sparkColorUpdate) {
+        mIsSparkColorUpdate = sparkColorUpdate;
     }
 
     /**
@@ -644,7 +691,6 @@ public class FadecandySingleton {
     public void setSpeed(int speed) {
         mSparkSpeed = speed;
         prefs.edit().putInt(AppConstants.PREFERENCE_FIELD_SPARK_SPEED, speed).apply();
-        Spark.setSpeed(speed);
     }
 
     /**
@@ -933,7 +979,7 @@ public class FadecandySingleton {
     public void setSparkSpan(int sparkSpan) {
         mSparkSpan = sparkSpan;
         prefs.edit().putInt(AppConstants.PREFERENCE_FIELD_SPARK_SPAN, sparkSpan).apply();
-        Spark.SPAN = sparkSpan;
+        mIsSpanUpdate = true;
     }
 
     public void setMixerDelay(int mixerDelay) {
@@ -965,7 +1011,7 @@ public class FadecandySingleton {
                         @Override
                         public void run() {
                             mAnimating = true;
-                            if (ColorUtils.mixer(getIpAddress(), getServerPort(), mLedCount, mMixerDelay, FadecandySingleton.this) == -1) {
+                            if (ColorUtils.mixer(getIpAddress(), getServerPort(), mLedCount, FadecandySingleton.this) == -1) {
                                 //error occured
                                 for (int i = 0; i < mListeners.size(); i++) {
                                     mListeners.get(i).onServerConnectionFailure();
@@ -1001,7 +1047,7 @@ public class FadecandySingleton {
             mIsSendingRequest = false;
 
             final int oldBrightness = getCurrentColorCorrection();
-            
+
             mExecutorService.execute(new Runnable() {
                 @Override
                 public void run() {
@@ -1048,4 +1094,5 @@ public class FadecandySingleton {
         mPulsePause = pulsePause;
         prefs.edit().putInt(AppConstants.PREFERENCE_FIELD_PULSE_PAUSE, mPulsePause).apply();
     }
+
 }
