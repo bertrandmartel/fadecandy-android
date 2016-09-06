@@ -204,30 +204,31 @@ public class ColorUtils {
     public static int mixer(FadecandySingleton singleton) {
 
         int status = 0;
+        int ledCount = singleton.getLedCount();
 
         while (singleton.isAnimating()) {
 
-            status = mixGreen(true, singleton.getLedCount(), singleton.getPixelStrip(), 255, 0, singleton, singleton.getOpcClient());
+            status = mixGreen(true, ledCount, singleton.getPixelStrip(), 255, 0, singleton, singleton.getOpcClient());
             if (status == -1) {
                 return -1;
             }
-            status = mixBlue(false, singleton.getLedCount(), singleton.getPixelStrip(), 255, 0, singleton, singleton.getOpcClient());
+            status = mixBlue(false, ledCount, singleton.getPixelStrip(), 255, 0, singleton, singleton.getOpcClient());
             if (status == -1) {
                 return -1;
             }
-            status = mixRed(true, singleton.getLedCount(), singleton.getPixelStrip(), 0, 255, singleton, singleton.getOpcClient());
+            status = mixRed(true, ledCount, singleton.getPixelStrip(), 0, 255, singleton, singleton.getOpcClient());
             if (status == -1) {
                 return -1;
             }
-            status = mixGreen(false, singleton.getLedCount(), singleton.getPixelStrip(), 0, 255, singleton, singleton.getOpcClient());
+            status = mixGreen(false, ledCount, singleton.getPixelStrip(), 0, 255, singleton, singleton.getOpcClient());
             if (status == -1) {
                 return -1;
             }
-            status = mixBlue(true, singleton.getLedCount(), singleton.getPixelStrip(), 0, 255, singleton, singleton.getOpcClient());
+            status = mixBlue(true, ledCount, singleton.getPixelStrip(), 0, 255, singleton, singleton.getOpcClient());
             if (status == -1) {
                 return -1;
             }
-            status = mixRed(false, singleton.getLedCount(), singleton.getPixelStrip(), 255, 0, singleton, singleton.getOpcClient());
+            status = mixRed(false, ledCount, singleton.getPixelStrip(), 255, 0, singleton, singleton.getOpcClient());
             if (status == -1) {
                 return -1;
             }
@@ -243,6 +244,8 @@ public class ColorUtils {
 
         int status = 0;
 
+        int ledCount = singleton.getLedCount();
+
         if (singleton.isAnimating()) {
             singleton.getOpcDevice().setColorCorrection(AppConstants.DEFAULT_GAMMA_CORRECTION, 0.0f, 0.0f, 0.0f);
             status = singleton.getOpcClient().show();
@@ -253,7 +256,7 @@ public class ColorUtils {
 
         while (singleton.isAnimating()) {
 
-            for (int i = 0; i < singleton.getLedCount(); i++) {
+            for (int i = 0; i < ledCount; i++) {
                 singleton.getPixelStrip().setPixelColor(i, singleton.getColor());
             }
 

@@ -230,6 +230,8 @@ public class FadecandySingleton {
 
     private PixelStrip mPixelStrip;
 
+    private boolean mRestartAnimation;
+
     /**
      * Get the static singleton instance.
      *
@@ -666,20 +668,33 @@ public class FadecandySingleton {
                         @Override
                         public void run() {
 
-                            while (mAnimating) {
-
-                                if (Spark.draw(FadecandySingleton.this) == -1) {
-                                    //error occured
-                                    for (int i = 0; i < mListeners.size(); i++) {
-                                        mListeners.get(i).onServerConnectionFailure();
-                                    }
-                                    mAnimating = false;
-                                    mIsSparkling = false;
-                                    return;
+                            if (spark() == -1) {
+                                //error occured
+                                for (int i = 0; i < mListeners.size(); i++) {
+                                    mListeners.get(i).onServerConnectionFailure();
                                 }
+                                mAnimating = false;
+                                mIsSparkling = false;
+                                return;
                             }
+
                             mAnimating = false;
                             mIsSparkling = false;
+
+                            if (mRestartAnimation) {
+
+                                mRestartAnimation = false;
+
+                                initOpcClient();
+
+                                mExecutorService.execute(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        spark(mColor);
+                                    }
+                                });
+
+                            }
                         }
                     });
                     workerThread.start();
@@ -687,6 +702,59 @@ public class FadecandySingleton {
                 }
             });
         }
+    }
+
+    private int spark() {
+
+        Spark spark = new Spark(Spark.buildColors(getColor(), (mLedCount * getSparkSpan() / 100)));
+
+        mPixelStrip.setAnimation(spark);
+
+        int status = 0;
+
+        setSpanUpdate(false);
+        setmIsSparkColorUpdate(false);
+
+        while (isAnimating()) {
+
+            status = mOpcClient.animate();
+            if (status == -1) {
+                return -1;
+            }
+
+            if (isBrightnessUpdate()) {
+
+                status = mOpcClient.setColorCorrection(AppConstants.DEFAULT_GAMMA_CORRECTION,
+                        getCurrentColorCorrection() / 100f,
+                        getCurrentColorCorrection() / 100f,
+                        getCurrentColorCorrection() / 100f);
+
+                if (status == -1) {
+                    return -1;
+                }
+                setBrightnessUpdate(false);
+            }
+
+            if (isSpanUpdate()) {
+                mPixelStrip.clear();
+                spark = new Spark(Spark.buildColors(getColor(), (mLedCount * getSparkSpan() / 100)));
+                mPixelStrip.setAnimation(spark);
+                setSpanUpdate(false);
+            }
+
+            if (ismIsSparkColorUpdate()) {
+                spark.updateColor(mColor, (mLedCount * getSparkSpan() / 100));
+                setmIsSparkColorUpdate(false);
+            }
+
+            try {
+                Thread.sleep(Spark.convertSpeed(getSpeed()));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return 0;
     }
 
     public boolean ismIsSparkColorUpdate() {
@@ -765,6 +833,13 @@ public class FadecandySingleton {
     public void setLedCount(int ledCount) {
         this.mLedCount = ledCount;
         prefs.edit().putInt(AppConstants.PREFERENCE_FIELD_LEDCOUNT, mLedCount).apply();
+
+        if (!mAnimating) {
+            initOpcClient();
+        } else {
+            mRestartAnimation = true;
+            mAnimating = false;
+        }
     }
 
     /**
@@ -1035,6 +1110,21 @@ public class FadecandySingleton {
                             }
                             mAnimating = false;
                             mIsMixing = false;
+
+                            if (mRestartAnimation) {
+
+                                mRestartAnimation = false;
+
+                                initOpcClient();
+
+                                mExecutorService.execute(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mixer();
+                                    }
+                                });
+
+                            }
                         }
                     });
                     workerThread.start();
@@ -1083,7 +1173,23 @@ public class FadecandySingleton {
                             mIsPulsing = false;
                             mAnimating = false;
 
-                            setColorCorrection(oldBrightness, true);
+                            if (mRestartAnimation) {
+
+                                mRestartAnimation = false;
+
+                                initOpcClient();
+
+                                mExecutorService.execute(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        pulse(mColor);
+                                    }
+                                });
+
+                            } else {
+                                setColorCorrection(oldBrightness, true);
+
+                            }
                         }
                     });
                     workerThread.start();
@@ -1113,6 +1219,10 @@ public class FadecandySingleton {
 
     public void initOpcClient() {
 
+        if (mOpcClient != null) {
+            mOpcClient.close();
+        }
+
         mOpcClient = new OpcClient(getIpAddress(), getServerPort());
 
         mOpcClient.setReuseAddress(true);
@@ -1128,7 +1238,7 @@ public class FadecandySingleton {
             }
         });
         mOpcDevice = mOpcClient.addDevice();
-        mPixelStrip = mOpcDevice.addPixelStrip(0, getLedCount());
+        mPixelStrip = mOpcDevice.addPixelStrip(0, mLedCount);
     }
 
     public OpcClient getOpcClient() {
