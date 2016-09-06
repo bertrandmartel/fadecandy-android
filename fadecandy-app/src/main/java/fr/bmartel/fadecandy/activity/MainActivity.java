@@ -85,11 +85,6 @@ public class MainActivity extends BaseActivity {
      */
     private Toast mToast;
 
-    /**
-     * define if configuration dialog is showing.
-     */
-    private boolean mShowingConfiguration = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 

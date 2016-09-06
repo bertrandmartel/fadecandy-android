@@ -6,9 +6,6 @@ import android.graphics.Color;
 import com.github.akinaru.Animation;
 import com.github.akinaru.PixelStrip;
 
-import fr.bmartel.fadecandy.FadecandySingleton;
-import fr.bmartel.fadecandy.constant.AppConstants;
-
 /**
  * Display a moving white pixel with trailing orange/red flames
  * This looks pretty good with a ring of pixels.
@@ -55,54 +52,7 @@ public class Spark extends Animation {
         return (p + numPixels - i) % numPixels;
     }
 
-    public static int draw(FadecandySingleton singleton) {
-
-        singleton.getPixelStrip().setAnimation(new Spark(buildColors(singleton.getColor(), singleton.getSparkSpan())));
-
-        int status = 0;
-
-        singleton.setSpanUpdate(false);
-        singleton.setmIsSparkColorUpdate(false);
-
-        while (singleton.isAnimating()) {
-
-            status = singleton.getOpcClient().animate();
-            if (status == -1) {
-                return -1;
-            }
-
-            if (singleton.isBrightnessUpdate()) {
-
-                status = singleton.getOpcDevice().setColorCorrection(AppConstants.DEFAULT_GAMMA_CORRECTION,
-                        singleton.getCurrentColorCorrection() / 100f,
-                        singleton.getCurrentColorCorrection() / 100f,
-                        singleton.getCurrentColorCorrection() / 100f);
-
-                if (status == -1) {
-
-                    return -1;
-                }
-                singleton.setBrightnessUpdate(false);
-            }
-
-            if (singleton.isSpanUpdate() || singleton.ismIsSparkColorUpdate()) {
-                singleton.getPixelStrip().clear();
-                singleton.getPixelStrip().setAnimation(new Spark(buildColors(singleton.getColor(), singleton.getSparkSpan())));
-                singleton.setSpanUpdate(false);
-                singleton.setmIsSparkColorUpdate(false);
-            }
-
-            try {
-                Thread.sleep(convertSpeed(singleton.getSpeed()));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        
-        return 0;
-    }
-
-    private static int[] buildColors(int color, int sparkSpan) {
+    public static int[] buildColors(int color, int sparkSpan) {
 
         int red = Color.red(color);
         int green = Color.green(color);
@@ -119,5 +69,9 @@ public class Spark extends Animation {
         colors[colors.length - 1] = noColor;
 
         return colors;
+    }
+
+    public void updateColor(int mColor, int sparkSpan) {
+        color = buildColors(mColor, sparkSpan);
     }
 }
