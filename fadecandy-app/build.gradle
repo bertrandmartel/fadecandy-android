@@ -26,6 +26,11 @@ android {
         versionCode 5
         versionName "1.4"
     }
+
+    signingConfigs {
+        playStore
+    }
+
     buildTypes {
 
         debug {
@@ -44,6 +49,8 @@ android {
             buildConfigField "boolean", "USE_CRASHLYTICS", "true"
             ext.enableCrashlytics = true
             minifyEnabled true
+            zipAlignEnabled true
+            signingConfig signingConfigs.playStore
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -97,4 +104,24 @@ crashlytics {
     enableNdk true
     androidNdkOut 'src/main/obj'
     androidNdkLibsOut 'src/main/libs'
+}
+
+def Properties props = new Properties()
+def propFile = new File('signing.properties')
+
+if (propFile.canRead()) {
+    props.load(new FileInputStream(propFile))
+}
+
+if (props.containsKey('STORE_FILE')
+        && props.containsKey('STORE_PASSWORD')
+        && props.containsKey('KEY_ALIAS')
+        && props.containsKey('KEY_PASSWORD')) {
+    android.signingConfigs.playStore.storeFile = file(props['STORE_FILE'])
+    android.signingConfigs.playStore.storePassword = props['STORE_PASSWORD']
+    android.signingConfigs.playStore.keyAlias = props['KEY_ALIAS']
+    android.signingConfigs.playStore.keyPassword = props['KEY_PASSWORD']
+} else {
+    println 'signing.properties not found or incomplete'
+    android.buildTypes.release.signingConfig = null
 }

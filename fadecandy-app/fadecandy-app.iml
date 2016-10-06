@@ -101,7 +101,7 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.crashlytics.sdk.android/crashlytics-core/2.3.11/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.crashlytics.sdk.android/crashlytics-ndk/1.1.4/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.crashlytics.sdk.android/crashlytics/2.6.2/jars" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.github.akinaru/fadecandy-service/1.2/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.github.akinaru/fadecandy-service/1.4/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.koushikdutta.async/androidasync/2.1.8/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.larswerkman/HoloColorPicker/1.5/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.roughike/bottom-bar/2.0.2/jars" />
@@ -138,18 +138,18 @@
     <orderEntry type="library" exported="" name="HoloColorPicker-1.5" level="project" />
     <orderEntry type="library" exported="" name="beta-1.2.2" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-24.2.0" level="project" />
+    <orderEntry type="library" exported="" name="opc-1.08" level="project" />
     <orderEntry type="library" exported="" name="support-fragment-24.2.0" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-24.2.0" level="project" />
     <orderEntry type="library" exported="" name="support-vector-drawable-24.2.0" level="project" />
     <orderEntry type="library" exported="" name="animated-vector-drawable-24.2.0" level="project" />
     <orderEntry type="library" exported="" name="bottom-bar-2.0.2" level="project" />
     <orderEntry type="library" exported="" name="design-24.2.0" level="project" />
-    <orderEntry type="library" exported="" name="opc-1.07" level="project" />
     <orderEntry type="library" exported="" name="androidasync-2.1.8" level="project" />
     <orderEntry type="library" exported="" name="answers-1.3.9" level="project" />
     <orderEntry type="library" exported="" name="crashlytics-core-2.3.11" level="project" />
-    <orderEntry type="library" exported="" name="fadecandy-service-1.2" level="project" />
     <orderEntry type="library" exported="" name="discrete-seekbar-1.0.1" level="project" />
+    <orderEntry type="library" exported="" name="fadecandy-service-1.4" level="project" />
     <orderEntry type="library" exported="" name="crashlytics-ndk-1.1.4" level="project" />
   </component>
 </module>
