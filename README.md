@@ -1,21 +1,18 @@
 # Fadecandy Android
 
-[![Build Status](https://travis-ci.org/akinaru/fadecandy-android.svg?branch=master)](https://travis-ci.org/akinaru/fadecandy-android)
-[ ![Download](https://api.bintray.com/packages/akinaru/maven/fadecandy-server-android/images/download.svg) ](https://bintray.com/akinaru/maven/fadecandy-server-android/_latestVersion)
-[![License](http://img.shields.io/:license-mit-blue.svg)](LICENSE.md)
+[![CircleCI](https://img.shields.io/circleci/project/akinaru/fadecandy-android.svg?maxAge=2592000?style=plastic)](https://circleci.com/gh/akinaru/fadecandy-android) [ ![Download](https://api.bintray.com/packages/akinaru/maven/fadecandy-server-android/images/download.svg) ](https://bintray.com/akinaru/maven/fadecandy-server-android/_latestVersion) [![License](http://img.shields.io/:license-mit-blue.svg)](LICENSE.md)
 
-The <a href="https://github.com/scanlime/fadecandy">Fadecandy</a> server library for Android devices
+The [Fadecandy](https://github.com/scanlime/fadecandy) server library for Android devices
 
 Control your Fadecandy USB LED controller plugged into your Android device
 
-Try Fadecandy server / client with the <a href="https://play.google.com/store/apps/details?id=fr.bmartel.fadecandy">sample app</a> available on the Playstore.
+Try Fadecandy server / client with the [sample app](https://play.google.com/store/apps/details?id=fr.bmartel.fadecandy) available on the Playstore.
 
-<b>No root required</b>
+**No root required**
 
-[![Download Fadecandy from Google Play](http://www.android.com/images/brand/android_app_on_play_large.png)](https://play.google.com/store/apps/details?id=fr.bmartel.fadecandy)
-[![Download latest debug from drone.io](https://raw.githubusercontent.com/kageiit/images-host/master/badges/drone-io-badge.png)](https://drone.io/github.com/akinaru/fadecandy-android/files/fadecandy-app/build/outputs/apk/fadecandy-app-debug.apk)
+[![Download Fadecandy from Google Play](http://www.android.com/images/brand/android_app_on_play_large.png)](https://play.google.com/store/apps/details?id=fr.bmartel.fadecandy) [![Download latest debug from drone.io](https://raw.githubusercontent.com/kageiit/images-host/master/badges/drone-io-badge.png)](https://drone.io/github.com/akinaru/fadecandy-android/files/fadecandy-app/build/outputs/apk/fadecandy-app-debug.apk)
 
-![fadecandy](img/fadecandy.gif)
+![fadecandy](https://github.com/akinaru/fadecandy-android/raw/master/img/fadecandy.gif)
 
 You can control your Fadecandy device from :
 * Android smartphone
@@ -26,15 +23,15 @@ You can control your Fadecandy device from :
 
 Fadecandy is a USB controlled LED driver with on-board dithering. One Fadecandy device support up to 8 strips of 64 Leds that gives you a maximum of 512 Leds/Fadecandy device.
 
-![notif](img/fadecandy.jpg)
+![notif](https://github.com/akinaru/fadecandy-android/raw/master/img/fadecandy.jpg)
 
-Check <a href="https://github.com/scanlime/fadecandy">official Fadecandy repository</a> for more information about Fadecandy device
+Check [official Fadecandy repository](https://github.com/scanlime/fadecandy) for more information about Fadecandy device
 
 ## What is Fadecandy Server ?
 
-Fadecandy server is a TCP server embedded in Fadecandy project which is used to remotely control Fadecandy USB devices through <a href="http://openpixelcontrol.org/">Open Pixel Control protocol</a>, a custom TCP protocol tailored to control LEDs
+Fadecandy server is a TCP server embedded in Fadecandy project which is used to remotely control Fadecandy USB devices through [Open Pixel Control protocol](http://openpixelcontrol.org/), a custom TCP protocol tailored to control LEDs
 
-Check <a href="https://github.com/scanlime/fadecandy#open-pixel-control-server">official Fadecandy repository</a> for more information about Open Pixel Control Server
+Check [official Fadecandy repository](https://github.com/scanlime/fadecandy#open-pixel-control-server) for more information about Open Pixel Control Server
 
 ## How does it work ? 
 
@@ -42,9 +39,9 @@ Fadecandy Android fork is available at https://github.com/akinaru/fadecandy
 
 Originally, Fadecandy server uses libusbx to interface with Fadecandy USB devices. In Android, a regular user has to grant permission for the application to open an USB device.
 
-Using <a href="https://play.google.com/store/apps/details?id=fr.bmartel.fadecandy">Fadecandy Android app</a>, when you plug a Fadecandy in your Android device, you will see this pop-up :
+Using [Fadecandy Android app](https://play.google.com/store/apps/details?id=fr.bmartel.fadecandy), when you plug a Fadecandy in your Android device, you will see this pop-up :
 
-![notif](screen/permission_pop.png)
+![notif](https://github.com/akinaru/fadecandy-android/raw/master/screen/permission_pop.png)
 
 If user click on `Use by default for this USB device`, it wont be asked again for this USB device when the device is re-plugged again.
 
@@ -205,7 +202,7 @@ The key is the USB device file descriptor, The value is an `UsbItem` object enca
 FadecandyConfig config = mFadecandyClient.getConfig();
 ```
 
-Fadecandy configuration is composed of the Top level object defined in <a href="https://github.com/scanlime/fadecandy/blob/master/doc/fc_server_config.md#top-level-object">Fadecandy Server configuration documentation</a>
+Fadecandy configuration is composed of the Top level object defined in [Fadecandy Server configuration documentation](https://github.com/scanlime/fadecandy/blob/master/doc/fc_server_config.md#top-level-object)
 
 ### Set Fadecandy service type 
 
@@ -215,7 +212,7 @@ Fadecandy configuration is composed of the Top level object defined in <a href="
 mFadecandyClient.setServiceType(ServiceType.PERSISTENT_SERVICE);
 ```
 
-![notif](screen/notif.png)
+![notif](https://github.com/akinaru/fadecandy-android/raw/master/screen/notif.png)
 
  * Set the Fadencandy service as `NON_PERSISTENT`. The service will be killed as soon as no application is bound to it
 
