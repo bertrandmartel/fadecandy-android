@@ -10,7 +10,7 @@ Try Fadecandy server / client with the [sample app](https://play.google.com/stor
 
 **No root required**
 
-[![Download Fadecandy from Google Play](http://www.android.com/images/brand/android_app_on_play_large.png)](https://play.google.com/store/apps/details?id=fr.bmartel.fadecandy) [![Download latest debug from drone.io](https://raw.githubusercontent.com/kageiit/images-host/master/badges/drone-io-badge.png)](https://drone.io/github.com/akinaru/fadecandy-android/files/fadecandy-app/build/outputs/apk/fadecandy-app-debug.apk)
+[![Download Fadecandy from Google Play](http://www.android.com/images/brand/android_app_on_play_large.png)](https://play.google.com/store/apps/details?id=fr.bmartel.fadecandy)
 
 ![fadecandy](https://github.com/akinaru/fadecandy-android/raw/master/img/fadecandy.gif)
 
