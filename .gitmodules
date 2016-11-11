@@ -1,6 +1,6 @@
 [submodule "fadecandy-service/src/main/jni/libws/libwebsockets"]
 	path = fadecandy-service/src/main/jni/libws/libwebsockets
-	url = git://github.com/akinaru/libwebsockets.git
+	url = git://github.com/bertrandmartel/libwebsockets.git
 [submodule "fadecandy-service/src/main/jni/fadecandy"]
 	path = fadecandy-service/src/main/jni/fadecandy
-	url = git://github.com/akinaru/fadecandy.git
+	url = git://github.com/bertrandmartel/fadecandy.git

@@ -19,7 +19,7 @@
     <string name="copyright">\u00a9 2016 Bertrand Martel</string>
     <string name="dialog_ok">Ok</string>
     <string name="developper_mail">bmartel.fr@gmail.com</string>
-    <string name="github_link">https://github.com/akinaru/fadecandy-android</string>
+    <string name="github_link">https://github.com/bertrandmartel/fadecandy-android</string>
     <string name="issue_object">Fadecandy Android Issue</string>
     <string name="issue_title">Report a problem</string>
     <string name="issue_message">Your error report here...</string>

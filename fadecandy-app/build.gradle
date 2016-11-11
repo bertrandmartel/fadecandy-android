@@ -26,7 +26,7 @@ android {
         applicationId "fr.bmartel.fadecandy"
         minSdkVersion 16
         targetSdkVersion 24
-        versionCode 5
+        versionCode 6
         versionName "1.4"
     }
 
