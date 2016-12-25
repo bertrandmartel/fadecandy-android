@@ -76,11 +76,11 @@ tasks.withType(JavaCompile) {
 }
 
 
-def siteUrl = 'https://github.com/akinaru/fadecandy-android'
-def gitUrl = 'https://github.com/akinaru/fadecandy-android.git'
+def siteUrl = 'https://github.com/bertrandmartel/fadecandy-android'
+def gitUrl = 'https://github.com/bertrandmartel/fadecandy-android.git'
 
 
-group = 'com.github.akinaru'
+group = 'bmartel.fr'
 version = android.defaultConfig.versionName
 
 bintray {
@@ -140,7 +140,7 @@ install {
                 }
                 developers {
                     developer {
-                        id 'akinaru'
+                        id 'bertrandmartel'
                         name 'Bertrand Martel'
                         email 'bmartel.fr@gmail.com'
                     }

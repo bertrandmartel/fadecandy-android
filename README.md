@@ -1,6 +1,6 @@
 # Fadecandy Android
 
-[![CircleCI](https://img.shields.io/circleci/project/bertrandmartel/fadecandy-android.svg?maxAge=2592000?style=plastic)](https://circleci.com/gh/bertrandmartel/fadecandy-android) [ ![Download](https://api.bintray.com/packages/akinaru/maven/fadecandy-server-android/images/download.svg) ](https://bintray.com/akinaru/maven/fadecandy-server-android/_latestVersion) [![License](http://img.shields.io/:license-mit-blue.svg)](LICENSE.md)
+[![CircleCI](https://img.shields.io/circleci/project/bertrandmartel/fadecandy-android.svg?maxAge=2592000?style=plastic)](https://circleci.com/gh/bertrandmartel/fadecandy-android) [ ![Download](https://api.bintray.com/packages/bertrandmartel/maven/fadecandy-server-android/images/download.svg) ](https://bintray.com/bertrandmartel/maven/fadecandy-server-android/_latestVersion) [![License](http://img.shields.io/:license-mit-blue.svg)](LICENSE.md)
 
 The [Fadecandy](https://github.com/scanlime/fadecandy) server library for Android devices
 
@@ -86,7 +86,7 @@ For writing to USB device, Fadecandy server is calling from C++ a Java method to
 * with Gradle, from jcenter :
 
 ```
-compile 'com.github.akinaru:fadecandy-service:1.4'
+compile 'bmartel.fr:fadecandy-service:1.4'
 ```
 
 ## How to use it ?
