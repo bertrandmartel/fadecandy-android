@@ -1,0 +1,8 @@
+title: Fadecandy-android
+description: Fadecandy server library to manage your Fadecandy USB controlled LED driver on Android
+google_analytics: 
+show_downloads: true
+theme: jekyll-theme-cayman
+
+gems:
+  - jekyll-mentions
