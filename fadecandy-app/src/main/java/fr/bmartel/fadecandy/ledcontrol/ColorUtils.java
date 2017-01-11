@@ -25,12 +25,11 @@ package fr.bmartel.fadecandy.ledcontrol;
 
 import android.graphics.Color;
 
-import com.github.akinaru.OpcClient;
-import com.github.akinaru.OpcDevice;
-import com.github.akinaru.PixelStrip;
-
 import fr.bmartel.fadecandy.FadecandySingleton;
 import fr.bmartel.fadecandy.constant.AppConstants;
+import fr.bmartel.opc.OpcClient;
+import fr.bmartel.opc.OpcDevice;
+import fr.bmartel.opc.PixelStrip;
 
 /**
  * open pixel control functions.

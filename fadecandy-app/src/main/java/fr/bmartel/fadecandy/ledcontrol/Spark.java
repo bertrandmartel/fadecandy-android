@@ -3,8 +3,8 @@ package fr.bmartel.fadecandy.ledcontrol;
 
 import android.graphics.Color;
 
-import com.github.akinaru.Animation;
-import com.github.akinaru.PixelStrip;
+import fr.bmartel.opc.Animation;
+import fr.bmartel.opc.PixelStrip;
 
 /**
  * Display a moving white pixel with trailing orange/red flames

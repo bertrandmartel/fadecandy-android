@@ -80,7 +80,7 @@ def siteUrl = 'https://github.com/bertrandmartel/fadecandy-android'
 def gitUrl = 'https://github.com/bertrandmartel/fadecandy-android.git'
 
 
-group = 'bmartel.fr'
+group = 'fr.bmartel'
 version = android.defaultConfig.versionName
 
 bintray {
@@ -135,7 +135,7 @@ install {
                 licenses {
                     license {
                         name 'The MIT License'
-                        url 'https://github.com/akinary/fadecandy-android/blob/master/LICENSE.md'
+                        url 'https://github.com/bertrandmartel/fadecandy-android/blob/master/LICENSE.md'
                     }
                 }
                 developers {
@@ -146,8 +146,8 @@ install {
                     }
                 }
                 scm {
-                    connection 'https://github.com/akinary/fadecandy-android.git'
-                    developerConnection 'https://github.com/akinary/fadecandy-android.git'
+                    connection 'https://github.com/bertrandmartel/fadecandy-android.git'
+                    developerConnection 'https://github.com/bertrandmartel/fadecandy-android.git'
                     url siteUrl
                 }
             }

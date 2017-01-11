@@ -27,10 +27,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.github.akinaru.ISocketListener;
-import com.github.akinaru.OpcClient;
-import com.github.akinaru.OpcDevice;
-import com.github.akinaru.PixelStrip;
 import com.koushikdutta.async.callback.CompletedCallback;
 import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.WebSocket;
@@ -61,6 +57,10 @@ import fr.bmartel.fadecandy.ledcontrol.ColorUtils;
 import fr.bmartel.fadecandy.ledcontrol.Spark;
 import fr.bmartel.fadecandy.listener.ISingletonListener;
 import fr.bmartel.fadecandy.utils.ManualResetEvent;
+import fr.bmartel.opc.ISocketListener;
+import fr.bmartel.opc.OpcClient;
+import fr.bmartel.opc.OpcDevice;
+import fr.bmartel.opc.PixelStrip;
 
 /**
  * Singleton used to bind service and wrap around it.
