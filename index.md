@@ -1,6 +1,6 @@
 # Fadecandy Android
 
-[![CircleCI](https://img.shields.io/circleci/project/akinaru/fadecandy-android.svg?maxAge=2592000?style=plastic)](https://circleci.com/gh/akinaru/fadecandy-android) [ ![Download](https://api.bintray.com/packages/akinaru/maven/fadecandy-server-android/images/download.svg) ](https://bintray.com/akinaru/maven/fadecandy-server-android/_latestVersion) [![License](http://img.shields.io/:license-mit-blue.svg)](LICENSE.md)
+[![CircleCI](https://img.shields.io/circleci/project/bertrandmartel/fadecandy-android.svg?maxAge=2592000?style=plastic)](https://circleci.com/gh/bertrandmartel/fadecandy-android) [ ![Download](https://api.bintray.com/packages/bertrandmartel/maven/fadecandy-server-android/images/download.svg) ](https://bintray.com/bertrandmartel/maven/fadecandy-server-android/_latestVersion) [![License](http://img.shields.io/:license-mit-blue.svg)](LICENSE.md)
 
 The [Fadecandy](https://github.com/scanlime/fadecandy) server library for Android devices
 
@@ -10,9 +10,9 @@ Try Fadecandy server / client with the [sample app](https://play.google.com/stor
 
 **No root required**
 
-[![Download Fadecandy from Google Play](http://www.android.com/images/brand/android_app_on_play_large.png)](https://play.google.com/store/apps/details?id=fr.bmartel.fadecandy) [![Download latest debug from drone.io](https://raw.githubusercontent.com/kageiit/images-host/master/badges/drone-io-badge.png)](https://drone.io/github.com/akinaru/fadecandy-android/files/fadecandy-app/build/outputs/apk/fadecandy-app-debug.apk)
+[![Download Fadecandy from Google Play](http://www.android.com/images/brand/android_app_on_play_large.png)](https://play.google.com/store/apps/details?id=fr.bmartel.fadecandy)
 
-![fadecandy](https://github.com/akinaru/fadecandy-android/raw/master/img/fadecandy.gif)
+![fadecandy](https://github.com/bertrandmartel/fadecandy-android/raw/master/img/fadecandy.gif)
 
 You can control your Fadecandy device from :
 * Android smartphone
@@ -23,7 +23,7 @@ You can control your Fadecandy device from :
 
 Fadecandy is a USB controlled LED driver with on-board dithering. One Fadecandy device support up to 8 strips of 64 Leds that gives you a maximum of 512 Leds/Fadecandy device.
 
-![notif](https://github.com/akinaru/fadecandy-android/raw/master/img/fadecandy.jpg)
+![notif](https://github.com/bertrandmartel/fadecandy-android/raw/master/img/fadecandy.jpg)
 
 Check [official Fadecandy repository](https://github.com/scanlime/fadecandy) for more information about Fadecandy device
 
@@ -35,13 +35,13 @@ Check [official Fadecandy repository](https://github.com/scanlime/fadecandy#open
 
 ## How does it work ? 
 
-Fadecandy Android fork is available at https://github.com/akinaru/fadecandy
+Fadecandy Android fork is available at https://github.com/bertrandmartel/fadecandy
 
 Originally, Fadecandy server uses libusbx to interface with Fadecandy USB devices. In Android, a regular user has to grant permission for the application to open an USB device.
 
 Using [Fadecandy Android app](https://play.google.com/store/apps/details?id=fr.bmartel.fadecandy), when you plug a Fadecandy in your Android device, you will see this pop-up :
 
-![notif](https://github.com/akinaru/fadecandy-android/raw/master/screen/permission_pop.png)
+![notif](https://github.com/bertrandmartel/fadecandy-android/raw/master/screen/permission_pop.png)
 
 If user click on `Use by default for this USB device`, it wont be asked again for this USB device when the device is re-plugged again.
 
@@ -86,7 +86,7 @@ For writing to USB device, Fadecandy server is calling from C++ a Java method to
 * with Gradle, from jcenter :
 
 ```
-compile 'com.github.akinaru:fadecandy-service:1.4'
+compile 'bmartel.fr:fadecandy-service:1.4'
 ```
 
 ## How to use it ?
@@ -212,7 +212,7 @@ Fadecandy configuration is composed of the Top level object defined in [Fadecand
 mFadecandyClient.setServiceType(ServiceType.PERSISTENT_SERVICE);
 ```
 
-![notif](https://github.com/akinaru/fadecandy-android/raw/master/screen/notif.png)
+![notif](https://github.com/bertrandmartel/fadecandy-android/raw/master/screen/notif.png)
 
  * Set the Fadencandy service as `NON_PERSISTENT`. The service will be killed as soon as no application is bound to it
 
@@ -253,7 +253,7 @@ This will keep methods in `FadecandyService` to preserve calls from native code 
 ### Get source code
 
 ```
-git clone git@github.com:akinaru/fadecandy-android.git
+git clone git@github.com:bertrandmartel/fadecandy-android.git
 cd fadecandy-android
 git submodule update --init --recursive
 ```
@@ -270,14 +270,14 @@ git submodule update --init --recursive
 
 * Fadecandy : https://github.com/scanlime/fadecandy
 * rapidjson : https://github.com/scanlime/rapidjson
-* libwebsockets : https://github.com/akinaru/libwebsockets
+* libwebsockets : https://github.com/bertrandmartel/libwebsockets
 * Android support-v4
 
 ### Fadecandy Application
 
 * DiscreteSeekBar : https://github.com/AnderWeb/discreteSeekBar
 * Android Holo ColorPicker : https://github.com/LarsWerkman/HoloColorPicker
-* Open Pixel Control Library : https://github.com/akinaru/opc-java
+* Open Pixel Control Library : https://github.com/bertrandmartel/opc-java
 * AndroidAsync : https://github.com/koush/AndroidAsync
 * Led Icon by Kenneth Appiah, CA (Pulic Domain) : https://thenounproject.com/search/?q=led&i=3156
 * appcompat-v7, design & recyclerview-v7
