@@ -1,6 +1,10 @@
 # Fadecandy Android
 
-[![CircleCI](https://img.shields.io/circleci/project/bertrandmartel/fadecandy-android.svg?maxAge=2592000?style=plastic)](https://circleci.com/gh/bertrandmartel/fadecandy-android) [ ![Download](https://api.bintray.com/packages/bertrandmartel/maven/fadecandy-server-android/images/download.svg) ](https://bintray.com/bertrandmartel/maven/fadecandy-server-android/_latestVersion) [![License](http://img.shields.io/:license-mit-blue.svg)](LICENSE.md)
+[![CircleCI](https://img.shields.io/circleci/project/bertrandmartel/fadecandy-android.svg?maxAge=2592000?style=plastic)](https://circleci.com/gh/bertrandmartel/fadecandy-android) 
+[ ![Download](https://api.bintray.com/packages/bertrandmartel/maven/fadecandy-server-android/images/download.svg) ](https://bintray.com/bertrandmartel/maven/fadecandy-server-android/_latestVersion) 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/fr.bmartel/fadecandy-service/badge.svg)](https://maven-badges.herokuapp.com/maven-central/fr.bmartel/fadecandy-service)
+[![Javadoc](http://javadoc-badge.appspot.com/fr.bmartel/fadecandy-service.svg?label=javadoc)](http://javadoc-badge.appspot.com/fr.bmartel/fadecandy-service)
+[![License](http://img.shields.io/:license-mit-blue.svg)](LICENSE.md)
 
 The [Fadecandy](https://github.com/scanlime/fadecandy) server library for Android devices
 
