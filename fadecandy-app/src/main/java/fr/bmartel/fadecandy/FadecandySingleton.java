@@ -48,7 +48,6 @@ import fr.bmartel.android.fadecandy.client.FadecandyClient;
 import fr.bmartel.android.fadecandy.constant.Constants;
 import fr.bmartel.android.fadecandy.inter.IFcServerEventListener;
 import fr.bmartel.android.fadecandy.inter.IUsbEventListener;
-import fr.bmartel.android.fadecandy.model.FadecandyConfig;
 import fr.bmartel.android.fadecandy.model.ServerError;
 import fr.bmartel.android.fadecandy.model.ServiceType;
 import fr.bmartel.android.fadecandy.model.UsbItem;
@@ -297,9 +296,7 @@ public class FadecandySingleton {
 
             @Override
             public void onServerStart() {
-
                 Log.v(TAG, "onServerStart");
-
                 for (int i = 0; i < mListeners.size(); i++) {
                     mListeners.get(i).onServerStart();
                 }
@@ -309,9 +306,7 @@ public class FadecandySingleton {
 
             @Override
             public void onServerClose() {
-
                 Log.v(TAG, "onServerClose");
-
                 for (int i = 0; i < mListeners.size(); i++) {
                     mListeners.get(i).onServerClose();
                 }
@@ -319,7 +314,10 @@ public class FadecandySingleton {
 
             @Override
             public void onServerError(ServerError error) {
-
+                Log.v(TAG, "onServerError");
+                for (int i = 0; i < mListeners.size(); i++) {
+                    mListeners.get(i).onServerError();
+                }
             }
 
         }, new IUsbEventListener() {
@@ -477,7 +475,7 @@ public class FadecandySingleton {
      *
      * @return
      */
-    public FadecandyConfig getConfig() {
+    public String getConfig() {
         if (mFadecandyClient != null) {
             return mFadecandyClient.getConfig();
         }
@@ -557,6 +555,17 @@ public class FadecandySingleton {
     public void disconnect() {
         if (mFadecandyClient != null) {
             mFadecandyClient.disconnect();
+        }
+    }
+
+    /**
+     * Set Fadecandy configuration.
+     *
+     * @param config
+     */
+    public void setConfig(String config) {
+        if (mFadecandyClient != null) {
+            mFadecandyClient.setConfig(config);
         }
     }
 
@@ -846,7 +855,6 @@ public class FadecandySingleton {
      * Restart Fadecandy Server.
      */
     public void restartServer() {
-
         if (mFadecandyClient != null) {
             mFadecandyClient.startServer();
         }
@@ -1253,4 +1261,11 @@ public class FadecandySingleton {
         return mPixelStrip;
     }
 
+    public void updateConfig(String config) {
+        mFadecandyClient.setConfig(config);
+    }
+
+    public String getDefaultConfig() {
+        return mFadecandyClient.getDefaultConfig();
+    }
 }

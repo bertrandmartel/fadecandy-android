@@ -110,6 +110,8 @@ public class MainActivity extends BaseActivity {
         mBottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelected(@IdRes int tabId) {
+                clearBackStack();
+                setToolbarTitle();
                 switch (tabId) {
                     case R.id.tab_fullcolor:
                         mFragment = new FullColorFragment();
@@ -168,9 +170,7 @@ public class MainActivity extends BaseActivity {
     private ISingletonListener mListener = new ISingletonListener() {
         @Override
         public void onServerStart() {
-
             runOnUiThread(new Runnable() {
-
                 @Override
                 public void run() {
                     MenuItem item = nvDrawer.getMenu().findItem(R.id.server_status);
@@ -192,7 +192,25 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public void onServerClose() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    MenuItem item = nvDrawer.getMenu().findItem(R.id.server_status);
+                    if (item != null) {
+                        item.setIcon(R.drawable.ic_action_playback_play);
+                        item.setTitle(getResources().getString(R.string.start));
+                    }
 
+                    if (mStarted) {
+                        showToast(getString(R.string.server_closed));
+                        setToolbarTitle("disconnected");
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onServerError() {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

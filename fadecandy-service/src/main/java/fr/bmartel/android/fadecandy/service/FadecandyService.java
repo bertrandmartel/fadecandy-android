@@ -40,9 +40,7 @@ import android.hardware.usb.UsbManager;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,9 +51,6 @@ import java.util.Map;
 import fr.bmartel.android.fadecandy.activity.UsbEventReceiverActivity;
 import fr.bmartel.android.fadecandy.constant.Constants;
 import fr.bmartel.android.fadecandy.inter.IUsbEventListener;
-import fr.bmartel.android.fadecandy.model.FadecandyColor;
-import fr.bmartel.android.fadecandy.model.FadecandyConfig;
-import fr.bmartel.android.fadecandy.model.FadecandyDevice;
 import fr.bmartel.android.fadecandy.model.ServiceType;
 import fr.bmartel.android.fadecandy.model.UsbItem;
 import fr.bmartel.android.fadecandy.utils.ManualResetEvent;
@@ -93,7 +88,7 @@ public class FadecandyService extends Service {
     /**
      * Fadecandy server configuration.
      */
-    private FadecandyConfig mConfig;
+    private String mConfig;
 
     /**
      * Service type persistent or non persistent.
@@ -189,19 +184,14 @@ public class FadecandyService extends Service {
         mBinder = new FadecandyServiceBinder(this);
 
         prefs = this.getSharedPreferences(Constants.PREFERENCE_PREFS, Context.MODE_PRIVATE);
-        String configStr = prefs.getString(Constants.PREFERENCE_CONFIG, getDefaultConfig().toJsonString());
+        String configStr = prefs.getString(Constants.PREFERENCE_CONFIG, getDefaultConfig(Constants.DEFAULT_SERVER_ADDRESS, Constants.DEFAULT_SERVER_PORT));
         int serviceType = prefs.getInt(Constants.PREFERENCE_SERVICE_TYPE, ServiceType.getState(Constants.DEFAULT_SERVICE_TYPE));
         mServerPort = prefs.getInt(Constants.PREFERENCE_PORT, Constants.DEFAULT_SERVER_PORT);
         mServerAddress = prefs.getString(Constants.PREFERENCE_IP_ADDRESS, Constants.DEFAULT_SERVER_ADDRESS);
 
         mServiceType = ServiceType.getServiceType(serviceType);
 
-        try {
-            mConfig = new FadecandyConfig(new JSONObject(configStr));
-        } catch (JSONException e) {
-            mConfig = getDefaultConfig();
-            e.printStackTrace();
-        }
+        mConfig = configStr;
 
         mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
 
@@ -262,7 +252,7 @@ public class FadecandyService extends Service {
     /**
      * start Fadecandy server with a new configuration.
      */
-    public void startServer(FadecandyConfig config) {
+    public void startServer(String config) {
         mConfig = config;
         startServer();
     }
@@ -297,8 +287,18 @@ public class FadecandyService extends Service {
      *
      * @return
      */
-    public FadecandyConfig getConfig() {
+    public String getConfig() {
         return mConfig;
+    }
+
+    /**
+     * Set fadecandy configuration. server must be restarted to take effect.
+     *
+     * @param config
+     */
+    public void setConfig(String config) {
+        mConfig = config;
+        prefs.edit().putString(Constants.PREFERENCE_CONFIG, config).apply();
     }
 
     /**
@@ -306,26 +306,25 @@ public class FadecandyService extends Service {
      *
      * @return
      */
-    private FadecandyConfig getDefaultConfig() {
-
-        List<Float> defaultGamma = new ArrayList<>();
-        defaultGamma.add(1.0f);
-        defaultGamma.add(1.0f);
-        defaultGamma.add(1.0f);
-
-        List<FadecandyDevice> fcDevices = new ArrayList<>();
-
-        List<List<Integer>> map = new ArrayList<>();
-        List<Integer> mapItem = new ArrayList<>();
-        mapItem.add(0);
-        mapItem.add(0);
-        mapItem.add(0);
-        mapItem.add(512);
-        map.add(mapItem);
-
-        fcDevices.add(new FadecandyDevice(map, "fadecandy"));
-
-        return new FadecandyConfig(Constants.DEFAULT_SERVER_ADDRESS, Constants.DEFAULT_SERVER_PORT, new FadecandyColor(defaultGamma, 2.5f), true, fcDevices);
+    public static String getDefaultConfig(final String address, final int serverPort) {
+        return "{\n" +
+                "    \"listen\": [\"" + address + "\", " + serverPort + "],\n" +
+                "    \"verbose\": true,\n" +
+                "\n" +
+                "    \"color\": {\n" +
+                "        \"gamma\": 2.5,\n" +
+                "        \"whitepoint\": [1.0, 1.0, 1.0]\n" +
+                "    },\n" +
+                "\n" +
+                "    \"devices\": [\n" +
+                "        {\n" +
+                "            \"type\": \"fadecandy\",\n" +
+                "            \"map\": [\n" +
+                "                [ 0, 0, 0, 512 ]\n" +
+                "            ]\n" +
+                "        }\n" +
+                "    ]\n" +
+                "}";
     }
 
     /**
@@ -389,8 +388,6 @@ public class FadecandyService extends Service {
                 }
 
             } else if (UsbEventReceiverActivity.ACTION_USB_DEVICE_ATTACHED.equals(action)) {
-                Log.v(TAG, "ACTION_USB_DEVICE_ATTACHED");
-
                 UsbDevice device = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
 
                 dispatchAttached(device);
@@ -511,9 +508,11 @@ public class FadecandyService extends Service {
             }
         }
 
-        mConfig = new FadecandyConfig(mServerAddress, mServerPort, mConfig.getFcColor(), mConfig.isVerbose(), mConfig.getFcDevices());
+        if (mConfig == null || mConfig.equals("")) {
+            mConfig = getDefaultConfig(mServerAddress, mServerPort);
+        }
 
-        int status = startFcServer(mConfig.toJsonString());
+        int status = startFcServer(mConfig);
 
         initUsbDeviceList();
 
@@ -573,6 +572,10 @@ public class FadecandyService extends Service {
             Log.e(TAG, "device with fd " + fileDescriptor + " not found");
         }
         return -1;
+    }
+
+    private void onParseError(int parseOffset, String message) {
+        Toast.makeText(this, "Parse error at character " + parseOffset + ": " + message, Toast.LENGTH_LONG).show();
     }
 
     /**

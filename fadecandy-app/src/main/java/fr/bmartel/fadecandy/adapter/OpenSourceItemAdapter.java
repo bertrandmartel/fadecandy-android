@@ -45,7 +45,7 @@ public class OpenSourceItemAdapter extends BaseAdapter {
             {"rapidjson",
                     "https://github.com/scanlime/rapidjson"},
             {"libwebsockets",
-                    "https://github.com/akinaru/libwebsockets"},
+                    "https://github.com/bertrandmartel/libwebsockets"},
             {"DiscreteSeekBar",
                     "https://github.com/AnderWeb/discreteSeekBar"},
             {"BottomBar",
@@ -53,9 +53,11 @@ public class OpenSourceItemAdapter extends BaseAdapter {
             {"Android Holo ColorPicker",
                     "https://github.com/LarsWerkman/HoloColorPicker"},
             {"Open Pixel Control Library",
-                    "https://github.com/akinaru/opc-java"},
+                    "https://github.com/bertrandmartel/opc-java"},
             {"AndroidAsync",
                     "https://github.com/koush/AndroidAsync"},
+            {"Ace editor",
+                    "https://github.com/ajaxorg/ace"},
             {"Led Icon by Kenneth Appiah, CA (Pulic Domain)",
                     "https://thenounproject.com/search/?q=led&i=3156"}
     };

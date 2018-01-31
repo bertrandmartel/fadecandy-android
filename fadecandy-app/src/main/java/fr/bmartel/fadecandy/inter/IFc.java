@@ -25,6 +25,8 @@ package fr.bmartel.fadecandy.inter;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 
 import fr.bmartel.android.fadecandy.model.ServiceType;
 
@@ -176,4 +178,14 @@ public interface IFc {
      */
     void setSparkSpan(int sparkSpan);
 
+    /**
+     * get facecandy config.
+     */
+    String getConfig();
+
+    FragmentManager getSFragmentManager();
+
+    void setReplaceableFragment(Fragment fragment);
+
+    void clearBackStack();
 }

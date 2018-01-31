@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  * <p/>
- * Copyright (c) 2016 Bertrand Martel
+ * Copyright (c) 2016-2018 Bertrand Martel
  * <p/>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,65 +21,56 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.bmartel.fadecandy.listener;
+package fr.bmartel.fadecandy.webview;
 
-import fr.bmartel.android.fadecandy.model.UsbItem;
+import android.os.Handler;
+import android.view.View;
+import android.widget.ProgressBar;
 
 /**
- * Listener used for interface between activity & singleton.
+ * Javascript interface for load/get config.
  *
  * @author Bertrand Martel
  */
-public interface ISingletonListener {
+public class JsInterface {
+    /**
+     * get configuration listener.
+     */
+    private IConfigListener configListener;
 
     /**
-     * called when server is started.
+     * Handler instantiated in Webview thread.
      */
-    void onServerStart();
+    private Handler mHandler;
 
     /**
-     * called when server is closed.
+     * Progress bar.
      */
-    void onServerClose();
+    private ProgressBar mLoadingProgress;
 
-    /**
-     * called when a server error occurs.
-     */
-    void onServerError();
+    public JsInterface(ProgressBar progressBar, Handler handler) {
+        mHandler = handler;
+        mLoadingProgress = progressBar;
+    }
 
-    /**
-     * called when a Fadecandy USB device is attached.
-     *
-     * @param usbItem
-     */
-    void onUsbDeviceAttached(UsbItem usbItem);
+    @android.webkit.JavascriptInterface
+    public void onConfigReceived(String config) {
+        configListener.onConfigReceived(config);
+    }
 
-    /**
-     * called when a Fadecandy USB device is detached.
-     *
-     * @param usbItem
-     */
-    void onUsbDeviceDetached(UsbItem usbItem);
+    @android.webkit.JavascriptInterface
+    public void onDocumentLoaded() {
+        if (mLoadingProgress != null) {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mLoadingProgress.setVisibility(View.GONE);
+                }
+            });
+        }
+    }
 
-    /**
-     * called when connection to server fail in host mode.
-     */
-    void onServerConnectionFailure();
-
-    /**
-     * called when Fadecandy USB device list change
-     *
-     * @param size
-     */
-    void onConnectedDeviceChanged(int size);
-
-    /**
-     * called when connection to server is successfull in host mode.
-     */
-    void onServerConnectionSuccess();
-
-    /**
-     * called when connection to server is closed.
-     */
-    void onServerConnectionClosed();
+    public void setConfigListener(IConfigListener configListener) {
+        this.configListener = configListener;
+    }
 }

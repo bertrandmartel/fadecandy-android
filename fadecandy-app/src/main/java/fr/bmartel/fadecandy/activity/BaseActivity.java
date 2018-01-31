@@ -25,6 +25,9 @@ package fr.bmartel.fadecandy.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -36,6 +39,7 @@ import android.view.View;
 
 import fr.bmartel.fadecandy.FadecandySingleton;
 import fr.bmartel.fadecandy.R;
+import fr.bmartel.fadecandy.fragment.ConfigFragment;
 import fr.bmartel.fadecandy.inter.IFc;
 import fr.bmartel.fadecandy.menu.MenuUtils;
 
@@ -85,6 +89,8 @@ public abstract class BaseActivity extends AppCompatActivity implements IFc {
      */
     protected FadecandySingleton mSingleton;
 
+    private Fragment mFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,6 +116,13 @@ public abstract class BaseActivity extends AppCompatActivity implements IFc {
 
         // Setup drawer view
         setupDrawerContent(nvDrawer);
+    }
+
+    public void clearBackStack() {
+        FragmentManager fm = getSupportFragmentManager();
+        for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+            fm.popBackStack();
+        }
     }
 
     protected void diplayHideStartStopServer() {
@@ -140,11 +153,19 @@ public abstract class BaseActivity extends AppCompatActivity implements IFc {
         getSupportActionBar().setTitle(getResources().getString(R.string.app_title) + " (" + text + ")");
     }
 
+    public void setTitle(String text) {
+        getSupportActionBar().setTitle(text);
+    }
+
     /**
      * Set toolbar title in initialization or when USB device event occurs
      */
-    protected void setToolbarTitle() {
+    public void setToolbarTitle() {
         setToolbarTitle(mSingleton.getUsbDevices().size());
+    }
+
+    public void setReplaceableFragment(Fragment fragment) {
+        mFragment = fragment;
     }
 
     /**
@@ -222,6 +243,33 @@ public abstract class BaseActivity extends AppCompatActivity implements IFc {
     public boolean onCreateOptionsMenu(Menu menu) {
         this.getMenuInflater().inflate(R.menu.toolbar_menu, menu);
 
+        MenuItem configButton = toolbar.getMenu().findItem(R.id.button_config);
+
+        configButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                clearBackStack();
+                Fragment fragment = new ConfigFragment();
+                final FragmentTransaction ft = getSFragmentManager().beginTransaction();
+                ft.replace(R.id.fragment_frame, fragment, "Config");
+                ft.addToBackStack(null);
+                ft.commit();
+                setReplaceableFragment(fragment);
+                return false;
+            }
+        });
+
+
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public String getConfig() {
+        return mSingleton.getConfig();
+    }
+
+    @Override
+    public android.support.v4.app.FragmentManager getSFragmentManager() {
+        return getSupportFragmentManager();
     }
 }

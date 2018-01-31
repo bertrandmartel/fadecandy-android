@@ -27,9 +27,9 @@ import android.view.View;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
-import fr.bmartel.android.fadecandy.model.FadecandyConfig;
 import fr.bmartel.fadecandy.FadecandySingleton;
 import fr.bmartel.fadecandy.R;
+import fr.bmartel.fadecandy.activity.BaseActivity;
 import fr.bmartel.fadecandy.inter.IFragment;
 
 /**
@@ -44,7 +44,7 @@ public abstract class MainFragment extends android.support.v4.app.Fragment imple
     protected DiscreteSeekBar mBrightnessSeekBar;
 
     protected boolean mIsSpark = false;
-    
+
     public void onCreate(View view) {
 
         onCreateCommon();
@@ -85,14 +85,20 @@ public abstract class MainFragment extends android.support.v4.app.Fragment imple
         });
 
         if (mSingleton.getCurrentColorCorrection() == -1) {
-            FadecandyConfig config = mSingleton.getConfig();
+            String config = mSingleton.getConfig();
 
             if (config != null) {
-                mBrightnessSeekBar.setProgress((int) ((float) config.getFcColor().getWhitepoints().get(0) * 100));
+                mBrightnessSeekBar.setProgress(100);
             }
         } else {
             mBrightnessSeekBar.setProgress(mSingleton.getCurrentColorCorrection());
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((BaseActivity) getActivity()).setToolbarTitle();
     }
 
     public void onCreateCommon() {
@@ -103,10 +109,10 @@ public abstract class MainFragment extends android.support.v4.app.Fragment imple
     public void onServerFirstStart() {
 
         if (mSingleton.getCurrentColorCorrection() == -1) {
-            FadecandyConfig config = mSingleton.getConfig();
+            String config = mSingleton.getConfig();
 
             if (config != null && mBrightnessSeekBar != null) {
-                mBrightnessSeekBar.setProgress((int) ((float) config.getFcColor().getWhitepoints().get(0) * 100));
+                mBrightnessSeekBar.setProgress(100);
             }
         } else {
             mBrightnessSeekBar.setProgress(mSingleton.getCurrentColorCorrection());

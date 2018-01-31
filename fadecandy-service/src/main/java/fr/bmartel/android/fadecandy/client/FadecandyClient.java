@@ -37,7 +37,6 @@ import java.util.HashMap;
 import fr.bmartel.android.fadecandy.constant.Constants;
 import fr.bmartel.android.fadecandy.inter.IFcServerEventListener;
 import fr.bmartel.android.fadecandy.inter.IUsbEventListener;
-import fr.bmartel.android.fadecandy.model.FadecandyConfig;
 import fr.bmartel.android.fadecandy.model.ServerError;
 import fr.bmartel.android.fadecandy.model.ServiceType;
 import fr.bmartel.android.fadecandy.model.UsbItem;
@@ -389,11 +388,20 @@ public class FadecandyClient {
     }
 
     /**
+     * Set fadecandy configuration.
+     *
+     * @param config
+     */
+    public void setConfig(String config) {
+        fadecandyService.setConfig(config);
+    }
+
+    /**
      * get Fadecandy local configuration.
      *
      * @return
      */
-    public FadecandyConfig getConfig() {
+    public String getConfig() {
 
         if (mBound && fadecandyService != null) {
             return fadecandyService.getConfig();
@@ -412,5 +420,9 @@ public class FadecandyClient {
             return fadecandyService.getUsbDeviceMap();
         }
         return new HashMap<>();
+    }
+
+    public String getDefaultConfig() {
+        return fadecandyService.getDefaultConfig(fadecandyService.getIpAddress(), fadecandyService.getServerPort());
     }
 }

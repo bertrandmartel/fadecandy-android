@@ -28,6 +28,7 @@ import android.content.Intent;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 
 /**
  * Activity used to receive ACTION_USB_DEVICE_ATTACHED events.
@@ -53,8 +54,9 @@ public class UsbEventReceiverActivity extends Activity {
         Intent intent = getIntent();
 
         if (intent != null) {
-
+            Log.v("test", "ATTACHED");
             if (intent.getAction().equals(UsbManager.ACTION_USB_DEVICE_ATTACHED)) {
+
 
                 Parcelable usbDevice = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
 
