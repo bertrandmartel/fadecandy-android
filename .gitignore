@@ -13,3 +13,5 @@ fadecandy-service/src/main/libs
 fadecandy-app/src/production
 fadecandy-app/fabric.properties
 signing.properties
+*.iml
+.idea/
