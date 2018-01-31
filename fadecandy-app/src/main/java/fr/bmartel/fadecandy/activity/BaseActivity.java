@@ -98,7 +98,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IFc {
         setContentView(layoutId);
 
         // Set a Toolbar to replace the ActionBar.
-        toolbar = (Toolbar) findViewById(R.id.toolbar_item);
+        toolbar = findViewById(R.id.toolbar_item);
         setSupportActionBar(toolbar);
 
         setToolbarTitle();
@@ -107,10 +107,10 @@ public abstract class BaseActivity extends AppCompatActivity implements IFc {
         toolbar.inflateMenu(R.menu.toolbar_menu);
 
         // Find our drawer view
-        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawer = findViewById(R.id.drawer_layout);
         drawerToggle = setupDrawerToggle();
         mDrawer.setDrawerListener(drawerToggle);
-        nvDrawer = (NavigationView) findViewById(R.id.nvView);
+        nvDrawer = findViewById(R.id.nvView);
 
         diplayHideStartStopServer();
 
@@ -126,7 +126,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IFc {
     }
 
     protected void diplayHideStartStopServer() {
-
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -140,7 +139,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IFc {
     }
 
     protected void setToolbarTitle(int size) {
-
         String deviceTxt = "device";
         if (mSingleton.getUsbDevices().size() > 1) {
             deviceTxt = "devices";
@@ -174,7 +172,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IFc {
      * @param navigationView
      */
     private void setupDrawerContent(final NavigationView navigationView) {
-
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override

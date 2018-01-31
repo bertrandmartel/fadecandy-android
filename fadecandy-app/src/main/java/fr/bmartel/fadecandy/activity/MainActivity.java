@@ -87,11 +87,8 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         mSingleton = FadecandySingleton.getInstance(getApplicationContext());
-
         mSingleton.addListener(mListener);
-
         mSingleton.connect();
 
         setLayout(R.layout.activity_main);
@@ -102,10 +99,8 @@ public class MainActivity extends BaseActivity {
         }
 
         mFragment = new FullColorFragment();
-
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame, mFragment).commit();
-
-        BottomBar mBottomBar = (BottomBar) findViewById(R.id.bottomBar);
+        BottomBar mBottomBar = findViewById(R.id.bottomBar);
 
         mBottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
@@ -150,7 +145,6 @@ public class MainActivity extends BaseActivity {
                 }
             }
         });
-
         mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
     }
 
@@ -230,7 +224,6 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public void onUsbDeviceAttached(UsbItem usbItem) {
-
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -339,9 +332,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void switchServerStatus() {
-
         if (mSingleton != null) {
-
             if (mSingleton.isServerRunning()) {
                 mSingleton.closeServer();
             } else {

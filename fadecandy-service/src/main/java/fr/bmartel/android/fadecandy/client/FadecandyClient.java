@@ -138,7 +138,6 @@ public class FadecandyClient {
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-
             if (intent.getAction().equals(FadecandyService.ACTION_EXIT)) {
                 Log.v(TAG, "Exit event received : disconnecting");
                 disconnect();
@@ -196,7 +195,6 @@ public class FadecandyClient {
      * bind to Fadecandy service.
      */
     private void bindService() {
-
         fadecandyServiceIntent = new Intent();
         fadecandyServiceIntent.setClassName(mContext, SERVICE_NAME);
         fadecandyServiceIntent.putExtra(Constants.SERVICE_EXTRA_ACTIVITY, mActivity);
@@ -257,7 +255,6 @@ public class FadecandyClient {
      * start Fadecandy server. If service is not started/bounded, server will be started as soon as service is started & bounded.
      */
     public void startServer() {
-
         if (mBound && fadecandyService != null) {
 
             if (fadecandyService.startServer() == 0) {
@@ -280,7 +277,6 @@ public class FadecandyClient {
      * close Fadecandy server.
      */
     public void closeServer() {
-
         if (mBound && fadecandyService != null) {
 
             if (fadecandyService.stopServer() == 0) {
@@ -303,7 +299,6 @@ public class FadecandyClient {
      * @return true if server is running, false if server is stopped
      */
     public boolean isServerRunning() {
-
         if (mBound && fadecandyService != null) {
             return fadecandyService.isServerRunning();
         } else {
@@ -318,7 +313,6 @@ public class FadecandyClient {
      * @return
      */
     public ServiceType getServiceType() {
-
         if (mBound && fadecandyService != null) {
             return fadecandyService.getServiceType();
         }
@@ -331,7 +325,6 @@ public class FadecandyClient {
      * @param serviceType
      */
     public void setServiceType(ServiceType serviceType) {
-
         if (mBound && fadecandyService != null) {
             fadecandyService.setServiceType(serviceType);
         }
@@ -343,7 +336,6 @@ public class FadecandyClient {
      * @return
      */
     public int getServerPort() {
-
         if (mBound && fadecandyService != null) {
             return fadecandyService.getServerPort();
         }
@@ -356,7 +348,6 @@ public class FadecandyClient {
      * @return
      */
     public String getIpAddress() {
-
         if (mBound && fadecandyService != null) {
             return fadecandyService.getIpAddress();
         }
@@ -369,7 +360,6 @@ public class FadecandyClient {
      * @param port
      */
     public void setServerPort(int port) {
-
         if (mBound && fadecandyService != null) {
             fadecandyService.setServerPort(port);
         }
@@ -381,7 +371,6 @@ public class FadecandyClient {
      * @param ip
      */
     public void setServerAddress(String ip) {
-
         if (mBound && fadecandyService != null) {
             fadecandyService.setServerAddress(ip);
         }
@@ -402,7 +391,6 @@ public class FadecandyClient {
      * @return
      */
     public String getConfig() {
-
         if (mBound && fadecandyService != null) {
             return fadecandyService.getConfig();
         }
@@ -415,7 +403,6 @@ public class FadecandyClient {
      * @return
      */
     public HashMap<Integer, UsbItem> getUsbDeviceMap() {
-
         if (mBound && fadecandyService != null) {
             return fadecandyService.getUsbDeviceMap();
         }

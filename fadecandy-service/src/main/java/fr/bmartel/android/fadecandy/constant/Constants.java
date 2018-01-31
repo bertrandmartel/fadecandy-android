@@ -57,17 +57,6 @@ public class Constants {
      */
     public final static int FC_PRODUCT = 24698;
 
-
-    //Fadecandy configuration variables
-    public final static String CONFIG_LISTEN = "listen";
-    public final static String CONFIG_VERBOSE = "verbose";
-    public final static String CONFIG_COLOR = "color";
-    public final static String CONFIG_DEVICES = "devices";
-    public final static String CONFIG_GAMMA = "gamma";
-    public final static String CONFIG_WHITEPOINT = "whitepoint";
-    public final static String CONFIG_TYPE = "type";
-    public final static String CONFIG_MAP = "map";
-
     //shared preference field/variables
     public final static String PREFERENCE_PREFS = "prefs";
     public final static String PREFERENCE_CONFIG = "config";

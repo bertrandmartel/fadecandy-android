@@ -47,8 +47,6 @@ import fr.bmartel.fadecandy.inter.IFc;
  */
 public class MenuUtils {
 
-    private final static String TAG = MenuUtils.class.getSimpleName();
-
     /**
      * Execute actions according to selected menu item
      *
@@ -57,7 +55,6 @@ public class MenuUtils {
      * @param context  android context
      */
     public static void selectDrawerItem(MenuItem menuItem, DrawerLayout mDrawer, Context context, final IFc fcActivity) {
-
         switch (menuItem.getItemId()) {
             case R.id.server_status: {
                 fcActivity.switchServerStatus();

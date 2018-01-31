@@ -91,8 +91,8 @@ public class OpenSourceItemAdapter extends BaseAdapter {
             convertView = mInflater.inflate(R.layout.open_source_items, parent, false);
         }
 
-        TextView title = (TextView) convertView.findViewById(R.id.title);
-        TextView url = (TextView) convertView.findViewById(R.id.url);
+        TextView title = convertView.findViewById(R.id.title);
+        TextView url = convertView.findViewById(R.id.url);
 
         title.setText(COMPONENTS[position][0]);
         url.setText(COMPONENTS[position][1]);

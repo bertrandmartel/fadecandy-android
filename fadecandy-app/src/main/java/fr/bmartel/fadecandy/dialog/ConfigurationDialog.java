@@ -53,7 +53,7 @@ public class ConfigurationDialog extends AlertDialog {
         View dialoglayout = inflater.inflate(R.layout.configuration_dialog, null);
         setView(dialoglayout);
 
-        final CheckBox startServerCheckbox = (CheckBox) dialoglayout.findViewById(R.id.start_server_cb);
+        final CheckBox startServerCheckbox = dialoglayout.findViewById(R.id.start_server_cb);
 
         boolean serverMode = activity.isServerMode();
 
@@ -71,11 +71,11 @@ public class ConfigurationDialog extends AlertDialog {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(activity.getContext(), android.R.layout.simple_spinner_item, spinnerArray);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        final Spinner sItems = (Spinner) dialoglayout.findViewById(R.id.ip_spinner);
+        final Spinner sItems = dialoglayout.findViewById(R.id.ip_spinner);
         sItems.setAdapter(adapter);
         sItems.setSelection(defaultPos);
 
-        final EditText portEditText = (EditText) dialoglayout.findViewById(R.id.port_edit);
+        final EditText portEditText = dialoglayout.findViewById(R.id.port_edit);
 
         if (serverMode) {
             portEditText.setText("" + activity.getServerPort());
@@ -84,7 +84,7 @@ public class ConfigurationDialog extends AlertDialog {
         }
         portEditText.setSelection(portEditText.getText().length());
 
-        final EditText localServerEditText = (EditText) dialoglayout.findViewById(R.id.local_server_edit);
+        final EditText localServerEditText = dialoglayout.findViewById(R.id.local_server_edit);
         localServerEditText.setText(activity.getRemoteServerIp());
 
         if (!serverMode) {

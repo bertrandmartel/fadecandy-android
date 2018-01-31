@@ -54,7 +54,7 @@ public class LedStripConfigurationDialog extends AlertDialog {
         View dialoglayout = inflater.inflate(R.layout.led_count_dialog, null);
         setView(dialoglayout);
 
-        mLedCountEditText = (EditText) dialoglayout.findViewById(R.id.led_count_edit);
+        mLedCountEditText = dialoglayout.findViewById(R.id.led_count_edit);
         mLedCountEditText.setText("" + activity.getLedCount());
         mLedCountEditText.setSelection(mLedCountEditText.getText().length());
 

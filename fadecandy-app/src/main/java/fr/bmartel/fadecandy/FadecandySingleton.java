@@ -268,7 +268,6 @@ public class FadecandySingleton {
      * @param context
      */
     public FadecandySingleton(Context context) {
-
         prefs = context.getSharedPreferences(Constants.PREFERENCE_PREFS, Context.MODE_PRIVATE);
         mLedCount = prefs.getInt(AppConstants.PREFERENCE_FIELD_LEDCOUNT, AppConstants.DEFAULT_LED_COUNT);
         mServerMode = prefs.getBoolean(AppConstants.PREFERENCE_FIELD_SERVER_MODE, AppConstants.DEFAULT_SERVER_MODE);
@@ -365,16 +364,12 @@ public class FadecandySingleton {
      * Clear all led.
      */
     public void clearPixel() {
-
         if (!mIsSendingRequest) {
-
             mIsSendingRequest = true;
-
             mExecutorService.execute(new Runnable() {
                 @Override
                 public void run() {
                     checkJoinThread();
-
                     if (ColorUtils.clear(FadecandySingleton.this) == -1) {
                         //error occured
                         for (int i = 0; i < mListeners.size(); i++) {
@@ -391,7 +386,6 @@ public class FadecandySingleton {
      * Wait for led animation thread to join.
      */
     public void checkJoinThread() {
-
         if (workerThread != null) {
             mAnimating = false;
             try {
@@ -408,7 +402,6 @@ public class FadecandySingleton {
      * @param color
      */
     public void setFullColor(final int color, boolean storeColorVal, boolean force) {
-
         mColor = color;
         if (storeColorVal) {
             prefs.edit().putInt(AppConstants.PREFERENCE_FIELD_COLOR, mColor).apply();
@@ -421,7 +414,6 @@ public class FadecandySingleton {
             mExecutorService.execute(new Runnable() {
                 @Override
                 public void run() {
-
                     checkJoinThread();
 
                     if (ColorUtils.setFullColor(FadecandySingleton.this) == -1) {
@@ -499,7 +491,6 @@ public class FadecandySingleton {
      * @return
      */
     public int getServerPort() {
-
         if (mServerMode) {
             if (mFadecandyClient != null) {
                 return mFadecandyClient.getServerPort();
@@ -516,7 +507,6 @@ public class FadecandySingleton {
      * @return
      */
     public String getIpAddress() {
-
         if (mServerMode) {
             if (mFadecandyClient != null) {
                 return mFadecandyClient.getIpAddress();
@@ -615,18 +605,15 @@ public class FadecandySingleton {
      * @param value
      */
     public void setColorCorrection(final int value, boolean force) {
-
         mCurrentBrightness = value;
         prefs.edit().putInt(AppConstants.PREFERENCE_FIELD_BRIGHTNESS, mCurrentBrightness).apply();
 
         if (!mIsSendingRequest || force) {
-
             mIsSendingRequest = true;
 
             mExecutorService.execute(new Runnable() {
                 @Override
                 public void run() {
-
                     if (ColorUtils.setBrightness(FadecandySingleton.this) == -1) {
                         //error occured
                         for (int i = 0; i < mListeners.size(); i++) {
@@ -645,7 +632,6 @@ public class FadecandySingleton {
      * @param value
      */
     public void setColorCorrectionSpark(final int value) {
-
         mCurrentBrightness = value;
         prefs.edit().putInt(AppConstants.PREFERENCE_FIELD_BRIGHTNESS, mCurrentBrightness).apply();
         mIsBrightnessUpdate = true;
@@ -657,26 +643,22 @@ public class FadecandySingleton {
      * @param color color to be used when running spark animation
      */
     public void spark(final int color) {
-
         mColor = color;
         prefs.edit().putInt(AppConstants.PREFERENCE_FIELD_COLOR, mColor).apply();
         mIsSparkColorUpdate = true;
 
         if (!mIsSparkling) {
-
             mIsSparkling = true;
 
             mExecutorService.execute(new Runnable() {
                 @Override
                 public void run() {
-
                     checkJoinThread();
                     mAnimating = true;
 
                     workerThread = new Thread(new Runnable() {
                         @Override
                         public void run() {
-
                             if (spark() == -1) {
                                 //error occured
                                 for (int i = 0; i < mListeners.size(); i++) {
@@ -691,18 +673,14 @@ public class FadecandySingleton {
                             mIsSparkling = false;
 
                             if (mRestartAnimation) {
-
                                 mRestartAnimation = false;
-
                                 initOpcClient();
-
                                 mExecutorService.execute(new Runnable() {
                                     @Override
                                     public void run() {
                                         spark(mColor);
                                     }
                                 });
-
                             }
                         }
                     });
@@ -888,7 +866,6 @@ public class FadecandySingleton {
         final ScheduledFuture cancelTask = mExecutorService.schedule(new Runnable() {
             @Override
             public void run() {
-
                 if (mWebsocketFuture != null) {
                     mWebsocketFuture.cancel(true);
                 }
@@ -901,9 +878,7 @@ public class FadecandySingleton {
         AsyncHttpClient.WebSocketConnectCallback mWebSocketConnectCallback = new AsyncHttpClient.WebSocketConnectCallback() {
             @Override
             public void onCompleted(Exception ex, WebSocket webSocket) {
-
                 Log.v(TAG, "onCompleted");
-
                 if (cancelTask != null) {
                     cancelTask.cancel(true);
                 }
@@ -920,18 +895,14 @@ public class FadecandySingleton {
                 webSocket.setStringCallback(new WebSocket.StringCallback() {
                     @Override
                     public void onStringAvailable(String message) {
-
                         Log.v(TAG, "messageJson : " + message);
-
                         try {
                             JSONObject messageJson = new JSONObject(message);
 
                             if (messageJson.has("type")) {
-
                                 String type = messageJson.getString("type");
 
                                 if (type.equals("connected_devices_changed")) {
-
                                     JSONArray devices = (JSONArray) messageJson.get("devices");
 
                                     for (int i = 0; i < mListeners.size(); i++) {
@@ -939,7 +910,6 @@ public class FadecandySingleton {
                                     }
 
                                 } else if (type.equals("list_connected_devices")) {
-
                                     JSONArray devices = (JSONArray) messageJson.get("devices");
 
                                     for (int i = 0; i < mListeners.size(); i++) {
@@ -957,7 +927,6 @@ public class FadecandySingleton {
                 webSocket.setClosedCallback(new CompletedCallback() {
                     @Override
                     public void onCompleted(Exception ex) {
-
                         if (!mWebsocketClose) {
                             for (int i = 0; i < mListeners.size(); i++) {
                                 mListeners.get(i).onServerConnectionClosed();
@@ -1102,9 +1071,7 @@ public class FadecandySingleton {
             mExecutorService.execute(new Runnable() {
                 @Override
                 public void run() {
-
                     checkJoinThread();
-
                     workerThread = new Thread(new Runnable() {
 
                         @Override
@@ -1120,18 +1087,14 @@ public class FadecandySingleton {
                             mIsMixing = false;
 
                             if (mRestartAnimation) {
-
                                 mRestartAnimation = false;
-
                                 initOpcClient();
-
                                 mExecutorService.execute(new Runnable() {
                                     @Override
                                     public void run() {
                                         mixer();
                                     }
                                 });
-
                             }
                         }
                     });
@@ -1151,7 +1114,6 @@ public class FadecandySingleton {
      * @param color
      */
     public void pulse(int color) {
-
         mColor = color;
         prefs.edit().putInt(AppConstants.PREFERENCE_FIELD_COLOR, mColor).apply();
 
@@ -1165,7 +1127,6 @@ public class FadecandySingleton {
             mExecutorService.execute(new Runnable() {
                 @Override
                 public void run() {
-
                     checkJoinThread();
                     workerThread = new Thread(new Runnable() {
 
@@ -1182,21 +1143,16 @@ public class FadecandySingleton {
                             mAnimating = false;
 
                             if (mRestartAnimation) {
-
                                 mRestartAnimation = false;
-
                                 initOpcClient();
-
                                 mExecutorService.execute(new Runnable() {
                                     @Override
                                     public void run() {
                                         pulse(mColor);
                                     }
                                 });
-
                             } else {
                                 setColorCorrection(oldBrightness, true);
-
                             }
                         }
                     });

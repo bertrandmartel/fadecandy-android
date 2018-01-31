@@ -140,7 +140,6 @@ public class ColorUtils {
                 return 0;
             }
         }
-
         return 0;
     }
 
@@ -156,9 +155,7 @@ public class ColorUtils {
      * @param server     open pixel control server object
      */
     private static int mixGreen(boolean descending, int stripCount, PixelStrip strip, int initRed, int initBlue, FadecandySingleton singleton, OpcClient server) {
-
         return mix(descending, stripCount, strip, initRed, 0, initBlue, (byte) 0x01, singleton, server);
-
     }
 
     /**
@@ -173,7 +170,6 @@ public class ColorUtils {
      * @param server     open pixel control server object
      */
     private static int mixBlue(boolean descending, int stripCount, PixelStrip strip, int initRed, int initGreen, FadecandySingleton singleton, OpcClient server) {
-
         return mix(descending, stripCount, strip, initRed, initGreen, 0, (byte) 0x02, singleton, server);
 
     }
@@ -190,7 +186,6 @@ public class ColorUtils {
      * @param server     open pixel control server object
      */
     private static int mixRed(boolean descending, int stripCount, PixelStrip strip, int initGreen, int initBlue, FadecandySingleton singleton, OpcClient server) {
-
         return mix(descending, stripCount, strip, 0, initGreen, initBlue, (byte) 0x00, singleton, server);
 
     }
@@ -201,12 +196,10 @@ public class ColorUtils {
      * @param singleton singleton for vars
      */
     public static int mixer(FadecandySingleton singleton) {
-
         int status = 0;
         int ledCount = singleton.getLedCount();
 
         while (singleton.isAnimating()) {
-
             status = mixGreen(true, ledCount, singleton.getPixelStrip(), 255, 0, singleton, singleton.getOpcClient());
             if (status == -1) {
                 return -1;
@@ -232,7 +225,6 @@ public class ColorUtils {
                 return -1;
             }
         }
-
         return 0;
     }
 
@@ -283,7 +275,6 @@ public class ColorUtils {
                 return 0;
             }
         }
-
         return 0;
     }
 
@@ -300,7 +291,6 @@ public class ColorUtils {
                                                OpcClient server,
                                                OpcDevice fadecandy,
                                                FadecandySingleton singleton) {
-
         float bright = 0f;
 
         if (!ascending) {

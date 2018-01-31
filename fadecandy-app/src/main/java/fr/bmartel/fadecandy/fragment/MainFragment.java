@@ -46,27 +46,22 @@ public abstract class MainFragment extends android.support.v4.app.Fragment imple
     protected boolean mIsSpark = false;
 
     public void onCreate(View view) {
-
         onCreateCommon();
 
-        mBrightnessSeekBar = (DiscreteSeekBar) view.findViewById(R.id.seekbar_brightness);
-
+        mBrightnessSeekBar = view.findViewById(R.id.seekbar_brightness);
         mBrightnessSeekBar.setNumericTransformer(new DiscreteSeekBar.NumericTransformer() {
             @Override
             public int transform(int value) {
                 return value * 1;
             }
         });
-
         mBrightnessSeekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
 
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
-
                 if (mSingleton.isServerMode() && !mSingleton.isServerRunning()) {
                     return;
                 }
-
                 if (mIsSpark) {
                     mSingleton.setColorCorrectionSpark(value);
                 } else {
@@ -107,7 +102,6 @@ public abstract class MainFragment extends android.support.v4.app.Fragment imple
 
     @Override
     public void onServerFirstStart() {
-
         if (mSingleton.getCurrentColorCorrection() == -1) {
             String config = mSingleton.getConfig();
 

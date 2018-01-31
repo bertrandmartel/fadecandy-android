@@ -41,8 +41,6 @@ import fr.bmartel.fadecandy.R;
  */
 public class PulseFragment extends MainFragment implements ColorPicker.OnColorChangedListener {
 
-    private final static String TAG = FullColorFragment.class.getSimpleName();
-
     public PulseFragment() {
     }
 
@@ -55,12 +53,12 @@ public class PulseFragment extends MainFragment implements ColorPicker.OnColorCh
         super.onCreateCommon();
 
         //init color picker
-        ColorPicker picker = (ColorPicker) view.findViewById(R.id.picker);
+        ColorPicker picker = view.findViewById(R.id.picker);
         picker.setOnColorChangedListener(this);
         picker.setShowOldCenterColor(false);
         picker.setColor(mSingleton.getColor());
 
-        DiscreteSeekBar delaySeekbar = (DiscreteSeekBar) view.findViewById(R.id.seekbar_delay);
+        DiscreteSeekBar delaySeekbar = view.findViewById(R.id.seekbar_delay);
 
         delaySeekbar.setNumericTransformer(new DiscreteSeekBar.NumericTransformer() {
             @Override
@@ -87,15 +85,13 @@ public class PulseFragment extends MainFragment implements ColorPicker.OnColorCh
         });
         delaySeekbar.setProgress(mSingleton.getPulseDelay());
 
-        DiscreteSeekBar pauseSeekbar = (DiscreteSeekBar) view.findViewById(R.id.seekbar_pause);
-
+        DiscreteSeekBar pauseSeekbar = view.findViewById(R.id.seekbar_pause);
         pauseSeekbar.setNumericTransformer(new DiscreteSeekBar.NumericTransformer() {
             @Override
             public int transform(int value) {
                 return value * 1;
             }
         });
-
         pauseSeekbar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
 
             @Override
@@ -109,7 +105,6 @@ public class PulseFragment extends MainFragment implements ColorPicker.OnColorCh
 
             @Override
             public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
-
             }
         });
 

@@ -46,20 +46,16 @@ public class MixerFragment extends MainFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.mixer_fragment, container, false);
-
         super.onCreate(view);
 
-        DiscreteSeekBar delaySeekbar = (DiscreteSeekBar) view.findViewById(R.id.seekbar_mixer_delay);
-
+        DiscreteSeekBar delaySeekbar = view.findViewById(R.id.seekbar_mixer_delay);
         delaySeekbar.setNumericTransformer(new DiscreteSeekBar.NumericTransformer() {
             @Override
             public int transform(int value) {
                 return value * 1;
             }
         });
-
         delaySeekbar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
 
             @Override

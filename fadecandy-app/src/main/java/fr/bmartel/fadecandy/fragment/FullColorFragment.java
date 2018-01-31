@@ -41,7 +41,6 @@ import fr.bmartel.fadecandy.R;
 public class FullColorFragment extends MainFragment implements ColorPicker.OnColorChangedListener {
 
     public FullColorFragment() {
-
     }
 
     @Override
@@ -55,12 +54,12 @@ public class FullColorFragment extends MainFragment implements ColorPicker.OnCol
         super.onCreate(view);
 
         //init color picker
-        final ColorPicker picker = (ColorPicker) view.findViewById(R.id.picker);
+        final ColorPicker picker = view.findViewById(R.id.picker);
         picker.setOnColorChangedListener(this);
         picker.setShowOldCenterColor(false);
         picker.setColor(mSingleton.getColor());
 
-        Button button_all_off = (Button) view.findViewById(R.id.button_all_off);
+        Button button_all_off = view.findViewById(R.id.button_all_off);
 
         button_all_off.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,7 +77,6 @@ public class FullColorFragment extends MainFragment implements ColorPicker.OnCol
 
     @Override
     public void onColorChanged(int color) {
-
         if (mSingleton.isServerMode() && !mSingleton.isServerRunning()) {
             return;
         }

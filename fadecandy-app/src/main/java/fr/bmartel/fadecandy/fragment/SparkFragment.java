@@ -55,12 +55,12 @@ public class SparkFragment extends MainFragment implements ColorPicker.OnColorCh
         super.onCreate(view);
 
         //init color picker
-        ColorPicker picker = (ColorPicker) view.findViewById(R.id.picker);
+        ColorPicker picker = view.findViewById(R.id.picker);
         picker.setOnColorChangedListener(this);
         picker.setShowOldCenterColor(false);
         picker.setColor(mSingleton.getColor());
 
-        DiscreteSeekBar speedSeekbar = (DiscreteSeekBar) view.findViewById(R.id.seekbar_speed);
+        DiscreteSeekBar speedSeekbar = view.findViewById(R.id.seekbar_speed);
 
         speedSeekbar.setNumericTransformer(new DiscreteSeekBar.NumericTransformer() {
             @Override
@@ -86,7 +86,7 @@ public class SparkFragment extends MainFragment implements ColorPicker.OnColorCh
             }
         });
 
-        DiscreteSeekBar spanSeekbar = (DiscreteSeekBar) view.findViewById(R.id.seekbar_span);
+        DiscreteSeekBar spanSeekbar = view.findViewById(R.id.seekbar_span);
 
         spanSeekbar.setNumericTransformer(new DiscreteSeekBar.NumericTransformer() {
             @Override

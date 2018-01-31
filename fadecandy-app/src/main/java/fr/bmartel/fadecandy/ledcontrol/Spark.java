@@ -53,7 +53,6 @@ public class Spark extends Animation {
     }
 
     public static int[] buildColors(int color, int sparkSpan) {
-
         int red = Color.red(color);
         int green = Color.green(color);
         int blue = Color.blue(color);

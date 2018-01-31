@@ -40,8 +40,6 @@ import fr.bmartel.fadecandy.R;
  */
 public class TemperatureFragment extends MainFragment {
 
-    private final static String TAG = FullColorFragment.class.getSimpleName();
-
     public TemperatureFragment() {
     }
 
@@ -55,15 +53,13 @@ public class TemperatureFragment extends MainFragment {
 
         super.onCreate(view);
 
-        DiscreteSeekBar temperatureSeekbar = (DiscreteSeekBar) view.findViewById(R.id.seekbar_temperature);
-
+        DiscreteSeekBar temperatureSeekbar = view.findViewById(R.id.seekbar_temperature);
         temperatureSeekbar.setNumericTransformer(new DiscreteSeekBar.NumericTransformer() {
             @Override
             public int transform(int value) {
                 return value * 1;
             }
         });
-
         temperatureSeekbar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
 
             @Override
@@ -78,7 +74,6 @@ public class TemperatureFragment extends MainFragment {
 
             @Override
             public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
-
             }
         });
 
@@ -86,8 +81,7 @@ public class TemperatureFragment extends MainFragment {
 
         temperatureSeekbar.setProgress(value);
 
-        Button button_all_off = (Button) view.findViewById(R.id.button_all_off);
-
+        Button button_all_off = view.findViewById(R.id.button_all_off);
         button_all_off.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

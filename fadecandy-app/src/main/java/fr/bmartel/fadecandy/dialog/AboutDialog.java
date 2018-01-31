@@ -47,9 +47,9 @@ public class AboutDialog extends AlertDialog {
         View dialoglayout = inflater.inflate(R.layout.about_dialog, null);
         setView(dialoglayout);
 
-        TextView name = (TextView) dialoglayout.findViewById(R.id.name);
-        TextView copyright = (TextView) dialoglayout.findViewById(R.id.copyright);
-        TextView github_link = (TextView) dialoglayout.findViewById(R.id.github_link);
+        TextView name = dialoglayout.findViewById(R.id.name);
+        TextView copyright = dialoglayout.findViewById(R.id.copyright);
+        TextView github_link = dialoglayout.findViewById(R.id.github_link);
 
         name.setText(context.getResources().getString(R.string.app_name) + " v" + BuildConfig.VERSION_NAME);
         copyright.setText(R.string.copyright);

@@ -202,7 +202,6 @@ public class FadecandyService extends Service {
      * Initialize broadcast receiver to receive USB ATTACHED/DETACHED events.
      */
     private void initBroadcastReceiver() {
-
         IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_USB_PERMISSION);
         filter.addAction(UsbEventReceiverActivity.ACTION_USB_DEVICE_ATTACHED);
@@ -233,16 +232,13 @@ public class FadecandyService extends Service {
      * initialize usb device list to request permission if not already given for already connected USB devices.
      */
     private void initUsbDeviceList() {
-
         mUsbDevices.clear();
 
         HashMap<String, UsbDevice> deviceList = mUsbManager.getDeviceList();
-
         Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
 
         while (deviceIterator.hasNext()) {
             UsbDevice device = deviceIterator.next();
-
             if (device.getVendorId() == Constants.FC_VENDOR && device.getProductId() == Constants.FC_PRODUCT) {
                 dispatchAttached(device);
             }
@@ -270,7 +266,6 @@ public class FadecandyService extends Service {
 
     @Override
     public void onDestroy() {
-
         Log.v(TAG, "onDestroy");
         clean();
 
@@ -333,24 +328,16 @@ public class FadecandyService extends Service {
      * @param device Usb device to be dispatched.
      */
     private void dispatchAttached(UsbDevice device) {
-
         if (!mUsbManager.hasPermission(device)) {
-
             Log.v(TAG, "Requesting permissiom to device");
             PendingIntent mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
             mUsbManager.requestPermission(device, mPermissionIntent);
-
         } else {
-
             Log.v(TAG, "Already has permission : opening device");
-
             UsbItem item = openDevice(device);
-
             int fd = item.getConnection().getFileDescriptor();
-
             dispatchUsb(item, fd);
         }
-
     }
 
     /**
@@ -360,13 +347,12 @@ public class FadecandyService extends Service {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-
             String action = intent.getAction();
 
             if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
                 Log.v(TAG, "ACTION_USB_DEVICE_DETACHED");
 
-                UsbDevice device = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+                UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
 
                 if (device != null) {
                     Iterator it = mUsbDevices.entrySet().iterator();
@@ -388,24 +374,18 @@ public class FadecandyService extends Service {
                 }
 
             } else if (UsbEventReceiverActivity.ACTION_USB_DEVICE_ATTACHED.equals(action)) {
-                UsbDevice device = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+                UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
 
                 dispatchAttached(device);
 
             } else if (ACTION_USB_PERMISSION.equals(action)) {
-
                 Log.v(TAG, "ACTION_USB_PERMISSION");
-
                 if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
-
                     Log.v(TAG, "Received permission result");
-
-                    UsbDevice device = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+                    UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
 
                     if (device != null) {
-
                         UsbItem item = openDevice(device);
-
                         if (item != null) {
                             int fd = item.getConnection().getFileDescriptor();
                             dispatchUsb(item, fd);
@@ -433,9 +413,7 @@ public class FadecandyService extends Service {
      * @param fd     USB device file descriptor
      */
     private void dispatchUsb(UsbItem device, int fd) {
-
         String serialNum = "";
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             serialNum = device.getDevice().getSerialNumber();
         } else {
@@ -494,13 +472,9 @@ public class FadecandyService extends Service {
      * @return server status (0 : started | 1 : not stated (error))
      */
     public int startServer() {
-
         if (isServerRunning()) {
-
             eventManager.reset();
-
             stopServer();
-
             try {
                 eventManager.waitOne(STOP_SERVER_TIMEOUT);
             } catch (Exception e) {
@@ -563,7 +537,6 @@ public class FadecandyService extends Service {
      * @return transfer status
      */
     private int bulkTransfer(int fileDescriptor, int timeout, byte[] data) {
-
         if (mUsbDevices.containsKey(fileDescriptor)) {
             if (mUsbDevices.get(fileDescriptor).getConnection() != null) {
                 return mUsbDevices.get(fileDescriptor).getConnection().bulkTransfer(mUsbDevices.get(fileDescriptor).getUsbEndpoint(), data, data.length, timeout);
