@@ -58,6 +58,8 @@ public class OpenSourceItemAdapter extends BaseAdapter {
                     "https://github.com/koush/AndroidAsync"},
             {"Ace editor",
                     "https://github.com/ajaxorg/ace"},
+            {"JS Beautifier",
+                    "https://github.com/beautify-web/js-beautify"},
             {"Led Icon by Kenneth Appiah, CA (Pulic Domain)",
                     "https://thenounproject.com/search/?q=led&i=3156"}
     };
