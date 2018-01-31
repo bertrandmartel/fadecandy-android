@@ -52,4 +52,5 @@
     <string name="update_fadecandy_config">update configuration</string>
     <string name="default_fadecandy_config">load default configuration</string>
     <string name="fadecandy_config_link">Check &lt;a href=\"https://github.com/scanlime/fadecandy/blob/master/doc/fc_server_config.md\"&gt;this link&lt;/a&gt; for more info about Fadecandy server configuration</string>
+    <string name="issue">https://github.com/bertrandmartel/fadecandy-android/issues/new</string>
 </resources>

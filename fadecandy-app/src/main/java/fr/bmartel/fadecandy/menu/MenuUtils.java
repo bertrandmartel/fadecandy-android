@@ -96,11 +96,7 @@ public class MenuUtils {
                 break;
             }
             case R.id.report_bugs: {
-                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                        "mailto", context.getResources().getString(R.string.developper_mail), null));
-                intent.putExtra(Intent.EXTRA_SUBJECT, context.getResources().getString(R.string.issue_object));
-                intent.putExtra(Intent.EXTRA_TEXT, context.getResources().getString(R.string.issue_message));
-                context.startActivity(Intent.createChooser(intent, context.getResources().getString(R.string.issue_title)));
+                context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(context.getResources().getString(R.string.issue))));
                 break;
             }
             case R.id.service_config: {
