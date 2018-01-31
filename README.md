@@ -89,8 +89,8 @@ For writing to USB device, Fadecandy server is calling from C++ a Java method to
 
 * with Gradle, from jcenter :
 
-```
-compile 'fr.bmartel:fadecandy-service:1.4'
+```gradle
+compile 'fr.bmartel:fadecandy-service:1.5'
 ```
 
 ## How to use it ?
@@ -98,49 +98,32 @@ compile 'fr.bmartel:fadecandy-service:1.4'
 * Use `FadecandyClient` service wrapper : 
 
 
-```
-mFadecandyClient = new FadecandyClient(mContext, 
-
-		new IFcServerEventListener() {
-
-            @Override
-            public void onServerStart() {
-
-                // server is started 
-
-            }
-
-            @Override
-            public void onServerClose() {
-
-                // server is closed
-
-            }
-
-            @Override
-            public void onServerError(ServerError error) {
-
-            	// a server error occured
-
-            }
-
-        }, new IUsbEventListener() {
-
-            @Override
-            public void onUsbDeviceAttached(UsbItem usbItem) {
-                
-                // a Fadecandy device has been attached
-
-            }
-
-            @Override
-            public void onUsbDeviceDetached(UsbItem usbItem) {
-                
-                // a Fadecandy device has been detached
-
-            }
-        }, 
-        "com.your.package/.activity.MainActivity"
+```java
+mFadecandyClient = new FadecandyClient(mContext,
+    new IFcServerEventListener() {
+        @Override
+        public void onServerStart() {
+            // server is started
+        }
+        @Override
+        public void onServerClose() {
+            // server is closed
+        }
+        @Override
+        public void onServerError(ServerError error) {
+            // a server error occured
+        }
+    }, new IUsbEventListener() {
+        @Override
+        public void onUsbDeviceAttached(UsbItem usbItem) {
+            // a Fadecandy device has been attached
+        }
+        @Override
+        public void onUsbDeviceDetached(UsbItem usbItem) {
+            // a Fadecandy device has been detached
+        }
+    },
+    "com.your.package/.activity.MainActivity"
 );
 ```
 
@@ -149,7 +132,7 @@ mFadecandyClient = new FadecandyClient(mContext,
 
 ### Start Fadecandy server 
 
-```
+```java
 mFadecandyClient.startServer();
 ```
 
@@ -157,19 +140,19 @@ mFadecandyClient.startServer();
 
 ### Stop Fadecandy server
 
-```
+```java
 mFadecandyClient.closeServer();
 ```
 
 ### Check if server is running 
 
-```
+```java
 boolean isRunning = mFadecandyClient.isServerRunning();
 ```
 
 ### Get last server IP/host & last server port
 
-```
+```java
 String serverAdress = mFadecandyClient.getIpAddress();
 
 int serverPort = mFadecandyClient.getServerPort();
@@ -177,7 +160,7 @@ int serverPort = mFadecandyClient.getServerPort();
 
 ### Set server IP/host & server port 
 
-```
+```java
 mFadecandyClient.setServerAddress("127.0.0.1");
 
 mFadecandyClient.setServerPort(7890);
@@ -185,9 +168,17 @@ mFadecandyClient.setServerPort(7890);
 
 You will need to call `startServer()` to restart the server after modifying these parameters
 
+### Set server configuration
+
+```java
+mFadecandyClient.setConfig(myConfig);
+```
+
+Fadecandy server configuration is a JSON document, check [server config doc](https://github.com/scanlime/fadecandy/blob/master/doc/fc_server_config.md)
+
 ### Get list of Fadecandy USB devices attached
 
-```
+```java
 HashMap<Integer, UsbItem> usbDevices = mFadecandyClient.getUsbDeviceMap();
 ```
 
@@ -202,7 +193,7 @@ The key is the USB device file descriptor, The value is an `UsbItem` object enca
 
 ### Get Fadecandy server configuration 
 
-```
+```java
 FadecandyConfig config = mFadecandyClient.getConfig();
 ```
 
@@ -212,7 +203,7 @@ Fadecandy configuration is composed of the Top level object defined in [Fadecand
 
  * Set the Fadecandy service as `PERSISTENT` (default value) which means the service will stay in background, a notification will be present in notification view. The user can kill the service by clicking on "close background service" on the notification :
 
-```
+```java
 mFadecandyClient.setServiceType(ServiceType.PERSISTENT_SERVICE);
 ```
 
@@ -220,19 +211,19 @@ mFadecandyClient.setServiceType(ServiceType.PERSISTENT_SERVICE);
 
  * Set the Fadencandy service as `NON_PERSISTENT`. The service will be killed as soon as no application is bound to it
 
-```
+```java
 mFadecandyClient.setServiceType(ServiceType.NON_PERSISTENT_SERVICE);
 ```
 
 ### Bind Fadecandy service without starting server
 
-```
+```java
 mFadecandyClient.connect();
 ```
 
 ### Unbind Fadecandy service
 
-```
+```java
 mFadecandyClient.disconnect();
 ```
 
@@ -242,7 +233,7 @@ Assure you call `disconnect()` to close service & unregister client receiver whe
 
 If you are using proguard add this to your `proguard-rules.pro` : 
 
-```
+```proguard
 -keep class fr.bmartel.android.fadecandy.service.FadecandyService { *; }
 
 -keepclassmembers,allowobfuscation class fr.bmartel.android.fadecandy.service.FadecandyService.** {
@@ -256,7 +247,7 @@ This will keep methods in `FadecandyService` to preserve calls from native code 
 
 ### Get source code
 
-```
+```bash
 git clone git@github.com:bertrandmartel/fadecandy-android.git
 cd fadecandy-android
 git submodule update --init --recursive
@@ -264,7 +255,7 @@ git submodule update --init --recursive
 
 ### Build
 
-```
+```bash
 ./gradlew build
 ```
 
@@ -283,11 +274,13 @@ git submodule update --init --recursive
 * Android Holo ColorPicker : https://github.com/LarsWerkman/HoloColorPicker
 * Open Pixel Control Library : https://github.com/bertrandmartel/opc-java
 * AndroidAsync : https://github.com/koush/AndroidAsync
+* Ace editor : https://github.com/ajaxorg/ace
+* JS Beautifier : https://github.com/beautify-web/js-beautify
 * Led Icon by Kenneth Appiah, CA (Pulic Domain) : https://thenounproject.com/search/?q=led&i=3156
 * appcompat-v7, design & recyclerview-v7
 
 ## License
 
 ```
-The MIT License (MIT) Copyright (c) 2016 Bertrand Martel
+The MIT License (MIT) Copyright (c) 2016-2018 Bertrand Martel
 ```
