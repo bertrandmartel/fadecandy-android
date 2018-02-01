@@ -114,7 +114,7 @@ abstract class BaseActivity : AppCompatActivity(), IFc {
         diplayHideStartStopServer()
 
         // Setup drawer view
-        setupDrawerContent(nvDrawer)
+        setupDrawerContent(navigationView = nvDrawer)
     }
 
     override fun clearBackStack() {
@@ -164,8 +164,10 @@ abstract class BaseActivity : AppCompatActivity(), IFc {
      */
     private fun setupDrawerContent(navigationView: NavigationView) {
         navigationView.setNavigationItemSelectedListener { menuItem ->
-            MenuUtils.selectDrawerItem(menuItem, mDrawer, this@BaseActivity, this@BaseActivity)
-
+            MenuUtils.selectDrawerItem(menuItem = menuItem,
+                    mDrawer = mDrawer,
+                    context = this@BaseActivity,
+                    fcActivity = this@BaseActivity)
             false
         }
     }

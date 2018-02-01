@@ -67,7 +67,7 @@ object NotificationHelper {
     fun createNotification(context: Context, content: String?, activityIntent: Intent): Notification {
 
         val title = context.getString(R.string.app_name)
-        val pendingIntent = createLaunchIntent(context, activityIntent)
+        val pendingIntent = createLaunchIntent(context = context, activityIntent = activityIntent)
 
         val builder = NotificationCompat.Builder(context)
                 .setContentTitle(title)

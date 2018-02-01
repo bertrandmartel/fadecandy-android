@@ -91,22 +91,22 @@ class ConfigFragment : android.support.v4.app.Fragment() {
             })
         }
 
-        mSingleton = FadecandySingleton.getInstance(activity!!.applicationContext)
-        defaultBtn.setOnClickListener { setConfig(mSingleton?.defaultConfig) }
-        setupWebView(view)
+        mSingleton = FadecandySingleton.getInstance(context = activity!!.applicationContext)
+        defaultBtn.setOnClickListener { setConfig(config = mSingleton?.defaultConfig) }
+        setupWebView(view = view)
         return view
     }
 
     override fun onResume() {
         super.onResume()
-        (activity as BaseActivity).setTitle(resources.getString(R.string.menu_config_fadecandy))
+        (activity as BaseActivity).setTitle(text = resources.getString(R.string.menu_config_fadecandy))
     }
 
     @SuppressLint("JavascriptInterface")
     private fun setupWebView(view: View) {
         val loadingProgress = view.findViewById<ProgressBar>(R.id.progress_bar)
         mWebView = view.findViewById(R.id.webView)
-        mJavascriptInterface = JsInterface(loadingProgress, mHandler)
+        mJavascriptInterface = JsInterface(mLoadingProgress = loadingProgress, mHandler = mHandler)
         mWebView.addJavascriptInterface(mJavascriptInterface, "JSInterface")
         val webSettings = mWebView.settings
         webSettings.javaScriptEnabled = true
@@ -131,7 +131,7 @@ class ConfigFragment : android.support.v4.app.Fragment() {
     }
 
     private fun getConfig(configListener: IConfigListener) {
-        mJavascriptInterface.setConfigListener(configListener)
+        mJavascriptInterface.setConfigListener(configListener = configListener)
         mWebView.post {
             val stringBuilder = StringBuilder()
             stringBuilder.append("javascript:try{")

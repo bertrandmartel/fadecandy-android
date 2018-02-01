@@ -56,19 +56,19 @@ class FadecandyClient(
         /**
          * android context.
          */
-        private val mContext: Context,
+        private val context: Context,
         /**
          * Fadecandy server event listener.
          */
-        private val mListener: IFcServerEventListener?,
+        private val listener: IFcServerEventListener?,
         /**
          * Fadencandy USB event listener.
          */
-        private val mUsbListener: IUsbEventListener?,
+        private val usbListener: IUsbEventListener?,
         /**
          * activity intent name that will be opened when user click on service notification.
          */
-        private val mActivity: String) {
+        private val activity: String) {
 
     /**
      * Fadecandy service instance.
@@ -121,15 +121,15 @@ class FadecandyClient(
             Log.v(TAG, "fadecandy service connected")
             fadecandyService = (service as FadecandyServiceBinder).service
 
-            if (mUsbListener != null) {
-                fadecandyService?.addUsbListener(mUsbListener)
+            if (usbListener != null) {
+                fadecandyService?.addUsbListener(listener = usbListener)
             }
 
             if (mShouldStartServer) {
                 if (fadecandyService?.startServer() == 0) {
-                    mListener?.onServerStart()
+                    listener?.onServerStart()
                 } else {
-                    mListener?.onServerError(ServerError.START_SERVER_ERROR)
+                    listener?.onServerError(error = ServerError.START_SERVER_ERROR)
                 }
             }
             mShouldStartServer = false
@@ -234,8 +234,9 @@ class FadecandyClient(
         } else HashMap()
 
     val defaultConfig: String
-        get() = FadecandyService.getDefaultConfig(fadecandyService?.ipAddress,
-                fadecandyService?.serverPort ?: Constants.DEFAULT_SERVER_PORT)
+        get() = FadecandyService.getDefaultConfig(
+                address = fadecandyService?.ipAddress,
+                serverPort = fadecandyService?.serverPort ?: Constants.DEFAULT_SERVER_PORT)
 
     /**
      * connect with override of service type
@@ -263,7 +264,7 @@ class FadecandyClient(
     private fun registerReceiver() {
         val filter = IntentFilter()
         filter.addAction(FadecandyService.ACTION_EXIT)
-        mContext.registerReceiver(receiver, filter)
+        context.registerReceiver(receiver, filter)
     }
 
     /**
@@ -271,10 +272,10 @@ class FadecandyClient(
      */
     fun disconnect() {
         if (mBound) {
-            mContext.unbindService(mServiceConnection)
-            mContext.unregisterReceiver(receiver)
+            context.unbindService(mServiceConnection)
+            context.unregisterReceiver(receiver)
             mBound = false
-            mListener?.onServerClose()
+            listener?.onServerClose()
         }
     }
 
@@ -282,7 +283,7 @@ class FadecandyClient(
      * force service to stop.
      */
     fun stopService() {
-        mContext.stopService(fadecandyServiceIntent)
+        context.stopService(fadecandyServiceIntent)
     }
 
     /**
@@ -290,16 +291,16 @@ class FadecandyClient(
      */
     private fun bindService() {
         fadecandyServiceIntent = Intent()
-        fadecandyServiceIntent?.setClassName(mContext, SERVICE_NAME)
-        fadecandyServiceIntent?.putExtra(Constants.SERVICE_EXTRA_ACTIVITY, mActivity)
+        fadecandyServiceIntent?.setClassName(context, SERVICE_NAME)
+        fadecandyServiceIntent?.putExtra(Constants.SERVICE_EXTRA_ACTIVITY, activity)
 
         if (mShouldOverrideServiceType) {
             fadecandyServiceIntent?.putExtra(Constants.SERVICE_EXTRA_SERVICE_TYPE, mOverrideServiceType!!.ordinal)
         }
 
-        mContext.startService(fadecandyServiceIntent)
+        context.startService(fadecandyServiceIntent)
 
-        mBound = mContext.bindService(fadecandyServiceIntent, mServiceConnection,
+        mBound = context.bindService(fadecandyServiceIntent, mServiceConnection,
                 Context.BIND_AUTO_CREATE)
 
         if (mBound) {
@@ -315,9 +316,9 @@ class FadecandyClient(
     fun startServer() {
         if (mBound && fadecandyService != null) {
             if (fadecandyService?.startServer() == 0) {
-                mListener?.onServerStart()
+                listener?.onServerStart()
             } else {
-                mListener?.onServerError(ServerError.START_SERVER_ERROR)
+                listener?.onServerError(error = ServerError.START_SERVER_ERROR)
             }
         } else {
             mShouldStartServer = true
@@ -332,9 +333,9 @@ class FadecandyClient(
     fun closeServer() {
         if (mBound && fadecandyService != null) {
             if (fadecandyService?.stopServer() == 0) {
-                mListener?.onServerClose()
+                listener?.onServerClose()
             } else {
-                mListener?.onServerError(ServerError.CLOSE_SERVER_ERROR)
+                listener?.onServerError(error = ServerError.CLOSE_SERVER_ERROR)
             }
         } else {
             Log.e(TAG, "service not started.")
@@ -348,7 +349,7 @@ class FadecandyClient(
      */
     fun setServerAddress(ip: String?) {
         if (mBound && fadecandyService != null) {
-            fadecandyService?.setServerAddress(ip)
+            fadecandyService?.setServerAddress(ip = ip)
         }
     }
 

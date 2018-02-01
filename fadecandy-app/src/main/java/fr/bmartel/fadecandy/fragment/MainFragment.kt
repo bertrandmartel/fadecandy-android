@@ -65,9 +65,9 @@ abstract class MainFragment : android.support.v4.app.Fragment(), IFragment {
                     return
                 }
                 if (mIsSpark) {
-                    mSingleton?.setColorCorrectionSpark(value)
+                    mSingleton?.setColorCorrectionSpark(value = value)
                 } else {
-                    mSingleton?.setColorCorrection(value, false)
+                    mSingleton?.setColorCorrection(value = value, force = false)
                 }
             }
 
@@ -91,7 +91,7 @@ abstract class MainFragment : android.support.v4.app.Fragment(), IFragment {
     }
 
     fun onCreateCommon() {
-        mSingleton = FadecandySingleton.getInstance(activity!!.applicationContext)
+        mSingleton = FadecandySingleton.getInstance(context = activity!!.applicationContext)
     }
 
     override fun onServerFirstStart() {

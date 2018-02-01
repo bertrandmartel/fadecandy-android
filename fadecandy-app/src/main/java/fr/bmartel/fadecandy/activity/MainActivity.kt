@@ -221,15 +221,15 @@ class MainActivity : BaseActivity() {
         override fun onServerConnectionClosed() {
             runOnUiThread {
                 showToast(getString(R.string.server_connection) + " ${mSingleton?.remoteServerIp}:${mSingleton?.serverPort} " + getString(R.string.closed))
-                setToolbarTitle("disconnected")
+                setToolbarTitle(text = "disconnected")
                 showConfigurationDialog()
             }
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        mSingleton = FadecandySingleton.getInstance(applicationContext)
-        mSingleton?.addListener(mListener)
+        mSingleton = FadecandySingleton.getInstance(context = applicationContext)
+        mSingleton?.addListener(listener = mListener)
         mSingleton?.connect()
 
         setLayout(R.layout.activity_main)
@@ -298,7 +298,7 @@ class MainActivity : BaseActivity() {
     override fun onDestroy() {
         super.onDestroy()
         mDialog?.let { it.dismiss() }
-        mSingleton?.removeListener(mListener)
+        mSingleton?.removeListener(listener = mListener)
         mStarted = false
         mSingleton?.let { it.disconnect() }
     }

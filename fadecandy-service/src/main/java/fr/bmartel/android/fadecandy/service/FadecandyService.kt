@@ -163,7 +163,7 @@ class FadecandyService : Service() {
                             usbDeviceLeft(pair.key)
                             usbDeviceMap.remove(pair.key)
                             for (i in mUsbListeners.indices) {
-                                mUsbListeners[i].onUsbDeviceDetached(pair.value)
+                                mUsbListeners[i].onUsbDeviceDetached(usbItem = pair.value)
                             }
                             break
                         }
@@ -173,7 +173,7 @@ class FadecandyService : Service() {
                 }
             } else if (UsbEventReceiverActivity.ACTION_USB_DEVICE_ATTACHED == action) {
                 val device = intent.getParcelableExtra<UsbDevice>(UsbManager.EXTRA_DEVICE)
-                dispatchAttached(device)
+                dispatchAttached(device = device)
             } else if (ACTION_USB_PERMISSION == action) {
                 Log.v(TAG, "ACTION_USB_PERMISSION")
                 if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
@@ -181,10 +181,10 @@ class FadecandyService : Service() {
                     val device = intent.getParcelableExtra<UsbDevice>(UsbManager.EXTRA_DEVICE)
 
                     if (device != null) {
-                        val item = openDevice(device)
+                        val item = openDevice(device = device)
                         if (item != null) {
                             val fd = item.connection.fileDescriptor
-                            dispatchUsb(item, fd)
+                            dispatchUsb(device = item, fd = fd)
                         }
                     } else {
                         Log.v(TAG, "permission denied for device")
@@ -273,7 +273,7 @@ class FadecandyService : Service() {
 
         mExit = false
 
-        mBinder = FadecandyServiceBinder(this)
+        mBinder = FadecandyServiceBinder(service = this)
 
         prefs = this.getSharedPreferences(Constants.PREFERENCE_PREFS, Context.MODE_PRIVATE)
         val configStr = prefs.getString(Constants.PREFERENCE_CONFIG, getDefaultConfig(Constants.DEFAULT_SERVER_ADDRESS, Constants.DEFAULT_SERVER_PORT))
@@ -281,7 +281,7 @@ class FadecandyService : Service() {
         mServerPort = prefs.getInt(Constants.PREFERENCE_PORT, Constants.DEFAULT_SERVER_PORT)
         ipAddress = prefs.getString(Constants.PREFERENCE_IP_ADDRESS, Constants.DEFAULT_SERVER_ADDRESS)
 
-        mServiceType = ServiceType.getServiceType(serviceType)
+        mServiceType = ServiceType.getServiceType(serviceType = serviceType)
 
         mConfig = configStr
 
@@ -332,7 +332,7 @@ class FadecandyService : Service() {
         while ((deviceIterator?.hasNext() == true)) {
             val device = deviceIterator.next()
             if (device?.vendorId == Constants.FC_VENDOR && device.productId == Constants.FC_PRODUCT) {
-                dispatchAttached(device)
+                dispatchAttached(device = device)
             }
         }
     }
@@ -377,9 +377,9 @@ class FadecandyService : Service() {
             mUsbManager.requestPermission(device, mPermissionIntent)
         } else {
             Log.v(TAG, "Already has permission : opening device")
-            val item = openDevice(device)
+            val item = openDevice(device = device)
             val fd = item?.connection?.fileDescriptor
-            dispatchUsb(item, fd)
+            dispatchUsb(device = item, fd = fd)
         }
     }
 
@@ -400,14 +400,15 @@ class FadecandyService : Service() {
         usbDeviceMap.set(fd, device)
 
         for (i in mUsbListeners.indices) {
-            mUsbListeners[i].onUsbDeviceAttached(device)
+            mUsbListeners[i].onUsbDeviceAttached(usbItem = device)
         }
         System.out.println("vendor id : " + device?.device?.vendorId)
         System.out.println("product id : " + device?.device?.productId)
-        usbDeviceArrived(device?.device?.vendorId ?: 0,
-                device?.device?.productId ?: 0,
-                serialNum ?: "",
-                fd ?: 0)
+        usbDeviceArrived(
+                vendorId = device?.device?.vendorId ?: 0,
+                productId = device?.device?.productId ?: 0,
+                serialNumber = serialNum ?: "",
+                fileDescriptor = fd ?: 0)
     }
 
     override fun onBind(intent: Intent): IBinder? {
@@ -455,7 +456,7 @@ class FadecandyService : Service() {
             eventManager.reset()
             stopServer()
             try {
-                eventManager.waitOne(STOP_SERVER_TIMEOUT.toLong())
+                eventManager.waitOne(milliseconds = STOP_SERVER_TIMEOUT.toLong())
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -463,10 +464,10 @@ class FadecandyService : Service() {
         }
 
         if (mConfig == "") {
-            mConfig = getDefaultConfig(ipAddress, mServerPort)
+            mConfig = getDefaultConfig(address = ipAddress, serverPort = mServerPort)
         }
 
-        val status = startFcServer(mConfig)
+        val status = startFcServer(config = mConfig)
 
         initUsbDeviceList()
 
@@ -555,12 +556,10 @@ class FadecandyService : Service() {
                 Log.e(TAG, "USB connection error")
                 return null
             }
-
-            return UsbItem(device, connection, endpoint)
+            return UsbItem(device = device, connection = connection, usbEndpoint = endpoint)
 
         } catch (e: IllegalArgumentException) {
         }
-
         return null
     }
 

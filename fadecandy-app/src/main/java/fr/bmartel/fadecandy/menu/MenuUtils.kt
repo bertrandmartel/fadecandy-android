@@ -61,26 +61,26 @@ object MenuUtils {
                 fcActivity.switchServerStatus()
             }
             R.id.server_config -> {
-                val dialog = ConfigurationDialog(fcActivity)
-                fcActivity.setCurrentDialog(dialog)
+                val dialog = ConfigurationDialog(activity = fcActivity)
+                fcActivity.setCurrentDialog(dialog = dialog)
                 dialog.show()
             }
             R.id.ledstrip_config -> {
-                val dialog = LedStripConfigurationDialog(fcActivity)
-                fcActivity.setCurrentDialog(dialog)
+                val dialog = LedStripConfigurationDialog(mActivity = fcActivity)
+                fcActivity.setCurrentDialog(dialog = dialog)
                 dialog.show()
             }
             R.id.open_source_components -> {
-                val dialog = OpenSourceItemsDialog(context)
-                fcActivity.setCurrentDialog(dialog)
+                val dialog = OpenSourceItemsDialog(context = context)
+                fcActivity.setCurrentDialog(dialog = dialog)
                 dialog.show()
             }
             R.id.rate_app -> {
                 context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + context.applicationContext.packageName)))
             }
             R.id.about_app -> {
-                val dialog = AboutDialog(context)
-                fcActivity.setCurrentDialog(dialog)
+                val dialog = AboutDialog(context = context)
+                fcActivity.setCurrentDialog(dialog = dialog)
                 dialog.show()
             }
             R.id.report_bugs -> {
@@ -108,7 +108,7 @@ object MenuUtils {
                         }
                         .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
                         .show()
-                fcActivity.setCurrentDialog(dialog)
+                fcActivity.setCurrentDialog(dialog = dialog)
             }
         }
         mDrawer.closeDrawers()

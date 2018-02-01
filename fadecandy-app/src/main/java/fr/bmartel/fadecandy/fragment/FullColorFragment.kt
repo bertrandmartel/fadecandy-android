@@ -70,6 +70,6 @@ class FullColorFragment : MainFragment(), ColorPicker.OnColorChangedListener {
         if ((mSingleton?.isServerMode == true) && mSingleton?.isServerRunning != true) {
             return
         }
-        mSingleton?.setFullColor(color, true, false)
+        mSingleton?.setFullColor(color = color, storeColorVal = true, force = false)
     }
 }

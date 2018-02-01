@@ -63,7 +63,7 @@ import kotlin.collections.HashMap
  *
  * @author Bertrand Martel
  */
-class FadecandySingleton(mContext: Context) {
+class FadecandySingleton(context: Context) {
 
     /**
      * an executor to launch task on a new thread.
@@ -130,7 +130,7 @@ class FadecandySingleton(mContext: Context) {
     /**
      * shared preferences.
      */
-    private val prefs: SharedPreferences = mContext.getSharedPreferences(Constants.PREFERENCE_PREFS, Context.MODE_PRIVATE)
+    private val prefs: SharedPreferences = context.getSharedPreferences(Constants.PREFERENCE_PREFS, Context.MODE_PRIVATE)
 
     /**
      * websocket client in host mode.
@@ -208,7 +208,7 @@ class FadecandySingleton(mContext: Context) {
     /**
      * monitoring object used to wait for server close before starting server if already started.
      */
-    private val eventManager = ManualResetEvent(false)
+    private val eventManager = ManualResetEvent(open = false)
 
     /**
      * define  if websocket will be closed manually so we dont dispatch error listener when this is set to true.
@@ -312,7 +312,7 @@ class FadecandySingleton(mContext: Context) {
             }
         }
         set(ip) {
-            mFadecandyClient.setServerAddress(ip)
+            mFadecandyClient.setServerAddress(ip = ip)
         }
 
     /**
@@ -347,7 +347,7 @@ class FadecandySingleton(mContext: Context) {
         set(temperature) {
             mTemperature = temperature
             prefs.edit().putInt(AppConstants.PREFERENCE_FIELD_TEMPERATURE, mTemperature).apply()
-            setFullColor(temperature, false, false)
+            setFullColor(color = temperature, storeColorVal = false, force = false)
         }
 
     /**
@@ -507,7 +507,7 @@ class FadecandySingleton(mContext: Context) {
         isSpanUpdate = false
 
         //build Fadecandy client to bind Fadecandy service & start server
-        mFadecandyClient = FadecandyClient(mContext, object : IFcServerEventListener {
+        mFadecandyClient = FadecandyClient(mContext = context, mListener = object : IFcServerEventListener {
 
             override fun onServerStart() {
                 Log.v(TAG, "onServerStart")
@@ -531,7 +531,7 @@ class FadecandySingleton(mContext: Context) {
                 }
             }
 
-        }, object : IUsbEventListener {
+        }, mUsbListener = object : IUsbEventListener {
             override fun onUsbDeviceAttached(usbItem: UsbItem?) {
                 for (i in mListeners.indices) {
                     mListeners[i].onUsbDeviceAttached(usbItem)
@@ -543,14 +543,13 @@ class FadecandySingleton(mContext: Context) {
                     mListeners[i].onUsbDeviceDetached(usbItem)
                 }
             }
-        }, "fr.bmartel.fadecandy/.activity.MainActivity")
+        }, mActivity = "fr.bmartel.fadecandy/.activity.MainActivity")
 
         if (mServerMode) {
             mFadecandyClient.startServer()
         } else {
             createWebsocketClient()
         }
-
         initOpcClient()
     }
 
@@ -562,7 +561,7 @@ class FadecandySingleton(mContext: Context) {
             mIsSendingRequest = true
             mExecutorService.execute {
                 checkJoinThread()
-                if (ColorUtils.clear(this@FadecandySingleton) == -1) {
+                if (ColorUtils.clear(singleton = this@FadecandySingleton) == -1) {
                     //error occured
                     for (i in mListeners.indices) {
                         mListeners[i].onServerConnectionFailure()
@@ -603,7 +602,7 @@ class FadecandySingleton(mContext: Context) {
             mExecutorService.execute {
                 checkJoinThread()
 
-                if (ColorUtils.setFullColor(this@FadecandySingleton) == -1) {
+                if (ColorUtils.setFullColor(singleton = this@FadecandySingleton) == -1) {
                     Log.e(TAG, "error occured")
                     //error occured
                     for (i in mListeners.indices) {
@@ -641,7 +640,7 @@ class FadecandySingleton(mContext: Context) {
      */
     fun connect() {
         if (!mServerMode) {
-            mFadecandyClient.connect(ServiceType.NON_PERSISTENT_SERVICE)
+            mFadecandyClient.connect(serviceType = ServiceType.NON_PERSISTENT_SERVICE)
         } else {
             mFadecandyClient.connect()
         }
@@ -660,7 +659,7 @@ class FadecandySingleton(mContext: Context) {
             mIsSendingRequest = true
 
             mExecutorService.execute {
-                if (ColorUtils.setBrightness(this@FadecandySingleton) == -1) {
+                if (ColorUtils.setBrightness(singleton = this@FadecandySingleton) == -1) {
                     //error occured
                     for (i in mListeners.indices) {
                         mListeners[i].onServerConnectionFailure()
@@ -729,7 +728,7 @@ class FadecandySingleton(mContext: Context) {
     }
 
     private fun spark(): Int {
-        var spark = Spark(Spark.buildColors(color, mLedCount * sparkSpan / 100))
+        var spark = Spark(Spark.buildColors(color = color, sparkSpan = mLedCount * sparkSpan / 100))
         pixelStrip?.animation = spark
         var status: Int?
 
@@ -755,16 +754,16 @@ class FadecandySingleton(mContext: Context) {
 
             if (isSpanUpdate) {
                 pixelStrip?.clear()
-                spark = Spark(Spark.buildColors(color, mLedCount * sparkSpan / 100))
+                spark = Spark(Spark.buildColors(color = color, sparkSpan = mLedCount * sparkSpan / 100))
                 pixelStrip?.animation = spark
                 isSpanUpdate = false
             }
             if (ismIsSparkColorUpdate()) {
-                spark.updateColor(color, mLedCount * sparkSpan / 100)
+                spark.updateColor(mColor = color, sparkSpan = mLedCount * sparkSpan / 100)
                 setmIsSparkColorUpdate(false)
             }
             try {
-                Thread.sleep(Spark.convertSpeed(speed).toLong())
+                Thread.sleep(Spark.convertSpeed(speed = speed).toLong())
             } catch (e: InterruptedException) {
                 e.printStackTrace()
             }
@@ -821,14 +820,14 @@ class FadecandySingleton(mContext: Context) {
                             val devices = messageJson.get("devices") as JSONArray
 
                             for (i in mListeners.indices) {
-                                mListeners[i].onConnectedDeviceChanged(devices.length())
+                                mListeners[i].onConnectedDeviceChanged(size = devices.length())
                             }
 
                         } else if (type == "list_connected_devices") {
                             val devices = messageJson.get("devices") as JSONArray
 
                             for (i in mListeners.indices) {
-                                mListeners[i].onConnectedDeviceChanged(devices.length())
+                                mListeners[i].onConnectedDeviceChanged(size = devices.length())
                             }
                         }
                     }
@@ -881,7 +880,7 @@ class FadecandySingleton(mContext: Context) {
         mWebsocketClose = true
         mWebsocket?.close()
         try {
-            eventManager.waitOne(AppConstants.STOP_WEBSOCKET_TIMEOUT.toLong())
+            eventManager.waitOne(milliseconds = AppConstants.STOP_WEBSOCKET_TIMEOUT.toLong())
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -907,7 +906,7 @@ class FadecandySingleton(mContext: Context) {
                 checkJoinThread()
                 workerThread = Thread(Runnable {
                     isAnimating = true
-                    if (ColorUtils.mixer(this@FadecandySingleton) == -1) {
+                    if (ColorUtils.mixer(singleton = this@FadecandySingleton) == -1) {
                         //error occured
                         for (i in mListeners.indices) {
                             mListeners[i].onServerConnectionFailure()
@@ -946,7 +945,7 @@ class FadecandySingleton(mContext: Context) {
                 checkJoinThread()
                 workerThread = Thread(Runnable {
                     isAnimating = true
-                    if (ColorUtils.pulse(this@FadecandySingleton) == -1) {
+                    if (ColorUtils.pulse(singleton = this@FadecandySingleton) == -1) {
                         //error occured
                         for (i in mListeners.indices) {
                             mListeners[i].onServerConnectionFailure()
@@ -1009,7 +1008,7 @@ class FadecandySingleton(mContext: Context) {
          */
         fun getInstance(context: Context): FadecandySingleton? {
             if (mInstance == null) {
-                mInstance = FadecandySingleton(context)
+                mInstance = FadecandySingleton(context = context)
             }
             return mInstance
         }

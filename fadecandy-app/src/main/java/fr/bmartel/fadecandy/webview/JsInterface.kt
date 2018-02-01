@@ -53,7 +53,7 @@ class JsInterface(
 
     @android.webkit.JavascriptInterface
     fun onConfigReceived(config: String) {
-        configListener!!.onConfigReceived(config)
+        configListener?.onConfigReceived(config = config)
     }
 
     @android.webkit.JavascriptInterface

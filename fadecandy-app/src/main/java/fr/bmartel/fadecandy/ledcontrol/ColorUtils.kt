@@ -133,7 +133,15 @@ object ColorUtils {
      * @param server     open pixel control server object
      */
     private fun mixGreen(descending: Boolean, stripCount: Int, strip: PixelStrip?, initRed: Int, initBlue: Int, singleton: FadecandySingleton, server: OpcClient?): Int {
-        return mix(descending, stripCount, strip, initRed, 0, initBlue, 0x01.toByte(), singleton, server)
+        return mix(descending = descending,
+                stripCount = stripCount,
+                strip = strip,
+                r = initRed,
+                g = 0,
+                b = initBlue,
+                selectedColor = 0x01.toByte(),
+                singleton = singleton,
+                server = server)
     }
 
     /**
@@ -148,7 +156,15 @@ object ColorUtils {
      * @param server     open pixel control server object
      */
     private fun mixBlue(descending: Boolean, stripCount: Int, strip: PixelStrip?, initRed: Int, initGreen: Int, singleton: FadecandySingleton, server: OpcClient?): Int {
-        return mix(descending, stripCount, strip, initRed, initGreen, 0, 0x02.toByte(), singleton, server)
+        return mix(descending = descending,
+                stripCount = stripCount,
+                strip = strip,
+                r = initRed,
+                g = initGreen,
+                b = 0,
+                selectedColor = 0x02.toByte(),
+                singleton = singleton,
+                server = server)
     }
 
     /**
@@ -163,7 +179,15 @@ object ColorUtils {
      * @param server     open pixel control server object
      */
     private fun mixRed(descending: Boolean, stripCount: Int, strip: PixelStrip?, initGreen: Int, initBlue: Int, singleton: FadecandySingleton, server: OpcClient?): Int {
-        return mix(descending, stripCount, strip, 0, initGreen, initBlue, 0x00.toByte(), singleton, server)
+        return mix(descending = descending,
+                stripCount = stripCount,
+                strip = strip,
+                r = 0,
+                g = initGreen,
+                b = initBlue,
+                selectedColor = 0x00.toByte(),
+                singleton = singleton,
+                server = server)
     }
 
     /**
@@ -176,27 +200,69 @@ object ColorUtils {
         val ledCount = singleton.ledCount
 
         while (singleton.isAnimating) {
-            status = mixGreen(true, ledCount, singleton.pixelStrip, 255, 0, singleton, singleton.opcClient)
+            status = mixGreen(
+                    descending = true,
+                    stripCount = ledCount,
+                    strip = singleton.pixelStrip,
+                    initRed = 255,
+                    initBlue = 0,
+                    singleton = singleton,
+                    server = singleton.opcClient)
             if (status == -1) {
                 return -1
             }
-            status = mixBlue(false, ledCount, singleton.pixelStrip, 255, 0, singleton, singleton.opcClient)
+            status = mixBlue(
+                    descending = false,
+                    stripCount = ledCount,
+                    strip = singleton.pixelStrip,
+                    initRed = 255,
+                    initGreen = 0,
+                    singleton = singleton,
+                    server = singleton.opcClient)
             if (status == -1) {
                 return -1
             }
-            status = mixRed(true, ledCount, singleton.pixelStrip, 0, 255, singleton, singleton.opcClient)
+            status = mixRed(
+                    descending = true,
+                    stripCount = ledCount,
+                    strip = singleton.pixelStrip,
+                    initGreen = 0,
+                    initBlue = 255,
+                    singleton = singleton,
+                    server = singleton.opcClient)
             if (status == -1) {
                 return -1
             }
-            status = mixGreen(false, ledCount, singleton.pixelStrip, 0, 255, singleton, singleton.opcClient)
+            status = mixGreen(
+                    descending = false,
+                    stripCount = ledCount,
+                    strip = singleton.pixelStrip,
+                    initRed = 0,
+                    initBlue = 255,
+                    singleton = singleton,
+                    server = singleton.opcClient)
             if (status == -1) {
                 return -1
             }
-            status = mixBlue(true, ledCount, singleton.pixelStrip, 0, 255, singleton, singleton.opcClient)
+            status = mixBlue(
+                    descending = true,
+                    stripCount = ledCount,
+                    strip = singleton.pixelStrip,
+                    initRed = 0,
+                    initGreen = 255,
+                    singleton = singleton,
+                    server = singleton.opcClient)
             if (status == -1) {
                 return -1
             }
-            status = mixRed(false, ledCount, singleton.pixelStrip, 255, 0, singleton, singleton.opcClient)
+            status = mixRed(
+                    descending = false,
+                    stripCount = ledCount,
+                    strip = singleton.pixelStrip,
+                    initGreen = 255,
+                    initBlue = 0,
+                    singleton = singleton,
+                    server = singleton.opcClient)
             if (status == -1) {
                 return -1
             }
@@ -223,14 +289,14 @@ object ColorUtils {
                 singleton.pixelStrip?.setPixelColor(i, singleton.color)
             }
 
-            status = graduateColorCorrection(true, singleton.opcClient, singleton.opcDevice, singleton)
+            status = graduateColorCorrection(ascending = true, server = singleton.opcClient, fadecandy = singleton.opcDevice, singleton = singleton)
             if (status == -1) {
                 return -1
             } else if (status == 1) {
                 return 0
             }
 
-            status = graduateColorCorrection(false, singleton.opcClient, singleton.opcDevice, singleton)
+            status = graduateColorCorrection(ascending = false, server = singleton.opcClient, fadecandy = singleton.opcDevice, singleton = singleton)
             if (status == -1) {
                 return -1
             } else if (status == 1) {
