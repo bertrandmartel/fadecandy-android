@@ -49,7 +49,7 @@ public class TemperatureFragment extends MainFragment {
 
         View view = inflater.inflate(R.layout.temperature_fragment, container, false);
 
-        mIsSpark = false;
+        setMIsSpark(false);
 
         super.onCreate(view);
 
@@ -65,7 +65,7 @@ public class TemperatureFragment extends MainFragment {
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
                 int color = 0xFFFF00 + (value * 255 / 100);
-                mSingleton.setTemperature(color);
+                getMSingleton().setTemperature(color);
             }
 
             @Override
@@ -77,7 +77,7 @@ public class TemperatureFragment extends MainFragment {
             }
         });
 
-        int value = (mSingleton.getTemperature() - 0xFFFF00) * 100 / 255;
+        int value = (getMSingleton().getTemperature() - 0xFFFF00) * 100 / 255;
 
         temperatureSeekbar.setProgress(value);
 
@@ -86,7 +86,7 @@ public class TemperatureFragment extends MainFragment {
             @Override
             public void onClick(View v) {
 
-                mSingleton.clearPixel();
+                getMSingleton().clearPixel();
             }
         });
 
