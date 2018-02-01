@@ -90,7 +90,7 @@ For writing to USB device, Fadecandy server is calling from C++ a Java method to
 * with Gradle, from jcenter :
 
 ```gradle
-compile 'fr.bmartel:fadecandy-service:1.5'
+compile 'fr.bmartel:fadecandy-service:1.6'
 ```
 
 ## How to use it ?
@@ -194,7 +194,7 @@ The key is the USB device file descriptor, The value is an `UsbItem` object enca
 ### Get Fadecandy server configuration 
 
 ```java
-FadecandyConfig config = mFadecandyClient.getConfig();
+String config = mFadecandyClient.getConfig();
 ```
 
 Fadecandy configuration is composed of the Top level object defined in [Fadecandy Server configuration documentation](https://github.com/scanlime/fadecandy/blob/master/doc/fc_server_config.md#top-level-object)
