@@ -55,24 +55,24 @@ What differs between libusbx Fadecandy server & Android Fadecandy server is that
 
 | order | description  | language |
 |---|--------------------------------------------------------------------------|-------|
-| 1 | register a USB event receiver (for a specific product/vendor ID)         | Java  |                                                 
+| 1 | register a USB event receiver (for a specific product/vendor ID)         | Kotlin  |
 | 2 | start Fadecandy server                                                   | C++   | 
 
 * USB attached flow :
 
 | order | description  | language |
 |---|--------------------------------------------------------------------------|-------|
-| 1 | catch a USB device attached event                                        | Java  |          
-| 2 | check if this Fadecandy USB is allowed                                   | Java  |               
-| 3 | ask permission if device is not allowed                                  | Java  |                
-| 4 | open the device if permission is granted                                 | Java  |                 
+| 1 | catch a USB device attached event                                        | Kotlin  |
+| 2 | check if this Fadecandy USB is allowed                                   | Kotlin  |
+| 3 | ask permission if device is not allowed                                  | Kotlin  |
+| 4 | open the device if permission is granted                                 | Kotlin  |
 | 5 | notify Fadecandy server that a new device is attached                    | C++   |                             
 
 * USB detached flow :
 
 | order | description | language |
 |---|-------------------|--------|
-| 1 | catch a USB device detached event | Java |
+| 1 | catch a USB device detached event | Kotlin |
 | 2 | notify Fadecandy server that a device is detached | C++ |
 
 
@@ -81,9 +81,9 @@ What differs between libusbx Fadecandy server & Android Fadecandy server is that
 | order | description | language |
 |-------|-------------|----------|
 | 1     | prepare data to be written | C++ |
-| 2     | perform a bulk transfer on `UsbDeviceConnection` | Java |
+| 2     | perform a bulk transfer on `UsbDeviceConnection` | Kotlin |
 
-For writing to USB device, Fadecandy server is calling from C++ a Java method to perform a bulk transfer
+For writing to USB device, Fadecandy server is calling from C++ a Kotlin method to perform a bulk transfer
 
 ## How to include it in your Android project ?
 
