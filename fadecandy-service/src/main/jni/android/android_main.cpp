@@ -39,10 +39,11 @@ static FCServer server;
 int launch_server(std::string configuration)
 {
     int status = server.init(configuration.c_str());
-
+ 
     if (status != 0) {
         return status;
     }
+
     if (server.hasError()) {
         __android_log_print(ANDROID_LOG_ERROR, APP_NAME, "Configuration errors:\n%s", server.errorText());
         return -1;

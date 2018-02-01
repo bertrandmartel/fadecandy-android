@@ -244,7 +244,7 @@ class FadecandyService : Service() {
      * @param config Fadecandy configuration in Json string.
      * @return start status (0 : OK | 1 : ERROR)
      */
-    external fun startFcServer(config: String?): Int
+    external fun startFcServer(config: String): Int
 
     /**
      * Stop fadecandy server (async)
@@ -259,7 +259,7 @@ class FadecandyService : Service() {
      * @param serialNumber   Fadecandy device serial number (depend on Android version)
      * @param fileDescriptor USB file descriptor (what is used to identify the USB device)
      */
-    external fun usbDeviceArrived(vendorId: Int?, productId: Int?, serialNumber: String?, fileDescriptor: Int?)
+    external fun usbDeviceArrived(vendorId: Int, productId: Int, serialNumber: String, fileDescriptor: Int)
 
     /**
      * notify Fadecandy server that a Fadecandy USB device has been detached.
@@ -402,7 +402,12 @@ class FadecandyService : Service() {
         for (i in mUsbListeners.indices) {
             mUsbListeners[i].onUsbDeviceAttached(device)
         }
-        usbDeviceArrived(device?.device?.vendorId, device?.device?.productId, serialNum, fd)
+        System.out.println("vendor id : " + device?.device?.vendorId)
+        System.out.println("product id : " + device?.device?.productId)
+        usbDeviceArrived(device?.device?.vendorId ?: 0,
+                device?.device?.productId ?: 0,
+                serialNum ?: "",
+                fd ?: 0)
     }
 
     override fun onBind(intent: Intent): IBinder? {
@@ -502,9 +507,10 @@ class FadecandyService : Service() {
      * @param data           data to be transferred.
      * @return transfer status
      */
-    private fun bulkTransfer(fileDescriptor: Int, timeout: Int, data: ByteArray): Int? {
+    private fun bulkTransfer(fileDescriptor: Int, timeout: Int, data: ByteArray): Int {
         if (usbDeviceMap.containsKey(fileDescriptor)) {
             return usbDeviceMap[fileDescriptor]?.connection?.bulkTransfer(usbDeviceMap[fileDescriptor]?.usbEndpoint, data, data.size, timeout)
+                    ?: 0
         } else {
             Log.e(TAG, "device with fd $fileDescriptor not found")
         }
