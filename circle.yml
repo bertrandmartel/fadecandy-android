@@ -10,7 +10,7 @@ test:
     - ./gradlew clean build connectedCheck
   post:
     - mkdir $CIRCLE_ARTIFACTS/apk
-    - mv fadecandy-app/build/outputs/apk/*.apk $CIRCLE_ARTIFACTS/apk
+    - mv fadecandy-app/build/outputs/apk/debug/*.apk $CIRCLE_ARTIFACTS/apk
 
 dependencies:
   pre:
