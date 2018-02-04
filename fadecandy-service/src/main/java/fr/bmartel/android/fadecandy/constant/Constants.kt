@@ -49,7 +49,7 @@ object Constants {
     /**
      * service is persistent by default.
      */
-    val DEFAULT_SERVICE_TYPE = ServiceType.PERSISTENT_SERVICE
+    val DEFAULT_SERVICE_TYPE: ServiceType = ServiceType.PERSISTENT_SERVICE
 
     /**
      * Fadecandy vendor id.

@@ -70,16 +70,6 @@ class FadecandyService : Service() {
     val usbDeviceMap = HashMap<Int?, UsbItem?>()
 
     /**
-     * Fadecandy server configuration.
-     */
-    lateinit var mConfig: String
-
-    /**
-     * Service type persistent or non persistent.
-     */
-    private var mServiceType: ServiceType? = null
-
-    /**
      * Server address.
      */
     /**
@@ -119,7 +109,7 @@ class FadecandyService : Service() {
     /**
      * Shared preferences used by Service.
      */
-    lateinit var prefs: SharedPreferences
+    private lateinit var prefs: SharedPreferences
 
     /**
      * define if user has click on notification to close Service.
@@ -136,11 +126,10 @@ class FadecandyService : Service() {
      *
      * @param config
      */
-    var config: String
-        get() = mConfig
-        set(config) {
-            mConfig = config
-            prefs.edit().putString(Constants.PREFERENCE_CONFIG, config).apply()
+    var config: String = ""
+        set(conf) {
+            config = conf
+            prefs.edit().putString(Constants.PREFERENCE_CONFIG, conf).apply()
         }
 
     /**
@@ -202,7 +191,7 @@ class FadecandyService : Service() {
         }
     }
 
-    lateinit var mBinder: FadecandyServiceBinder
+    private lateinit var mBinder: FadecandyServiceBinder
 
     /**
      * Retrieve service type (persistent or non persistent).
@@ -214,11 +203,10 @@ class FadecandyService : Service() {
      *
      * @param serviceType
      */
-    var serviceType: ServiceType?
-        get() = mServiceType
-        set(serviceType) {
-            this.mServiceType = serviceType
-            prefs.edit().putInt(Constants.PREFERENCE_SERVICE_TYPE, ServiceType.getState(serviceType)).apply()
+    var serviceType: ServiceType? = Constants.DEFAULT_SERVICE_TYPE
+        set(type) {
+            this.serviceType = type
+            prefs.edit().putInt(Constants.PREFERENCE_SERVICE_TYPE, ServiceType.getState(type)).apply()
         }
 
     /**
@@ -276,14 +264,10 @@ class FadecandyService : Service() {
         mBinder = FadecandyServiceBinder(service = this)
 
         prefs = this.getSharedPreferences(Constants.PREFERENCE_PREFS, Context.MODE_PRIVATE)
-        val configStr = prefs.getString(Constants.PREFERENCE_CONFIG, getDefaultConfig(Constants.DEFAULT_SERVER_ADDRESS, Constants.DEFAULT_SERVER_PORT))
-        val serviceType = prefs.getInt(Constants.PREFERENCE_SERVICE_TYPE, ServiceType.getState(Constants.DEFAULT_SERVICE_TYPE))
+        config = prefs.getString(Constants.PREFERENCE_CONFIG, getDefaultConfig(Constants.DEFAULT_SERVER_ADDRESS, Constants.DEFAULT_SERVER_PORT))
+        serviceType = ServiceType.getServiceType(prefs.getInt(Constants.PREFERENCE_SERVICE_TYPE, ServiceType.getState(Constants.DEFAULT_SERVICE_TYPE)))
         mServerPort = prefs.getInt(Constants.PREFERENCE_PORT, Constants.DEFAULT_SERVER_PORT)
         ipAddress = prefs.getString(Constants.PREFERENCE_IP_ADDRESS, Constants.DEFAULT_SERVER_ADDRESS)
-
-        mServiceType = ServiceType.getServiceType(serviceType = serviceType)
-
-        mConfig = configStr
 
         mUsbManager = getSystemService(Context.USB_SERVICE) as UsbManager
 
@@ -340,9 +324,9 @@ class FadecandyService : Service() {
     /**
      * start Fadecandy server with a new configuration.
      */
-    fun startServer(config: String) {
-        mConfig = config
-        startServer()
+    fun startServer(config: String): Int {
+        this.config = config
+        return startServer()
     }
 
     /**
@@ -428,7 +412,7 @@ class FadecandyService : Service() {
         if (intent != null && intent.hasExtra(Constants.SERVICE_EXTRA_SERVICE_TYPE)) {
             serviceTypeOverride = ServiceType.getServiceType(intent.getIntExtra(Constants.SERVICE_EXTRA_SERVICE_TYPE, ServiceType.NON_PERSISTENT_SERVICE.ordinal))
         } else {
-            serviceTypeOverride = mServiceType
+            serviceTypeOverride = serviceType
         }
 
         when (serviceTypeOverride) {
@@ -460,14 +444,13 @@ class FadecandyService : Service() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-
         }
 
-        if (mConfig == "") {
-            mConfig = getDefaultConfig(address = ipAddress, serverPort = mServerPort)
+        if (config == "") {
+            config = getDefaultConfig(address = ipAddress, serverPort = mServerPort)
         }
 
-        val status = startFcServer(config = mConfig)
+        val status = startFcServer(config = config)
 
         initUsbDeviceList()
 
@@ -477,7 +460,6 @@ class FadecandyService : Service() {
         } else {
             Log.e(TAG, "error occured while starting server")
         }
-
         return status
     }
 
