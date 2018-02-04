@@ -90,7 +90,7 @@ For writing to USB device, Fadecandy server is calling from C++ a Kotlin method 
 * with Gradle, from jcenter :
 
 ```gradle
-compile 'fr.bmartel:fadecandy-service:1.61'
+compile 'fr.bmartel:fadecandy-service:1.62'
 ```
 
 ## How to use it ?
@@ -137,6 +137,14 @@ mFadecandyClient.startServer();
 ```
 
 `startServer()` will internally stop the server if already running before starting
+
+### Start Fadecandy server with custom server config
+
+```java
+mFadecandyClient.startServer(yourConfig);
+```
+
+Fadecandy server configuration is a JSON document, check [server config doc](https://github.com/scanlime/fadecandy/blob/master/doc/fc_server_config.md)
 
 ### Stop Fadecandy server
 
@@ -189,7 +197,6 @@ The key is the USB device file descriptor, The value is an `UsbItem` object enca
 | `UsbDevice` | features attached USB device     |
 | `UsbConnection` | send/receive data from an UBS device |
 | `UsbEndpoint` | channel used for sending/receiving data   |
-
 
 ### Get Fadecandy server configuration 
 

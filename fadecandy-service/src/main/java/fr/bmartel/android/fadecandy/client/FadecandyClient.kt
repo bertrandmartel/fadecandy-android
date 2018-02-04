@@ -101,6 +101,11 @@ class FadecandyClient(
     private var mShouldOverrideServiceType: Boolean = false
 
     /**
+     * temporary server configuration used when service is not already started.
+     */
+    private var mTempConfig: String = ""
+
+    /**
      * broadcast receiver used to catch user click on service notification.
      */
     private val receiver = object : BroadcastReceiver() {
@@ -126,10 +131,18 @@ class FadecandyClient(
             }
 
             if (mShouldStartServer) {
-                if (fadecandyService?.startServer() == 0) {
-                    listener?.onServerStart()
+                if (mTempConfig == "") {
+                    if (fadecandyService?.startServer() == 0) {
+                        listener?.onServerStart()
+                    } else {
+                        listener?.onServerError(error = ServerError.START_SERVER_ERROR)
+                    }
                 } else {
-                    listener?.onServerError(error = ServerError.START_SERVER_ERROR)
+                    if (fadecandyService?.startServer(mTempConfig) == 0) {
+                        listener?.onServerStart()
+                    } else {
+                        listener?.onServerError(error = ServerError.START_SERVER_ERROR)
+                    }
                 }
             }
             mShouldStartServer = false
@@ -340,6 +353,7 @@ class FadecandyClient(
             }
         } else {
             mShouldStartServer = true
+            mTempConfig = config
             connect()
         }
     }
