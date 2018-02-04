@@ -16,7 +16,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 27
         versionCode 7
-        versionName "1.6"
+        versionName "1.61"
 
         ndk {
             moduleName "fadecandy-server"

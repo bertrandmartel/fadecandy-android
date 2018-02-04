@@ -90,7 +90,7 @@ For writing to USB device, Fadecandy server is calling from C++ a Kotlin method 
 * with Gradle, from jcenter :
 
 ```gradle
-compile 'fr.bmartel:fadecandy-service:1.6'
+compile 'fr.bmartel:fadecandy-service:1.61'
 ```
 
 ## How to use it ?
