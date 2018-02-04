@@ -507,7 +507,7 @@ class FadecandySingleton(context: Context) {
         isSpanUpdate = false
 
         //build Fadecandy client to bind Fadecandy service & start server
-        mFadecandyClient = FadecandyClient(mContext = context, mListener = object : IFcServerEventListener {
+        mFadecandyClient = FadecandyClient(context = context, listener = object : IFcServerEventListener {
 
             override fun onServerStart() {
                 Log.v(TAG, "onServerStart")
@@ -531,7 +531,7 @@ class FadecandySingleton(context: Context) {
                 }
             }
 
-        }, mUsbListener = object : IUsbEventListener {
+        }, usbListener = object : IUsbEventListener {
             override fun onUsbDeviceAttached(usbItem: UsbItem?) {
                 for (i in mListeners.indices) {
                     mListeners[i].onUsbDeviceAttached(usbItem)
@@ -543,7 +543,7 @@ class FadecandySingleton(context: Context) {
                     mListeners[i].onUsbDeviceDetached(usbItem)
                 }
             }
-        }, mActivity = "fr.bmartel.fadecandy/.activity.MainActivity")
+        }, activity = "fr.bmartel.fadecandy/.activity.MainActivity")
 
         if (mServerMode) {
             mFadecandyClient.startServer()
