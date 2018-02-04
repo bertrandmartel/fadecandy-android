@@ -366,7 +366,7 @@ class FadecandyClient(
      */
     fun setServerAddress(ip: String?) {
         if (mBound && fadecandyService != null) {
-            fadecandyService?.setServerAddress(ip = ip)
+            fadecandyService?.ipAddress = ip
         }
     }
 

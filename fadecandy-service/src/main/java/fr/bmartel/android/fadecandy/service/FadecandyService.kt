@@ -78,12 +78,10 @@ class FadecandyService : Service() {
      * @return
      */
     var ipAddress: String? = null
-        private set
-
-    /**
-     * Server port.
-     */
-    private var mServerPort: Int = 0
+        set(address) {
+            field = address
+            prefs.edit().putString(Constants.PREFERENCE_IP_ADDRESS, address).apply()
+        }
 
     /**
      * define that server is started or not.
@@ -128,7 +126,7 @@ class FadecandyService : Service() {
      */
     var config: String = ""
         set(conf) {
-            config = conf
+            field = conf
             prefs.edit().putString(Constants.PREFERENCE_CONFIG, conf).apply()
         }
 
@@ -205,7 +203,7 @@ class FadecandyService : Service() {
      */
     var serviceType: ServiceType? = Constants.DEFAULT_SERVICE_TYPE
         set(type) {
-            this.serviceType = type
+            field = type
             prefs.edit().putInt(Constants.PREFERENCE_SERVICE_TYPE, ServiceType.getState(type)).apply()
         }
 
@@ -219,10 +217,9 @@ class FadecandyService : Service() {
      *
      * @param port
      */
-    var serverPort: Int
-        get() = mServerPort
+    var serverPort: Int = 0
         set(port) {
-            this.mServerPort = port
+            field = port
             prefs.edit().putInt(Constants.PREFERENCE_PORT, port).apply()
         }
 
@@ -266,7 +263,7 @@ class FadecandyService : Service() {
         prefs = this.getSharedPreferences(Constants.PREFERENCE_PREFS, Context.MODE_PRIVATE)
         config = prefs.getString(Constants.PREFERENCE_CONFIG, getDefaultConfig(Constants.DEFAULT_SERVER_ADDRESS, Constants.DEFAULT_SERVER_PORT))
         serviceType = ServiceType.getServiceType(prefs.getInt(Constants.PREFERENCE_SERVICE_TYPE, ServiceType.getState(Constants.DEFAULT_SERVICE_TYPE)))
-        mServerPort = prefs.getInt(Constants.PREFERENCE_PORT, Constants.DEFAULT_SERVER_PORT)
+        serverPort = prefs.getInt(Constants.PREFERENCE_PORT, Constants.DEFAULT_SERVER_PORT)
         ipAddress = prefs.getString(Constants.PREFERENCE_IP_ADDRESS, Constants.DEFAULT_SERVER_ADDRESS)
 
         mUsbManager = getSystemService(Context.USB_SERVICE) as UsbManager
@@ -447,7 +444,7 @@ class FadecandyService : Service() {
         }
 
         if (config == "") {
-            config = getDefaultConfig(address = ipAddress, serverPort = mServerPort)
+            config = getDefaultConfig(address = ipAddress, serverPort = serverPort)
         }
 
         val status = startFcServer(config = config)
@@ -543,16 +540,6 @@ class FadecandyService : Service() {
         } catch (e: IllegalArgumentException) {
         }
         return null
-    }
-
-    /**
-     * Set server address.
-     *
-     * @param ip
-     */
-    fun setServerAddress(ip: String?) {
-        this.ipAddress = ip
-        prefs.edit().putString(Constants.PREFERENCE_IP_ADDRESS, ip).apply()
     }
 
     companion object {
