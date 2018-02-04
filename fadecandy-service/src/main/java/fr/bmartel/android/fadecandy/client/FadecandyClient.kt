@@ -311,7 +311,8 @@ class FadecandyClient(
     }
 
     /**
-     * start Fadecandy server. If service is not started/bounded, server will be started as soon as service is started & bounded.
+     * start Fadecandy server.
+     * If service is not started/bounded, server will be started as soon as service is started & bounded.
      */
     fun startServer() {
         if (mBound && fadecandyService != null) {
@@ -322,7 +323,23 @@ class FadecandyClient(
             }
         } else {
             mShouldStartServer = true
-            Log.e(TAG, "Starting service...")
+            connect()
+        }
+    }
+
+    /**
+     * start Fadecandy server after setting server configuration.
+     * If service is not started/bounded, server will be started as soon as service is started & bounded.
+     */
+    fun startServer(config: String) {
+        if (mBound && fadecandyService != null) {
+            if (fadecandyService?.startServer(config = config) == 0) {
+                listener?.onServerStart()
+            } else {
+                listener?.onServerError(error = ServerError.START_SERVER_ERROR)
+            }
+        } else {
+            mShouldStartServer = true
             connect()
         }
     }
