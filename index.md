@@ -1,6 +1,10 @@
 # Fadecandy Android
 
-[![CircleCI](https://img.shields.io/circleci/project/bertrandmartel/fadecandy-android.svg?maxAge=2592000?style=plastic)](https://circleci.com/gh/bertrandmartel/fadecandy-android) [ ![Download](https://api.bintray.com/packages/bertrandmartel/maven/fadecandy-server-android/images/download.svg) ](https://bintray.com/bertrandmartel/maven/fadecandy-server-android/_latestVersion) [![License](http://img.shields.io/:license-mit-blue.svg)](LICENSE.md)
+[![CircleCI](https://img.shields.io/circleci/project/bertrandmartel/fadecandy-android.svg?maxAge=2592000?style=plastic)](https://circleci.com/gh/bertrandmartel/fadecandy-android) 
+[ ![Download](https://api.bintray.com/packages/bertrandmartel/maven/fadecandy-server-android/images/download.svg) ](https://bintray.com/bertrandmartel/maven/fadecandy-server-android/_latestVersion) 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/fr.bmartel/fadecandy-service/badge.svg)](https://maven-badges.herokuapp.com/maven-central/fr.bmartel/fadecandy-service)
+[![Javadoc](http://javadoc-badge.appspot.com/fr.bmartel/fadecandy-service.svg?label=javadoc)](http://javadoc-badge.appspot.com/fr.bmartel/fadecandy-service)
+[![License](http://img.shields.io/:license-mit-blue.svg)](LICENSE.md)
 
 The [Fadecandy](https://github.com/scanlime/fadecandy) server library for Android devices
 
@@ -51,24 +55,24 @@ What differs between libusbx Fadecandy server & Android Fadecandy server is that
 
 | order | description  | language |
 |---|--------------------------------------------------------------------------|-------|
-| 1 | register a USB event receiver (for a specific product/vendor ID)         | Java  |                                                 
+| 1 | register a USB event receiver (for a specific product/vendor ID)         | Kotlin  |
 | 2 | start Fadecandy server                                                   | C++   | 
 
 * USB attached flow :
 
 | order | description  | language |
 |---|--------------------------------------------------------------------------|-------|
-| 1 | catch a USB device attached event                                        | Java  |          
-| 2 | check if this Fadecandy USB is allowed                                   | Java  |               
-| 3 | ask permission if device is not allowed                                  | Java  |                
-| 4 | open the device if permission is granted                                 | Java  |                 
+| 1 | catch a USB device attached event                                        | Kotlin  |
+| 2 | check if this Fadecandy USB is allowed                                   | Kotlin  |
+| 3 | ask permission if device is not allowed                                  | Kotlin  |
+| 4 | open the device if permission is granted                                 | Kotlin  |
 | 5 | notify Fadecandy server that a new device is attached                    | C++   |                             
 
 * USB detached flow :
 
 | order | description | language |
 |---|-------------------|--------|
-| 1 | catch a USB device detached event | Java |
+| 1 | catch a USB device detached event | Kotlin |
 | 2 | notify Fadecandy server that a device is detached | C++ |
 
 
@@ -77,16 +81,16 @@ What differs between libusbx Fadecandy server & Android Fadecandy server is that
 | order | description | language |
 |-------|-------------|----------|
 | 1     | prepare data to be written | C++ |
-| 2     | perform a bulk transfer on `UsbDeviceConnection` | Java |
+| 2     | perform a bulk transfer on `UsbDeviceConnection` | Kotlin |
 
-For writing to USB device, Fadecandy server is calling from C++ a Java method to perform a bulk transfer
+For writing to USB device, Fadecandy server is calling from C++ a Kotlin method to perform a bulk transfer
 
 ## How to include it in your Android project ?
 
 * with Gradle, from jcenter :
 
-```
-compile 'fr.bmartel:fadecandy-service:1.4'
+```gradle
+compile 'fr.bmartel:fadecandy-service:1.62'
 ```
 
 ## How to use it ?
@@ -94,49 +98,32 @@ compile 'fr.bmartel:fadecandy-service:1.4'
 * Use `FadecandyClient` service wrapper : 
 
 
-```
-mFadecandyClient = new FadecandyClient(mContext, 
-
-		new IFcServerEventListener() {
-
-            @Override
-            public void onServerStart() {
-
-                // server is started 
-
-            }
-
-            @Override
-            public void onServerClose() {
-
-                // server is closed
-
-            }
-
-            @Override
-            public void onServerError(ServerError error) {
-
-            	// a server error occured
-
-            }
-
-        }, new IUsbEventListener() {
-
-            @Override
-            public void onUsbDeviceAttached(UsbItem usbItem) {
-                
-                // a Fadecandy device has been attached
-
-            }
-
-            @Override
-            public void onUsbDeviceDetached(UsbItem usbItem) {
-                
-                // a Fadecandy device has been detached
-
-            }
-        }, 
-        "com.your.package/.activity.MainActivity"
+```java
+mFadecandyClient = new FadecandyClient(mContext,
+    new IFcServerEventListener() {
+        @Override
+        public void onServerStart() {
+            // server is started
+        }
+        @Override
+        public void onServerClose() {
+            // server is closed
+        }
+        @Override
+        public void onServerError(ServerError error) {
+            // a server error occured
+        }
+    }, new IUsbEventListener() {
+        @Override
+        public void onUsbDeviceAttached(UsbItem usbItem) {
+            // a Fadecandy device has been attached
+        }
+        @Override
+        public void onUsbDeviceDetached(UsbItem usbItem) {
+            // a Fadecandy device has been detached
+        }
+    },
+    "com.your.package/.activity.MainActivity"
 );
 ```
 
@@ -145,27 +132,35 @@ mFadecandyClient = new FadecandyClient(mContext,
 
 ### Start Fadecandy server 
 
-```
+```java
 mFadecandyClient.startServer();
 ```
 
 `startServer()` will internally stop the server if already running before starting
 
+### Start Fadecandy server with custom server config
+
+```java
+mFadecandyClient.startServer(yourConfig);
+```
+
+Fadecandy server configuration is a JSON document, check [server config doc](https://github.com/scanlime/fadecandy/blob/master/doc/fc_server_config.md)
+
 ### Stop Fadecandy server
 
-```
+```java
 mFadecandyClient.closeServer();
 ```
 
 ### Check if server is running 
 
-```
+```java
 boolean isRunning = mFadecandyClient.isServerRunning();
 ```
 
 ### Get last server IP/host & last server port
 
-```
+```java
 String serverAdress = mFadecandyClient.getIpAddress();
 
 int serverPort = mFadecandyClient.getServerPort();
@@ -173,7 +168,7 @@ int serverPort = mFadecandyClient.getServerPort();
 
 ### Set server IP/host & server port 
 
-```
+```java
 mFadecandyClient.setServerAddress("127.0.0.1");
 
 mFadecandyClient.setServerPort(7890);
@@ -181,9 +176,17 @@ mFadecandyClient.setServerPort(7890);
 
 You will need to call `startServer()` to restart the server after modifying these parameters
 
+### Set server configuration
+
+```java
+mFadecandyClient.setConfig(myConfig);
+```
+
+Fadecandy server configuration is a JSON document, check [server config doc](https://github.com/scanlime/fadecandy/blob/master/doc/fc_server_config.md)
+
 ### Get list of Fadecandy USB devices attached
 
-```
+```java
 HashMap<Integer, UsbItem> usbDevices = mFadecandyClient.getUsbDeviceMap();
 ```
 
@@ -195,11 +198,10 @@ The key is the USB device file descriptor, The value is an `UsbItem` object enca
 | `UsbConnection` | send/receive data from an UBS device |
 | `UsbEndpoint` | channel used for sending/receiving data   |
 
-
 ### Get Fadecandy server configuration 
 
-```
-FadecandyConfig config = mFadecandyClient.getConfig();
+```java
+String config = mFadecandyClient.getConfig();
 ```
 
 Fadecandy configuration is composed of the Top level object defined in [Fadecandy Server configuration documentation](https://github.com/scanlime/fadecandy/blob/master/doc/fc_server_config.md#top-level-object)
@@ -208,7 +210,7 @@ Fadecandy configuration is composed of the Top level object defined in [Fadecand
 
  * Set the Fadecandy service as `PERSISTENT` (default value) which means the service will stay in background, a notification will be present in notification view. The user can kill the service by clicking on "close background service" on the notification :
 
-```
+```java
 mFadecandyClient.setServiceType(ServiceType.PERSISTENT_SERVICE);
 ```
 
@@ -216,19 +218,19 @@ mFadecandyClient.setServiceType(ServiceType.PERSISTENT_SERVICE);
 
  * Set the Fadencandy service as `NON_PERSISTENT`. The service will be killed as soon as no application is bound to it
 
-```
+```java
 mFadecandyClient.setServiceType(ServiceType.NON_PERSISTENT_SERVICE);
 ```
 
 ### Bind Fadecandy service without starting server
 
-```
+```java
 mFadecandyClient.connect();
 ```
 
 ### Unbind Fadecandy service
 
-```
+```java
 mFadecandyClient.disconnect();
 ```
 
@@ -238,7 +240,7 @@ Assure you call `disconnect()` to close service & unregister client receiver whe
 
 If you are using proguard add this to your `proguard-rules.pro` : 
 
-```
+```proguard
 -keep class fr.bmartel.android.fadecandy.service.FadecandyService { *; }
 
 -keepclassmembers,allowobfuscation class fr.bmartel.android.fadecandy.service.FadecandyService.** {
@@ -252,7 +254,7 @@ This will keep methods in `FadecandyService` to preserve calls from native code 
 
 ### Get source code
 
-```
+```bash
 git clone git@github.com:bertrandmartel/fadecandy-android.git
 cd fadecandy-android
 git submodule update --init --recursive
@@ -260,7 +262,7 @@ git submodule update --init --recursive
 
 ### Build
 
-```
+```bash
 ./gradlew build
 ```
 
@@ -279,11 +281,13 @@ git submodule update --init --recursive
 * Android Holo ColorPicker : https://github.com/LarsWerkman/HoloColorPicker
 * Open Pixel Control Library : https://github.com/bertrandmartel/opc-java
 * AndroidAsync : https://github.com/koush/AndroidAsync
+* Ace editor : https://github.com/ajaxorg/ace
+* JS Beautifier : https://github.com/beautify-web/js-beautify
 * Led Icon by Kenneth Appiah, CA (Pulic Domain) : https://thenounproject.com/search/?q=led&i=3156
 * appcompat-v7, design & recyclerview-v7
 
 ## License
 
 ```
-The MIT License (MIT) Copyright (c) 2016 Bertrand Martel
+The MIT License (MIT) Copyright (c) 2016-2018 Bertrand Martel
 ```
