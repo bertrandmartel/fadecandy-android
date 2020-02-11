@@ -28,9 +28,12 @@
 package fr.bmartel.android.fadecandy.utils
 
 import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.support.v4.app.NotificationCompat
 
 import fr.bmartel.android.fadecandy.R
@@ -42,6 +45,10 @@ import fr.bmartel.android.fadecandy.service.FadecandyService
  * @author Bertrand Martel
  */
 object NotificationHelper {
+
+    val CHANNEL_ID = "fadecandyServiceChannelID"
+    val CHANNEL_NAME = "fadecandyServiceChannel"
+    val CHANNEL_DESCRIPTION = "FadeCandy Service Channel"
 
     /**
      * Create the intent to be launched when user click on notification.
@@ -66,16 +73,19 @@ object NotificationHelper {
      */
     fun createNotification(context: Context, content: String?, activityIntent: Intent): Notification {
 
+        createNotificationChannel(context)
+
         val title = context.getString(R.string.app_name)
         val pendingIntent = createLaunchIntent(context = context, activityIntent = activityIntent)
 
-        val builder = NotificationCompat.Builder(context)
+        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentTitle(title)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentText(content)
                 .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setOngoing(true)
+                .setChannelId(CHANNEL_ID)
 
         val yesReceive = Intent()
         yesReceive.action = FadecandyService.ACTION_EXIT
@@ -84,4 +94,20 @@ object NotificationHelper {
 
         return builder.build()
     }
+
+    private fun createNotificationChannel(context: Context) {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
+            return
+
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?
+        if (notificationManager!!.getNotificationChannel(CHANNEL_ID) != null)
+            return
+
+        val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT)
+        channel.description = CHANNEL_DESCRIPTION
+        notificationManager.createNotificationChannel(channel) // Register the channel with the system; you can't change the importance or other notification behaviors after this
+    }
+
 }
