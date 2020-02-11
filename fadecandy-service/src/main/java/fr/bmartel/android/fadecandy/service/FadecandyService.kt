@@ -418,7 +418,7 @@ class FadecandyService : Service() {
                 return Service.START_NOT_STICKY
             }
             ServiceType.PERSISTENT_SERVICE -> {
-                startForeground(4242, NotificationHelper.createNotification(this, null, testIntent))
+                startForeground(1, NotificationHelper.createNotification(this, null, testIntent))
                 Log.v(TAG, "starting PERSISTENT_SERVICE...")
                 return Service.START_STICKY
             }
